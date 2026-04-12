@@ -11,6 +11,6 @@ export class AppController extends BaseController {
   @Get()
   getHello() {
     const hello = this.appService.getHello();
-    return this.success(hello, 'Bem-vindo');
+    return this.success(hello, 'Olá mundo 4');
   }
 }

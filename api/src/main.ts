@@ -7,8 +7,18 @@ async function bootstrap() {
 
   const app = await NestFactory.create(AppModule);
 
+
+  const allowedOrigins = [
+    'http://localhost:5173',
+    'https://atendimento-anhanguera.vercel.app',
+  ];
+
+  if (process.env.FRONTEND_URL) {
+    allowedOrigins.push(process.env.FRONTEND_URL);
+  }
+
   app.enableCors({
-    origin: 'http://localhost:5173',
+    origin: allowedOrigins,
     methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
     credentials: true,
   });
