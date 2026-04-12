@@ -6,10 +6,6 @@ import { Injectable } from '@nestjs/common';
 export class UserService {
 
   async findAll(): Promise<UserSafe[]>{
-    return prisma.user.findMany({
-      omit: {
-        password: true,
-      },
-    });
+    return prisma.user.findMany({});
   }
 }
