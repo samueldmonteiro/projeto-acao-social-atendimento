@@ -7,7 +7,6 @@ async function bootstrap() {
 
   const app = await NestFactory.create(AppModule);
 
-
   const allowedOrigins = [
     'http://localhost:5173',
     'https://atendimento-anhanguera.vercel.app',
