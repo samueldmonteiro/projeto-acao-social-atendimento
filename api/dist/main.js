@@ -6,8 +6,15 @@ const app_module_1 = require("./app.module");
 const swagger_1 = require("@nestjs/swagger");
 async function bootstrap() {
     const app = await core_1.NestFactory.create(app_module_1.AppModule);
+    const allowedOrigins = [
+        'http://localhost:5173',
+        'https://atendimento-anhanguera.vercel.app',
+    ];
+    if (process.env.FRONTEND_URL) {
+        allowedOrigins.push(process.env.FRONTEND_URL);
+    }
     app.enableCors({
-        origin: process.env.FRONTEND_URL ? [process.env.FRONTEND_URL, 'http://localhost:5173'] : 'http://localhost:5173',
+        origin: allowedOrigins,
         methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
         credentials: true,
     });
