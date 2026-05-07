@@ -47,6 +47,23 @@ docker compose up -d --build
 - **API (Swagger/Docs)**: [http://localhost:3000/api](http://localhost:3000/api)
 - **PostgreSQL**: `localhost:5432` (Acessível via ferramentas como DBeaver ou TablePlus)
 
+### 🗄️ Gerenciamento do Banco de Dados (Prisma)
+Com os containers rodando, você pode executar comandos do Prisma diretamente no container da API:
+
+*   **Rodar Migrations**:
+    ```bash
+    docker compose exec api npx prisma migrate dev
+    ```
+*   **Popular o Banco (Seed)**:
+    ```bash
+    docker compose exec api yarn seed
+    ```
+*   **Prisma Studio**:
+    Acesse a interface visual do banco em [http://localhost:5555](http://localhost:5555) rodando:
+    ```bash
+    docker compose exec api npx prisma studio --browser none --hostname 0.0.0.0
+    ```
+
 ---
 
 ## 💻 2. Desenvolvimento Local (Sem Docker)
