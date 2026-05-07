@@ -37,8 +37,8 @@ exports.getPrismaClientClass = getPrismaClientClass;
 const runtime = __importStar(require("@prisma/client/runtime/client"));
 const config = {
     "previewFeatures": [],
-    "clientVersion": "7.7.0",
-    "engineVersion": "75cbdc1eb7150937890ad5465d861175c6624711",
+    "clientVersion": "7.8.0",
+    "engineVersion": "3c6e192761c0362d496ed980de936e2f3cebcd3a",
     "activeProvider": "postgresql",
     "inlineSchema": "generator client {\n  provider     = \"prisma-client\"\n  output       = \"../src/generated/prisma\"\n  moduleFormat = \"cjs\"\n}\n\ndatasource db {\n  provider = \"postgresql\"\n}\n\nmodel User {\n  id        String   @id @default(uuid())\n  name      String\n  email     String   @unique\n  password  String\n  role      Role     @default(ATTENDANT)\n  createdAt DateTime @default(now())\n  updatedAt DateTime @updatedAt\n}\n\nenum Role {\n  ATTENDANT\n  ADMIN\n}\n",
     "runtimeDataModel": {

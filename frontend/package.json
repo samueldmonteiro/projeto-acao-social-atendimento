@@ -22,6 +22,7 @@
   "devDependencies": {
     "@eslint/js": "^10.0.1",
     "@react-router/dev": "7.14.0",
+    "@rolldown/binding-linux-x64-gnu": "1.0.0-rc.18",
     "@tailwindcss/vite": "^4.2.2",
     "@types/node": "^22.19.17",
     "@types/react": "^19.2.14",

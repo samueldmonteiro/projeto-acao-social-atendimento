@@ -18,6 +18,8 @@ export interface PrismaClient<in LogOpts extends Prisma.LogLevel = never, in out
     $queryRaw<T = unknown>(query: TemplateStringsArray | Prisma.Sql, ...values: any[]): Prisma.PrismaPromise<T>;
     $queryRawUnsafe<T = unknown>(query: string, ...values: any[]): Prisma.PrismaPromise<T>;
     $transaction<P extends Prisma.PrismaPromise<any>[]>(arg: [...P], options?: {
+        maxWait?: number;
+        timeout?: number;
         isolationLevel?: Prisma.TransactionIsolationLevel;
     }): runtime.Types.Utils.JsPromise<runtime.Types.Utils.UnwrapTuple<P>>;
     $transaction<R>(fn: (prisma: Omit<PrismaClient, runtime.ITXClientDenyList>) => runtime.Types.Utils.JsPromise<R>, options?: {

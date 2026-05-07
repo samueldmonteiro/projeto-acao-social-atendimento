@@ -2,103 +2,78 @@
 
 Este projeto consiste em um sistema de atendimento desenvolvido com uma API robusta em **NestJS** e um Frontend moderno com **React Router v7**. 
 
-O repositório é dividido em duas pastas principais:
+O repositório é estruturado para facilitar o desenvolvimento local e o deploy via Docker:
 - [`api`](./api): Backend em NestJS com Prisma e PostgreSQL.
 - [`frontend`](./frontend): Interface web em React com TailwindCSS (via React Router).
 
 ---
 
-## 🛠 Pré-requisitos globais
+## 🛠 Pré-requisitos
 
-Para rodar o projeto localmente, certifique-se de ter instalado:
-1. **Node.js** (versão 22 ou superior)
-2. **pnpm** (versão 9+)
-3. **Docker** e **Docker Compose** (para subir o banco de dados localmente)
-
----
-
-## 1. Passo a Passo: API (Backend)
-
-A API é o coração do sistema, fornecendo as rotas e regras de negócio usando NestJS e conectando ao banco de dados com Prisma ORM.
-
-### Instalação
-Abra o terminal, navegue até a pasta da API e instale as dependências:
-```bash
-cd api
-pnpm install
-```
-
-### Configuração do Banco de Dados
-A API precisa de um PostgreSQL ativo. Primeiro, suba o container usando o Docker Compose:
-```bash
-docker compose up -d
-```
-Verifique o arquivo `.env` para confirmar se as configurações estão corretas (a URL padrão usada é `postgresql://admin_s324:pass1@localhost:5432/atendimento?schema=public`).  
-
-Rode as migrações para criar as tabelas do banco de dados e aplicar gerações pendentes do Prisma:
-```bash
-npx prisma migrate dev
-```
-
-### Rodando a API
-Para rodar a API em modo de desenvolvimento (com auto-reload):
-```bash
-pnpm run start:dev
-```
-*A API ficará disponível por padrão na porta `3000` (ex: `http://localhost:3000`).*
-
-### Testes
-A API utiliza o **Vitest** para seus testes (unitários, integração e E2E).  
-> **⚠️ Importante:** Para que os testes de integração/E2E funcionem, o container do PostgreSQL na etapa anterior (`docker compose up -d`) deve estar ativo, pois os testes se conectam ao banco e criam tabelas temporárias com Prisma usando uma URL de conexão validada pelo `.env` da API.
-
-Comandos disponíveis (certifique-se de estar dentro da pasta `api/`):
-- **Rodar todos os testes de uma vez**: `pnpm run test`
-- **Rodar em modo "Watch"** (re-executa testes interativamente ao salvar arquivos): `pnpm run test:watch`
-- **Gerar relatório de cobertura de código (*coverage*)**: `pnpm run test:cov`
-
-### Linter e Formatação
-Para assegurar a qualidade e padronização do código da API:
-- **Apenas analisar e procurar erros**: `pnpm run lint`
-- **Corrigir erros automaticamente** (auto-fixer do ESLint): `pnpm run lint:fix`
+Para rodar o projeto, você precisará de:
+1. **Docker** e **Docker Compose** (Versão recomendada)
+2. **Node.js** (v22+) e **yarn** (apenas se for rodar sem Docker)
 
 ---
 
-## 2. Passo a Passo: Frontend
+## 🐳 1. Rodando com Docker (Recomendado)
 
-O frontend consome a API para alimentar as interfaces de usuário utilizando os loaders e actions do React Router.
+Esta é a forma mais rápida e profissional de subir todo o ambiente (Banco, API e Frontend) com **Hot-Reload** ativo e sincronização de permissões de arquivos.
 
-### Instalação
-Em uma nova aba do terminal, navegue até a pasta do Frontend e instale as dependências:
+### Passo 1: Configurar Variáveis de Ambiente
+Na raiz do projeto, crie um arquivo `.env` baseado no exemplo:
 ```bash
-cd frontend
-pnpm install
+cp .env.example .env
 ```
 
-### Rodando o Frontend
-Para subir o ambiente de desenvolvimento local (Vite/React Router):
-```bash
-pnpm run dev
-```
-*O frontend ficará disponível por padrão na porta `5173` (ex: `http://localhost:5173`).*
+**⚠️ Importante (Linux):** Para evitar problemas de permissão ao editar arquivos, verifique seu UID e GID rodando `id -u` e `id -g` no terminal e atualize os valores no seu `.env`:
+- `DOCKER_UID`: Seu UID (geralmente 1000)
+- `DOCKER_GID`: Seu GID (geralmente 1000)
 
-### Linter e Tipagem (TypeScript)
-O Frontend possui scripts essenciais para a qualidade do código:
-- **Verificação de Tipagem (Typecheck)**: `pnpm run typecheck`
-- **Linter**: `pnpm run lint`
-
-### Build para Produção
-Caso queira compilar o frontend para produção:
+### Passo 2: Subir os Containers
+Execute o comando abaixo para construir e iniciar todos os serviços em segundo plano:
 ```bash
-pnpm run build
-pnpm run start
+docker compose up -d --build
 ```
+
+### Passo 3: Acessar o Sistema
+- **Frontend**: [http://localhost:5173](http://localhost:5173) (Vite HMR ativo)
+- **API (Swagger/Docs)**: [http://localhost:3000/api](http://localhost:3000/api)
+- **PostgreSQL**: `localhost:5432` (Acessível via ferramentas como DBeaver ou TablePlus)
+
+---
+
+## 💻 2. Desenvolvimento Local (Sem Docker)
+
+Caso prefira rodar os serviços manualmente em sua máquina:
+
+### API (Backend)
+1. Navegue até a pasta: `cd api`
+2. Instale as dependências: `yarn install`
+3. Certifique-se de ter um banco Postgres rodando (pode usar `docker compose up -d postgres`)
+4. Execute as migrations: `npx prisma migrate dev`
+5. Inicie o servidor: `yarn run start:dev`
+
+### Frontend
+1. Navegue até a pasta: `cd frontend`
+2. Instale as dependências: `yarn install`
+3. Inicie o servidor: `yarn run dev`
+
+---
+
+## 🛠 Comandos Úteis (Docker)
+
+- **Ver logs**: `docker compose logs -f`
+- **Acessar o terminal da API**: `docker compose exec api sh`
+- **Rodar migrations manualmente**: `docker compose exec api yarn prisma migrate dev`
+- **Parar tudo e remover volumes**: `docker compose down -v`
 
 ---
 
 ## 🚀 Workflows e CI (GitHub Actions)
 
-Este projeto já possui integração contínua (CI) configurada usando GitHub Actions para garantir a saúde do repositório tanto no backend quanto no frontend:
-- **`ci-api.yml`**: Roda o *linter*, gera o script Prisma e os *testes* (subindo um container efêmero de banco de dados e as migrações dinâmicas).
-- **`ci-frontend.yml`**: Roda a instalação, o *linter*, avaliação de tipos (*typecheck*) e o processo de *build*.
+O projeto possui integração contínua configurada:
+- **`ci-api.yml`**: Roda o linter e testes automatizados.
+- **`ci-frontend.yml`**: Valida a tipagem e o processo de build.
 
-Os testes são executados automaticamente ao submeter qualquer alteração por *Pull Request* ou *Push* para a branch `main`.
+Os testes são executados automaticamente em cada *Pull Request* para a branch `main`.

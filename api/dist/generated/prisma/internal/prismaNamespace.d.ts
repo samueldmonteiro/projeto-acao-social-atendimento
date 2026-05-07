@@ -329,6 +329,7 @@ export type PrismaClientOptions = ({
     };
     omit?: GlobalOmitConfig;
     comments?: runtime.SqlCommenterPlugin[];
+    queryPlanCacheMaxSize?: number;
 };
 export type GlobalOmitConfig = {
     user?: Prisma.UserOmit;
