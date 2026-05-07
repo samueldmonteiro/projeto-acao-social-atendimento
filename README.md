@@ -26,7 +26,13 @@ Na raiz do projeto, crie um arquivo `.env` baseado no exemplo:
 cp .env.example .env
 ```
 
-**⚠️ Importante (Linux):** Para evitar problemas de permissão ao editar arquivos, verifique seu UID e GID rodando `id -u` e `id -g` no terminal e atualize os valores no seu `.env`:
+Também é necessário configurar os arquivos `.env` internos da **API** e do **Frontend**:
+```bash
+cp api/.env.example api/.env
+cp frontend/.env.example frontend/.env
+```
+
+**⚠️ Importante (Linux):** No arquivo `.env` da **raiz**, verifique seu UID e GID rodando `id -u` e `id -g` no terminal e atualize os valores:
 - `DOCKER_UID`: Seu UID (geralmente 1000)
 - `DOCKER_GID`: Seu GID (geralmente 1000)
 
@@ -49,14 +55,16 @@ Caso prefira rodar os serviços manualmente em sua máquina:
 
 ### API (Backend)
 1. Navegue até a pasta: `cd api`
-2. Instale as dependências: `yarn install`
+2. Configure o ambiente: `cp .env.example .env`
+3. Instale as dependências: `yarn install`
 3. Certifique-se de ter um banco Postgres rodando (pode usar `docker compose up -d postgres`)
 4. Execute as migrations: `npx prisma migrate dev`
 5. Inicie o servidor: `yarn run start:dev`
 
 ### Frontend
 1. Navegue até a pasta: `cd frontend`
-2. Instale as dependências: `yarn install`
+2. Configure o ambiente: `cp .env.example .env`
+3. Instale as dependências: `yarn install`
 3. Inicie o servidor: `yarn run dev`
 
 ---
