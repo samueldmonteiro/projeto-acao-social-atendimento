@@ -61,7 +61,7 @@ Com os containers rodando, você pode executar comandos do Prisma diretamente no
 *   **Prisma Studio**:
     Acesse a interface visual do banco em [http://localhost:5555](http://localhost:5555) rodando:
     ```bash
-    docker compose exec api npx prisma studio --browser none --hostname 0.0.0.0
+    docker compose exec api yarn prisma:studio
     ```
 
 ---
