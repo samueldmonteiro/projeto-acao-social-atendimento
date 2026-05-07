@@ -44,3 +44,18 @@ export { Prisma }
  * 
  */
 export type User = Prisma.UserModel
+/**
+ * Model Beneficiary
+ * 
+ */
+export type Beneficiary = Prisma.BeneficiaryModel
+/**
+ * Model ServiceCategory
+ * 
+ */
+export type ServiceCategory = Prisma.ServiceCategoryModel
+/**
+ * Model BeneficiaryCategory
+ * 
+ */
+export type BeneficiaryCategory = Prisma.BeneficiaryCategoryModel

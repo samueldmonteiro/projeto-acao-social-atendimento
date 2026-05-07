@@ -51,7 +51,10 @@ export const AnyNull = runtime.AnyNull
 
 
 export const ModelName = {
-  User: 'User'
+  User: 'User',
+  Beneficiary: 'Beneficiary',
+  ServiceCategory: 'ServiceCategory',
+  BeneficiaryCategory: 'BeneficiaryCategory'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -83,6 +86,39 @@ export const UserScalarFieldEnum = {
 export type UserScalarFieldEnum = (typeof UserScalarFieldEnum)[keyof typeof UserScalarFieldEnum]
 
 
+export const BeneficiaryScalarFieldEnum = {
+  id: 'id',
+  fullName: 'fullName',
+  cpf: 'cpf',
+  email: 'email',
+  birthDate: 'birthDate',
+  gender: 'gender',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type BeneficiaryScalarFieldEnum = (typeof BeneficiaryScalarFieldEnum)[keyof typeof BeneficiaryScalarFieldEnum]
+
+
+export const ServiceCategoryScalarFieldEnum = {
+  id: 'id',
+  name: 'name',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type ServiceCategoryScalarFieldEnum = (typeof ServiceCategoryScalarFieldEnum)[keyof typeof ServiceCategoryScalarFieldEnum]
+
+
+export const BeneficiaryCategoryScalarFieldEnum = {
+  beneficiaryId: 'beneficiaryId',
+  serviceCategoryId: 'serviceCategoryId',
+  createdAt: 'createdAt'
+} as const
+
+export type BeneficiaryCategoryScalarFieldEnum = (typeof BeneficiaryCategoryScalarFieldEnum)[keyof typeof BeneficiaryCategoryScalarFieldEnum]
+
+
 export const SortOrder = {
   asc: 'asc',
   desc: 'desc'
@@ -97,4 +133,12 @@ export const QueryMode = {
 } as const
 
 export type QueryMode = (typeof QueryMode)[keyof typeof QueryMode]
+
+
+export const NullsOrder = {
+  first: 'first',
+  last: 'last'
+} as const
+
+export type NullsOrder = (typeof NullsOrder)[keyof typeof NullsOrder]
 

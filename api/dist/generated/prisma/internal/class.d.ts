@@ -33,5 +33,14 @@ export interface PrismaClient<in LogOpts extends Prisma.LogLevel = never, in out
     get user(): Prisma.UserDelegate<ExtArgs, {
         omit: OmitOpts;
     }>;
+    get beneficiary(): Prisma.BeneficiaryDelegate<ExtArgs, {
+        omit: OmitOpts;
+    }>;
+    get serviceCategory(): Prisma.ServiceCategoryDelegate<ExtArgs, {
+        omit: OmitOpts;
+    }>;
+    get beneficiaryCategory(): Prisma.BeneficiaryCategoryDelegate<ExtArgs, {
+        omit: OmitOpts;
+    }>;
 }
 export declare function getPrismaClientClass(): PrismaClientConstructor;
