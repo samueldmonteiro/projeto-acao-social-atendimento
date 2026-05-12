@@ -7,19 +7,39 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.AppModule = void 0;
+require("dotenv/config");
 const common_1 = require("@nestjs/common");
 const app_controller_1 = require("./controllers/app.controller");
 const app_service_1 = require("./services/app.service");
 const user_controller_1 = require("./controllers/user.controller");
 const user_service_1 = require("./services/user.service");
+const config_1 = require("@nestjs/config");
+const auth_service_1 = require("./services/auth.service");
+const jwt_1 = require("@nestjs/jwt");
+const passport_1 = require("@nestjs/passport");
+const auth_controller_1 = require("./controllers/auth.controller");
+const jwt_guard_1 = require("./auth/jwt.guard");
+const jwt_strategy_1 = require("./auth/jwt.strategy");
 let AppModule = class AppModule {
 };
 exports.AppModule = AppModule;
 exports.AppModule = AppModule = __decorate([
     (0, common_1.Module)({
-        imports: [],
-        controllers: [app_controller_1.AppController, user_controller_1.UserController],
-        providers: [app_service_1.AppService, user_service_1.UserService],
+        imports: [
+            config_1.ConfigModule.forRoot({ isGlobal: true }),
+            passport_1.PassportModule,
+            jwt_1.JwtModule.registerAsync({
+                global: true,
+                imports: [config_1.ConfigModule],
+                inject: [config_1.ConfigService],
+                useFactory: () => ({
+                    secret: process.env.JWT_TOKEN,
+                    signOptions: { expiresIn: '1min' },
+                }),
+            }),
+        ],
+        controllers: [app_controller_1.AppController, user_controller_1.UserController, auth_controller_1.AuthController],
+        providers: [app_service_1.AppService, user_service_1.UserService, auth_service_1.AuthService, jwt_guard_1.JwtGuard, jwt_strategy_1.JwtStrategy],
     })
 ], AppModule);
 //# sourceMappingURL=app.module.js.map
