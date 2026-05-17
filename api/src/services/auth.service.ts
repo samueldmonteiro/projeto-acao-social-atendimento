@@ -3,9 +3,11 @@ import { JwtService } from '@nestjs/jwt';
 import { prisma } from '@/lib/prisma';
 import * as argon2 from 'argon2';
 import { LoginIncorrectError } from '@/errors/login-incorrect.error';
+import { UserSafe } from '@/types/user.type';
 
 export interface SignInResponse {
   accessToken: string;
+  user: UserSafe;
 }
 export interface SigninRequest {
   email: string;
@@ -28,6 +30,16 @@ export class AuthService {
 
     const payload = { username: String(user.email), sub: String(user.id) };
 
-    return { accessToken: this.jwtService.sign(payload) };
+    return {
+      accessToken: this.jwtService.sign(payload),
+      user: {
+        id: user.id,
+        name: user.name,
+        email: user.email,
+        role: user.role,
+        createdAt: user.createdAt,
+        updatedAt: user.updatedAt,
+      },
+    };
   }
 }

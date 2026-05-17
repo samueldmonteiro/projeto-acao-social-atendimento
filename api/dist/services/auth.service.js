@@ -63,7 +63,17 @@ let AuthService = class AuthService {
         if (!compare)
             throw new login_incorrect_error_1.LoginIncorrectError();
         const payload = { username: String(user.email), sub: String(user.id) };
-        return { accessToken: this.jwtService.sign(payload) };
+        return {
+            accessToken: this.jwtService.sign(payload),
+            user: {
+                id: user.id,
+                name: user.name,
+                email: user.email,
+                role: user.role,
+                createdAt: user.createdAt,
+                updatedAt: user.updatedAt,
+            },
+        };
     }
 };
 exports.AuthService = AuthService;

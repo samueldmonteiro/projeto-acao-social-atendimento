@@ -30,5 +30,7 @@ describe('AuthService Integration', () => {
 
     const result = await service.signin({ email: 'int@test.com', password });
     expect(result).toHaveProperty('accessToken');
+    expect(result).toHaveProperty('user');
+
   });
 });

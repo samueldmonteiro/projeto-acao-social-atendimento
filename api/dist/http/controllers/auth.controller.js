@@ -17,8 +17,6 @@ const base_controller_1 = require("./base.controller");
 const common_1 = require("@nestjs/common");
 const auth_service_1 = require("../../services/auth.service");
 const auth_dto_1 = require("../dtos/auth.dto");
-const jwt_guard_1 = require("../../auth/jwt.guard");
-const auth_decorator_1 = require("../decorators/auth.decorator");
 let AuthController = class AuthController extends base_controller_1.BaseController {
     auth;
     constructor(auth) {
@@ -29,9 +27,6 @@ let AuthController = class AuthController extends base_controller_1.BaseControll
         const data = await this.auth.signin(signin);
         return this.success(data);
     }
-    privateRoute(user) {
-        return `userId[${user.sub}] user[${user.username}]`;
-    }
 };
 exports.AuthController = AuthController;
 __decorate([
@@ -41,14 +36,6 @@ __decorate([
     __metadata("design:paramtypes", [auth_dto_1.UserLoginDto]),
     __metadata("design:returntype", Promise)
 ], AuthController.prototype, "signin", null);
-__decorate([
-    (0, common_1.Get)('/private'),
-    (0, common_1.UseGuards)(jwt_guard_1.JwtGuard),
-    __param(0, (0, auth_decorator_1.GetUser)()),
-    __metadata("design:type", Function),
-    __metadata("design:paramtypes", [Object]),
-    __metadata("design:returntype", String)
-], AuthController.prototype, "privateRoute", null);
 exports.AuthController = AuthController = __decorate([
     (0, common_1.Controller)('auth'),
     __metadata("design:paramtypes", [auth_service_1.AuthService])

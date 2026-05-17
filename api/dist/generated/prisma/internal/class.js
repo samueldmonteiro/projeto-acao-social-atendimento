@@ -36,25 +36,25 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.getPrismaClientClass = getPrismaClientClass;
 const runtime = __importStar(require("@prisma/client/runtime/client"));
 const config = {
-    previewFeatures: [],
-    clientVersion: '7.8.0',
-    engineVersion: '3c6e192761c0362d496ed980de936e2f3cebcd3a',
-    activeProvider: 'postgresql',
-    inlineSchema: 'generator client {\n  provider     = "prisma-client"\n  output       = "../src/generated/prisma"\n  moduleFormat = "cjs"\n}\n\ndatasource db {\n  provider = "postgresql"\n}\n\nmodel User {\n  id        String   @id @default(uuid())\n  name      String\n  email     String   @unique\n  password  String\n  role      Role     @default(ATTENDANT)\n  createdAt DateTime @default(now())\n  updatedAt DateTime @updatedAt\n}\n\nenum Role {\n  ATTENDANT\n  ADMIN\n}\n',
-    runtimeDataModel: {
-        models: {},
-        enums: {},
-        types: {},
+    "previewFeatures": [],
+    "clientVersion": "7.8.0",
+    "engineVersion": "3c6e192761c0362d496ed980de936e2f3cebcd3a",
+    "activeProvider": "postgresql",
+    "inlineSchema": "generator client {\n  provider     = \"prisma-client\"\n  output       = \"../src/generated/prisma\"\n  moduleFormat = \"cjs\"\n}\n\ndatasource db {\n  provider = \"postgresql\"\n}\n\nmodel User {\n  id        String   @id @default(uuid())\n  name      String\n  email     String   @unique\n  password  String\n  role      Role     @default(ATTENDANT)\n  createdAt DateTime @default(now())\n  updatedAt DateTime @updatedAt\n}\n\nenum Role {\n  ATTENDANT\n  ADMIN\n}\n",
+    "runtimeDataModel": {
+        "models": {},
+        "enums": {},
+        "types": {}
     },
-    parameterizationSchema: {
-        strings: [],
-        graph: '',
-    },
+    "parameterizationSchema": {
+        "strings": [],
+        "graph": ""
+    }
 };
-config.runtimeDataModel = JSON.parse('{"models":{"User":{"fields":[{"name":"id","kind":"scalar","type":"String"},{"name":"name","kind":"scalar","type":"String"},{"name":"email","kind":"scalar","type":"String"},{"name":"password","kind":"scalar","type":"String"},{"name":"role","kind":"enum","type":"Role"},{"name":"createdAt","kind":"scalar","type":"DateTime"},{"name":"updatedAt","kind":"scalar","type":"DateTime"}],"dbName":null}},"enums":{},"types":{}}');
+config.runtimeDataModel = JSON.parse("{\"models\":{\"User\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"name\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"email\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"password\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"role\",\"kind\":\"enum\",\"type\":\"Role\"},{\"name\":\"createdAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"updatedAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"}],\"dbName\":null}},\"enums\":{},\"types\":{}}");
 config.parameterizationSchema = {
-    strings: JSON.parse('["where","User.findUnique","User.findUniqueOrThrow","orderBy","cursor","User.findFirst","User.findFirstOrThrow","User.findMany","data","User.createOne","User.createMany","User.createManyAndReturn","User.updateOne","User.updateMany","User.updateManyAndReturn","create","update","User.upsertOne","User.deleteOne","User.deleteMany","having","_count","_min","_max","User.groupBy","User.aggregate","AND","OR","NOT","id","name","email","password","Role","role","createdAt","updatedAt","equals","in","notIn","lt","lte","gt","gte","not","contains","startsWith","endsWith","set"]'),
-    graph: 'LgkQChoAACUAMBsAAAQAEBwAACUAMB0BAAAAAR4BACYAIR8BAAAAASABACYAISIAACciIiNAACgAISRAACgAIQEAAAABACABAAAAAQAgChoAACUAMBsAAAQAEBwAACUAMB0BACYAIR4BACYAIR8BACYAISABACYAISIAACciIiNAACgAISRAACgAIQADAAAABAAgAwAABQAwBAAAAQAgAwAAAAQAIAMAAAUAMAQAAAEAIAMAAAAEACADAAAFADAEAAABACAHHQEAAAABHgEAAAABHwEAAAABIAEAAAABIgAAACICI0AAAAABJEAAAAABAQgAAAkAIAcdAQAAAAEeAQAAAAEfAQAAAAEgAQAAAAEiAAAAIgIjQAAAAAEkQAAAAAEBCAAACwAwAQgAAAsAMAcdAQAsACEeAQAsACEfAQAsACEgAQAsACEiAAAtIiIjQAAuACEkQAAuACECAAAAAQAgCAAADgAgBx0BACwAIR4BACwAIR8BACwAISABACwAISIAAC0iIiNAAC4AISRAAC4AIQIAAAAEACAIAAAQACACAAAABAAgCAAAEAAgAwAAAAEAIA8AAAkAIBAAAA4AIAEAAAABACABAAAABAAgAxUAACkAIBYAACsAIBcAACoAIAoaAAAaADAbAAAXABAcAAAaADAdAQAbACEeAQAbACEfAQAbACEgAQAbACEiAAAcIiIjQAAdACEkQAAdACEDAAAABAAgAwAAFgAwFAAAFwAgAwAAAAQAIAMAAAUAMAQAAAEAIAoaAAAaADAbAAAXABAcAAAaADAdAQAbACEeAQAbACEfAQAbACEgAQAbACEiAAAcIiIjQAAdACEkQAAdACEOFQAAHwAgFgAAJAAgFwAAJAAgJQEAAAABJgEAAAAEJwEAAAAEKAEAAAABKQEAAAABKgEAAAABKwEAAAABLAEAIwAhLQEAAAABLgEAAAABLwEAAAABBxUAAB8AIBYAACIAIBcAACIAICUAAAAiAiYAAAAiCCcAAAAiCCwAACEiIgsVAAAfACAWAAAgACAXAAAgACAlQAAAAAEmQAAAAAQnQAAAAAQoQAAAAAEpQAAAAAEqQAAAAAErQAAAAAEsQAAeACELFQAAHwAgFgAAIAAgFwAAIAAgJUAAAAABJkAAAAAEJ0AAAAAEKEAAAAABKUAAAAABKkAAAAABK0AAAAABLEAAHgAhCCUCAAAAASYCAAAABCcCAAAABCgCAAAAASkCAAAAASoCAAAAASsCAAAAASwCAB8AIQglQAAAAAEmQAAAAAQnQAAAAAQoQAAAAAEpQAAAAAEqQAAAAAErQAAAAAEsQAAgACEHFQAAHwAgFgAAIgAgFwAAIgAgJQAAACICJgAAACIIJwAAACIILAAAISIiBCUAAAAiAiYAAAAiCCcAAAAiCCwAACIiIg4VAAAfACAWAAAkACAXAAAkACAlAQAAAAEmAQAAAAQnAQAAAAQoAQAAAAEpAQAAAAEqAQAAAAErAQAAAAEsAQAjACEtAQAAAAEuAQAAAAEvAQAAAAELJQEAAAABJgEAAAAEJwEAAAAEKAEAAAABKQEAAAABKgEAAAABKwEAAAABLAEAJAAhLQEAAAABLgEAAAABLwEAAAABChoAACUAMBsAAAQAEBwAACUAMB0BACYAIR4BACYAIR8BACYAISABACYAISIAACciIiNAACgAISRAACgAIQslAQAAAAEmAQAAAAQnAQAAAAQoAQAAAAEpAQAAAAEqAQAAAAErAQAAAAEsAQAkACEtAQAAAAEuAQAAAAEvAQAAAAEEJQAAACICJgAAACIIJwAAACIILAAAIiIiCCVAAAAAASZAAAAABCdAAAAABChAAAAAASlAAAAAASpAAAAAAStAAAAAASxAACAAIQAAAAEwAQAAAAEBMAAAACICATBAAAAAAQAAAAADFQAGFgAHFwAIAAAAAxUABhYABxcACAECAQIDAQUGAQYHAQcIAQkKAQoMAgsNAwwPAQ0RAg4SBBETARIUARMVAhgYBRkZCQ',
+    strings: JSON.parse("[\"where\",\"User.findUnique\",\"User.findUniqueOrThrow\",\"orderBy\",\"cursor\",\"User.findFirst\",\"User.findFirstOrThrow\",\"User.findMany\",\"data\",\"User.createOne\",\"User.createMany\",\"User.createManyAndReturn\",\"User.updateOne\",\"User.updateMany\",\"User.updateManyAndReturn\",\"create\",\"update\",\"User.upsertOne\",\"User.deleteOne\",\"User.deleteMany\",\"having\",\"_count\",\"_min\",\"_max\",\"User.groupBy\",\"User.aggregate\",\"AND\",\"OR\",\"NOT\",\"id\",\"name\",\"email\",\"password\",\"Role\",\"role\",\"createdAt\",\"updatedAt\",\"equals\",\"in\",\"notIn\",\"lt\",\"lte\",\"gt\",\"gte\",\"not\",\"contains\",\"startsWith\",\"endsWith\",\"set\"]"),
+    graph: "LgkQChoAACUAMBsAAAQAEBwAACUAMB0BAAAAAR4BACYAIR8BAAAAASABACYAISIAACciIiNAACgAISRAACgAIQEAAAABACABAAAAAQAgChoAACUAMBsAAAQAEBwAACUAMB0BACYAIR4BACYAIR8BACYAISABACYAISIAACciIiNAACgAISRAACgAIQADAAAABAAgAwAABQAwBAAAAQAgAwAAAAQAIAMAAAUAMAQAAAEAIAMAAAAEACADAAAFADAEAAABACAHHQEAAAABHgEAAAABHwEAAAABIAEAAAABIgAAACICI0AAAAABJEAAAAABAQgAAAkAIAcdAQAAAAEeAQAAAAEfAQAAAAEgAQAAAAEiAAAAIgIjQAAAAAEkQAAAAAEBCAAACwAwAQgAAAsAMAcdAQAsACEeAQAsACEfAQAsACEgAQAsACEiAAAtIiIjQAAuACEkQAAuACECAAAAAQAgCAAADgAgBx0BACwAIR4BACwAIR8BACwAISABACwAISIAAC0iIiNAAC4AISRAAC4AIQIAAAAEACAIAAAQACACAAAABAAgCAAAEAAgAwAAAAEAIA8AAAkAIBAAAA4AIAEAAAABACABAAAABAAgAxUAACkAIBYAACsAIBcAACoAIAoaAAAaADAbAAAXABAcAAAaADAdAQAbACEeAQAbACEfAQAbACEgAQAbACEiAAAcIiIjQAAdACEkQAAdACEDAAAABAAgAwAAFgAwFAAAFwAgAwAAAAQAIAMAAAUAMAQAAAEAIAoaAAAaADAbAAAXABAcAAAaADAdAQAbACEeAQAbACEfAQAbACEgAQAbACEiAAAcIiIjQAAdACEkQAAdACEOFQAAHwAgFgAAJAAgFwAAJAAgJQEAAAABJgEAAAAEJwEAAAAEKAEAAAABKQEAAAABKgEAAAABKwEAAAABLAEAIwAhLQEAAAABLgEAAAABLwEAAAABBxUAAB8AIBYAACIAIBcAACIAICUAAAAiAiYAAAAiCCcAAAAiCCwAACEiIgsVAAAfACAWAAAgACAXAAAgACAlQAAAAAEmQAAAAAQnQAAAAAQoQAAAAAEpQAAAAAEqQAAAAAErQAAAAAEsQAAeACELFQAAHwAgFgAAIAAgFwAAIAAgJUAAAAABJkAAAAAEJ0AAAAAEKEAAAAABKUAAAAABKkAAAAABK0AAAAABLEAAHgAhCCUCAAAAASYCAAAABCcCAAAABCgCAAAAASkCAAAAASoCAAAAASsCAAAAASwCAB8AIQglQAAAAAEmQAAAAAQnQAAAAAQoQAAAAAEpQAAAAAEqQAAAAAErQAAAAAEsQAAgACEHFQAAHwAgFgAAIgAgFwAAIgAgJQAAACICJgAAACIIJwAAACIILAAAISIiBCUAAAAiAiYAAAAiCCcAAAAiCCwAACIiIg4VAAAfACAWAAAkACAXAAAkACAlAQAAAAEmAQAAAAQnAQAAAAQoAQAAAAEpAQAAAAEqAQAAAAErAQAAAAEsAQAjACEtAQAAAAEuAQAAAAEvAQAAAAELJQEAAAABJgEAAAAEJwEAAAAEKAEAAAABKQEAAAABKgEAAAABKwEAAAABLAEAJAAhLQEAAAABLgEAAAABLwEAAAABChoAACUAMBsAAAQAEBwAACUAMB0BACYAIR4BACYAIR8BACYAISABACYAISIAACciIiNAACgAISRAACgAIQslAQAAAAEmAQAAAAQnAQAAAAQoAQAAAAEpAQAAAAEqAQAAAAErAQAAAAEsAQAkACEtAQAAAAEuAQAAAAEvAQAAAAEEJQAAACICJgAAACIIJwAAACIILAAAIiIiCCVAAAAAASZAAAAABCdAAAAABChAAAAAASlAAAAAASpAAAAAAStAAAAAASxAACAAIQAAAAEwAQAAAAEBMAAAACICATBAAAAAAQAAAAADFQAGFgAHFwAIAAAAAxUABhYABxcACAECAQIDAQUGAQYHAQcIAQkKAQoMAgsNAwwPAQ0RAg4SBBETARIUARMVAhgYBRkZCQ"
 };
 async function decodeBase64AsWasm(wasmBase64) {
     const { Buffer } = await import('node:buffer');
@@ -62,12 +62,12 @@ async function decodeBase64AsWasm(wasmBase64) {
     return new WebAssembly.Module(wasmArray);
 }
 config.compilerWasm = {
-    getRuntime: async () => await import('@prisma/client/runtime/query_compiler_fast_bg.postgresql.js'),
+    getRuntime: async () => await import("@prisma/client/runtime/query_compiler_fast_bg.postgresql.js"),
     getQueryCompilerWasmModule: async () => {
-        const { wasm } = await import('@prisma/client/runtime/query_compiler_fast_bg.postgresql.wasm-base64.js');
+        const { wasm } = await import("@prisma/client/runtime/query_compiler_fast_bg.postgresql.wasm-base64.js");
         return await decodeBase64AsWasm(wasm);
     },
-    importName: './query_compiler_fast_bg.js',
+    importName: "./query_compiler_fast_bg.js"
 };
 function getPrismaClientClass() {
     return runtime.getPrismaClient(config);

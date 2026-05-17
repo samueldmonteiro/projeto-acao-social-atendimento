@@ -1,11 +1,11 @@
-import * as runtime from '@prisma/client/runtime/index-browser';
+import * as runtime from "@prisma/client/runtime/index-browser";
 export type * from '../models.js';
 export type * from './prismaNamespace.js';
 export declare const Decimal: typeof runtime.Decimal;
 export declare const NullTypes: {
-    DbNull: new (secret: never) => typeof runtime.DbNull;
-    JsonNull: new (secret: never) => typeof runtime.JsonNull;
-    AnyNull: new (secret: never) => typeof runtime.AnyNull;
+    DbNull: (new (secret: never) => typeof runtime.DbNull);
+    JsonNull: (new (secret: never) => typeof runtime.JsonNull);
+    AnyNull: (new (secret: never) => typeof runtime.AnyNull);
 };
 export declare const DbNull: import("@prisma/client-runtime-utils").DbNullClass;
 export declare const JsonNull: import("@prisma/client-runtime-utils").JsonNullClass;

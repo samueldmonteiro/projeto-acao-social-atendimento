@@ -1,6 +1,8 @@
 import { JwtService } from '@nestjs/jwt';
+import { UserSafe } from "../types/user.type";
 export interface SignInResponse {
     accessToken: string;
+    user: UserSafe;
 }
 export interface SigninRequest {
     email: string;
