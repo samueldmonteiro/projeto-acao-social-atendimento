@@ -1,14 +1,14 @@
 import 'dotenv/config';
 import { Module } from '@nestjs/common';
-import { AppController } from '@/controllers/app.controller';
+import { AppController } from '@/http/controllers/app.controller';
 import { AppService } from '@/services/app.service';
-import { UserController } from '@/controllers/user.controller';
+import { UserController } from '@/http/controllers/user.controller';
 import { UserService } from '@/services/user.service';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { AuthService } from '@/services/auth.service';
 import { JwtModule } from '@nestjs/jwt';
 import { PassportModule } from '@nestjs/passport';
-import { AuthController } from '@/controllers/auth.controller';
+import { AuthController } from '@/http/controllers/auth.controller';
 import { JwtGuard } from '@/auth/jwt.guard';
 import { JwtStrategy } from '@/auth/jwt.strategy';
 
@@ -29,4 +29,4 @@ import { JwtStrategy } from '@/auth/jwt.strategy';
   controllers: [AppController, UserController, AuthController],
   providers: [AppService, UserService, AuthService, JwtGuard, JwtStrategy],
 })
-export class AppModule {}
+export class AppModule { }

@@ -9,15 +9,15 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.AppModule = void 0;
 require("dotenv/config");
 const common_1 = require("@nestjs/common");
-const app_controller_1 = require("./controllers/app.controller");
+const app_controller_1 = require("./http/controllers/app.controller");
 const app_service_1 = require("./services/app.service");
-const user_controller_1 = require("./controllers/user.controller");
+const user_controller_1 = require("./http/controllers/user.controller");
 const user_service_1 = require("./services/user.service");
 const config_1 = require("@nestjs/config");
 const auth_service_1 = require("./services/auth.service");
 const jwt_1 = require("@nestjs/jwt");
 const passport_1 = require("@nestjs/passport");
-const auth_controller_1 = require("./controllers/auth.controller");
+const auth_controller_1 = require("./http/controllers/auth.controller");
 const jwt_guard_1 = require("./auth/jwt.guard");
 const jwt_strategy_1 = require("./auth/jwt.strategy");
 let AppModule = class AppModule {
@@ -34,7 +34,7 @@ exports.AppModule = AppModule = __decorate([
                 inject: [config_1.ConfigService],
                 useFactory: () => ({
                     secret: process.env.JWT_TOKEN,
-                    signOptions: { expiresIn: '1min' },
+                    signOptions: { expiresIn: '7d' },
                 }),
             }),
         ],

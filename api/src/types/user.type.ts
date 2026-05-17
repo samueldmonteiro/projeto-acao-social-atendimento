@@ -7,14 +7,8 @@ export type UserSafe = {
   role: Role;
   createdAt: Date;
   updatedAt: Date;
-}
-
-export type UserLogin = {
-  email: string;
-  password: string;
-}
-
+};
 export type UserPayload = {
-  sub:string,
-  username:string
-}
+  sub: string;
+  username: string;
+};

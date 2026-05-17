@@ -48,8 +48,8 @@ exports.Sql = runtime.Sql;
 exports.Decimal = runtime.Decimal;
 exports.getExtensionContext = runtime.Extensions.getExtensionContext;
 exports.prismaVersion = {
-    client: "7.8.0",
-    engine: "3c6e192761c0362d496ed980de936e2f3cebcd3a"
+    client: '7.8.0',
+    engine: '3c6e192761c0362d496ed980de936e2f3cebcd3a',
 };
 exports.NullTypes = {
     DbNull: runtime.NullTypes.DbNull,
@@ -60,13 +60,13 @@ exports.DbNull = runtime.DbNull;
 exports.JsonNull = runtime.JsonNull;
 exports.AnyNull = runtime.AnyNull;
 exports.ModelName = {
-    User: 'User'
+    User: 'User',
 };
 exports.TransactionIsolationLevel = runtime.makeStrictEnum({
     ReadUncommitted: 'ReadUncommitted',
     ReadCommitted: 'ReadCommitted',
     RepeatableRead: 'RepeatableRead',
-    Serializable: 'Serializable'
+    Serializable: 'Serializable',
 });
 exports.UserScalarFieldEnum = {
     id: 'id',
@@ -75,15 +75,16 @@ exports.UserScalarFieldEnum = {
     password: 'password',
     role: 'role',
     createdAt: 'createdAt',
-    updatedAt: 'updatedAt'
+    updatedAt: 'updatedAt',
 };
 exports.SortOrder = {
     asc: 'asc',
-    desc: 'desc'
+    desc: 'desc',
 };
 exports.QueryMode = {
     default: 'default',
-    insensitive: 'insensitive'
+    insensitive: 'insensitive',
 };
-exports.defineExtension = runtime.Extensions.defineExtension;
+exports.defineExtension = runtime.Extensions
+    .defineExtension;
 //# sourceMappingURL=prismaNamespace.js.map

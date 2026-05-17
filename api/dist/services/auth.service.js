@@ -47,21 +47,21 @@ const common_1 = require("@nestjs/common");
 const jwt_1 = require("@nestjs/jwt");
 const prisma_1 = require("../lib/prisma");
 const argon2 = __importStar(require("argon2"));
+const login_incorrect_error_1 = require("../errors/login-incorrect.error");
 let AuthService = class AuthService {
     jwtService;
     constructor(jwtService) {
         this.jwtService = jwtService;
     }
-    ;
     async signin(signin) {
         const user = await prisma_1.prisma.user.findFirst({
             where: { email: signin.email },
         });
         if (!user)
-            throw new common_1.UnauthorizedException('Invalid credentials');
+            throw new login_incorrect_error_1.LoginIncorrectError();
         const compare = await argon2.verify(user.password, signin.password);
         if (!compare)
-            throw new common_1.UnauthorizedException('Invalid password');
+            throw new login_incorrect_error_1.LoginIncorrectError();
         const payload = { username: String(user.email), sub: String(user.id) };
         return { accessToken: this.jwtService.sign(payload) };
     }

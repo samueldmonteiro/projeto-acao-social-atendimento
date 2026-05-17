@@ -1,6 +1,6 @@
-import * as runtime from "@prisma/client/runtime/client";
-import type * as Prisma from "../models.js";
-import { type PrismaClient } from "./class.js";
+import * as runtime from '@prisma/client/runtime/client';
+import type * as Prisma from '../models.js';
+import { type PrismaClient } from './class.js';
 export type * from '../models.js';
 export type DMMF = typeof runtime.DMMF;
 export type PrismaPromise<T> = runtime.Types.Public.PrismaPromise<T>;
@@ -42,9 +42,9 @@ export type InputJsonObject = runtime.InputJsonObject;
 export type InputJsonArray = runtime.InputJsonArray;
 export type InputJsonValue = runtime.InputJsonValue;
 export declare const NullTypes: {
-    DbNull: (new (secret: never) => typeof runtime.DbNull);
-    JsonNull: (new (secret: never) => typeof runtime.JsonNull);
-    AnyNull: (new (secret: never) => typeof runtime.AnyNull);
+    DbNull: new (secret: never) => typeof runtime.DbNull;
+    JsonNull: new (secret: never) => typeof runtime.JsonNull;
+    AnyNull: new (secret: never) => typeof runtime.AnyNull;
 };
 export declare const DbNull: runtime.DbNullClass;
 export declare const JsonNull: runtime.JsonNullClass;
@@ -116,9 +116,9 @@ type _Record<K extends keyof any, T> = {
 type NoExpand<T> = T extends unknown ? T : never;
 export type AtLeast<O extends object, K extends string> = NoExpand<O extends unknown ? (K extends keyof O ? {
     [P in K]: O[P];
-} & O : O) | {
+} & O : O) | ({
     [P in keyof O as P extends K ? P : never]-?: O[P];
-} & O : never>;
+} & O) : never>;
 type _Strict<U, _U = U> = U extends unknown ? U & OptionalFlat<_Record<Exclude<Keys<_U>, keyof U>, never>> : never;
 export type Strict<U extends object> = ComputeRaw<_Strict<U>>;
 export type Merge<U extends object> = ComputeRaw<_Merge<Strict<U>>>;
@@ -160,7 +160,8 @@ export declare const ModelName: {
     readonly User: "User";
 };
 export type ModelName = (typeof ModelName)[keyof typeof ModelName];
-export interface TypeMapCb<GlobalOmitOptions = {}> extends runtime.Types.Utils.Fn<{
+export interface TypeMapCb<GlobalOmitOptions = {}> extends runtime.Types.Utils
+    .Fn<{
     extArgs: runtime.Types.Extensions.InternalArgs;
 }, runtime.Types.Utils.Record<string, any>> {
     returns: TypeMap<this['params']['extArgs'], GlobalOmitOptions>;
@@ -170,7 +171,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         omit: GlobalOmitOptions;
     };
     meta: {
-        modelProps: "user";
+        modelProps: 'user';
         txIsolationLevel: TransactionIsolationLevel;
     };
     model: {
