@@ -20,6 +20,8 @@ const passport_1 = require("@nestjs/passport");
 const auth_controller_1 = require("./http/controllers/auth.controller");
 const jwt_guard_1 = require("./auth/jwt.guard");
 const jwt_strategy_1 = require("./auth/jwt.strategy");
+const service_category_controller_1 = require("./http/controllers/service-category.controller");
+const service_category_service_1 = require("./services/service-category.service");
 let AppModule = class AppModule {
 };
 exports.AppModule = AppModule;
@@ -38,8 +40,8 @@ exports.AppModule = AppModule = __decorate([
                 }),
             }),
         ],
-        controllers: [app_controller_1.AppController, user_controller_1.UserController, auth_controller_1.AuthController],
-        providers: [app_service_1.AppService, user_service_1.UserService, auth_service_1.AuthService, jwt_guard_1.JwtGuard, jwt_strategy_1.JwtStrategy],
+        controllers: [app_controller_1.AppController, user_controller_1.UserController, auth_controller_1.AuthController, service_category_controller_1.ServiceCategoryController],
+        providers: [app_service_1.AppService, user_service_1.UserService, auth_service_1.AuthService, jwt_guard_1.JwtGuard, jwt_strategy_1.JwtStrategy, service_category_service_1.ServiceCategoryService],
     })
 ], AppModule);
 //# sourceMappingURL=app.module.js.map

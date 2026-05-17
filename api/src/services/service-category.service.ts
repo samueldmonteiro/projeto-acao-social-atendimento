@@ -1,0 +1,90 @@
+import { Injectable } from '@nestjs/common';
+import { prisma } from '@/lib/prisma';
+import { CreateServiceCategoryDto, UpdateServiceCategoryDto } from '@/http/dtos/service-category.dto';
+import { ServiceCategoryNotFoundError } from '@/errors/service-category-not-found.error';
+import { ServiceCategoryAlreadyExistsError } from '@/errors/service-category-already-exists.error';
+
+@Injectable()
+export class ServiceCategoryService {
+  async create(data: CreateServiceCategoryDto) {
+    const exists = await prisma.serviceCategory.findUnique({
+      where: { name: data.name },
+    });
+    
+    if (exists) {
+      throw new ServiceCategoryAlreadyExistsError();
+    }
+
+    return await prisma.serviceCategory.create({
+      data,
+    });
+  }
+
+  async update(id: string, data: UpdateServiceCategoryDto) {
+    const category = await prisma.serviceCategory.findUnique({
+      where: { id },
+    });
+
+    if (!category) {
+      throw new ServiceCategoryNotFoundError();
+    }
+
+    if (data.name && data.name !== category.name) {
+      const exists = await prisma.serviceCategory.findUnique({
+        where: { name: data.name },
+      });
+
+      if (exists) {
+        throw new ServiceCategoryAlreadyExistsError();
+      }
+    }
+
+    return await prisma.serviceCategory.update({
+      where: { id },
+      data,
+    });
+  }
+
+  async delete(id: string) {
+    const category = await prisma.serviceCategory.findUnique({
+      where: { id },
+    });
+
+    if (!category) {
+      throw new ServiceCategoryNotFoundError();
+    }
+
+    await prisma.serviceCategory.delete({
+      where: { id },
+    });
+  }
+
+  async findById(id: string) {
+    const category = await prisma.serviceCategory.findUnique({
+      where: { id },
+    });
+
+    if (!category) {
+      throw new ServiceCategoryNotFoundError();
+    }
+
+    return category;
+  }
+
+  async findMany(search?: string) {
+    return await prisma.serviceCategory.findMany({
+      where: search
+        ? {
+          name: {
+            contains: search,
+            mode: 'insensitive',
+          },
+        }
+        : undefined,
+      orderBy: {
+        name: 'asc',
+      },
+    });
+  }
+}
+
