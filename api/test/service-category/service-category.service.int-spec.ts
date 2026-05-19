@@ -78,7 +78,7 @@ describe('ServiceCategoryService Integration', () => {
       });
       const cat2 = await prisma.serviceCategory.create({
         data: { name: 'Saúde' },
-      });
+      }); 
 
       await expect(
         service.update(cat2.id, { name: 'Educação' }),

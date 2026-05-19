@@ -1,0 +1,1 @@
+{"version":3,"file":"beneficiary-not-found.error.js","sourceRoot":"","sources":["../../src/errors/beneficiary-not-found.error.ts"],"names":[],"mappings":";;;AAAA,iDAA6C;AAE7C,MAAa,wBAAyB,SAAQ,0BAAW;IAC9C,UAAU,GAAG,GAAG,CAAC;IAC1B,YAAY,OAAO,GAAG,6BAA6B;QACjD,KAAK,CAAC,OAAO,CAAC,CAAC;IACjB,CAAC;CACF;AALD,4DAKC"}

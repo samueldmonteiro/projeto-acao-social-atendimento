@@ -13,6 +13,8 @@ import { JwtGuard } from '@/auth/jwt.guard';
 import { JwtStrategy } from '@/auth/jwt.strategy';
 import { ServiceCategoryController } from '@/http/controllers/service-category.controller';
 import { ServiceCategoryService } from '@/services/service-category.service';
+import { BeneficiaryController } from '@/http/controllers/beneficiary.controller';
+import { BeneficiaryService } from '@/services/beneficiary.service';
 
 @Module({
   imports: [
@@ -28,8 +30,22 @@ import { ServiceCategoryService } from '@/services/service-category.service';
       }),
     }),
   ],
-  controllers: [AppController, UserController, AuthController, ServiceCategoryController],
-  providers: [AppService, UserService, AuthService, JwtGuard, JwtStrategy, ServiceCategoryService],
+  controllers: [
+    AppController,
+    UserController,
+    AuthController,
+    ServiceCategoryController,
+    BeneficiaryController,
+  ],
+  providers: [
+    AppService,
+    UserService,
+    ServiceCategoryService,
+    BeneficiaryService,
+    AuthService,
+    JwtGuard,
+    JwtStrategy,
+  ],
 })
 export class AppModule { }
 

@@ -4,9 +4,11 @@ import request from 'supertest';
 import { prisma } from '@/lib/prisma';
 import { AppModule } from '@/app.module';
 import { HttpExceptionFilter } from '@/http/filters/http-exception.filter';
+import { JwtService } from '@nestjs/jwt';
 
 describe('ServiceCategoryController (e2e)', () => {
   let app: INestApplication;
+  let accessToken: string;
 
   beforeAll(async () => {
     const moduleFixture: TestingModule = await Test.createTestingModule({
@@ -22,9 +24,21 @@ describe('ServiceCategoryController (e2e)', () => {
       }),
     );
     await app.init();
+
+    const jwtService = moduleFixture.get<JwtService>(JwtService);
+    await prisma.user.deleteMany();
+    const user = await prisma.user.create({
+      data: {
+        email: 'e2e@test.com',
+        password: 'password_hash',
+        name: 'E2E User',
+      },
+    });
+    accessToken = jwtService.sign({ username: user.email, sub: user.id });
   });
 
   afterAll(async () => {
+    await prisma.user.deleteMany();
     await app.close();
   });
 
@@ -33,10 +47,19 @@ describe('ServiceCategoryController (e2e)', () => {
     await prisma.serviceCategory.deleteMany();
   });
 
+  describe('Unauthorized access', () => {
+    it('should return 401 when token is missing', async () => {
+      await request(app.getHttpServer())
+        .get('/categories')
+        .expect(401);
+    });
+  });
+
   describe('POST /categories', () => {
     it('should create a service category successfully', async () => {
       const response = await request(app.getHttpServer())
         .post('/categories')
+        .set('Authorization', `Bearer ${accessToken}`)
         .send({ name: 'Esportes' })
         .expect(201);
 
@@ -59,6 +82,7 @@ describe('ServiceCategoryController (e2e)', () => {
     it('should return 400 when validation fails (empty name)', async () => {
       const response = await request(app.getHttpServer())
         .post('/categories')
+        .set('Authorization', `Bearer ${accessToken}`)
         .send({ name: '' })
         .expect(400);
 
@@ -70,6 +94,7 @@ describe('ServiceCategoryController (e2e)', () => {
     it('should return 400 when name is too short', async () => {
       const response = await request(app.getHttpServer())
         .post('/categories')
+        .set('Authorization', `Bearer ${accessToken}`)
         .send({ name: 'A' })
         .expect(400);
 
@@ -85,6 +110,7 @@ describe('ServiceCategoryController (e2e)', () => {
 
       const response = await request(app.getHttpServer())
         .post('/categories')
+        .set('Authorization', `Bearer ${accessToken}`)
         .send({ name: 'Esportes' })
         .expect(409);
 
@@ -106,6 +132,7 @@ describe('ServiceCategoryController (e2e)', () => {
 
       const response = await request(app.getHttpServer())
         .get('/categories')
+        .set('Authorization', `Bearer ${accessToken}`)
         .expect(200);
 
       expect(response.body.ok).toBe(true);
@@ -122,6 +149,7 @@ describe('ServiceCategoryController (e2e)', () => {
 
       const response = await request(app.getHttpServer())
         .get('/categories')
+        .set('Authorization', `Bearer ${accessToken}`)
         .query({ search: 'saúde' })
         .expect(200);
 
@@ -140,6 +168,7 @@ describe('ServiceCategoryController (e2e)', () => {
 
       const response = await request(app.getHttpServer())
         .get(`/categories/${category.id}`)
+        .set('Authorization', `Bearer ${accessToken}`)
         .expect(200);
 
       expect(response.body).toEqual({
@@ -158,6 +187,7 @@ describe('ServiceCategoryController (e2e)', () => {
     it('should return 404 if the category does not exist', async () => {
       const response = await request(app.getHttpServer())
         .get('/categories/non-existent-id')
+        .set('Authorization', `Bearer ${accessToken}`)
         .expect(404);
 
       expect(response.body.ok).toBe(false);
@@ -165,14 +195,15 @@ describe('ServiceCategoryController (e2e)', () => {
     });
   });
 
-  describe('PUT /categories/:id', () => {
+  describe('PATCH /categories/:id', () => {
     it('should update a service category successfully', async () => {
       const category = await prisma.serviceCategory.create({
         data: { name: 'Educação' },
       });
 
       const response = await request(app.getHttpServer())
-        .put(`/categories/${category.id}`)
+        .patch(`/categories/${category.id}`)
+        .set('Authorization', `Bearer ${accessToken}`)
         .send({ name: 'Educação e Cultura' })
         .expect(200);
 
@@ -201,7 +232,8 @@ describe('ServiceCategoryController (e2e)', () => {
       });
 
       const response = await request(app.getHttpServer())
-        .put(`/categories/${cat2.id}`)
+        .patch(`/categories/${cat2.id}`)
+        .set('Authorization', `Bearer ${accessToken}`)
         .send({ name: 'Educação' })
         .expect(409);
 
@@ -211,7 +243,8 @@ describe('ServiceCategoryController (e2e)', () => {
 
     it('should return 404 if the category to update is not found', async () => {
       const response = await request(app.getHttpServer())
-        .put('/categories/non-existent-id')
+        .patch('/categories/non-existent-id')
+        .set('Authorization', `Bearer ${accessToken}`)
         .send({ name: 'Inovação' })
         .expect(404);
 
@@ -228,6 +261,7 @@ describe('ServiceCategoryController (e2e)', () => {
 
       const response = await request(app.getHttpServer())
         .delete(`/categories/${category.id}`)
+        .set('Authorization', `Bearer ${accessToken}`)
         .expect(200);
 
       expect(response.body).toEqual({
@@ -246,6 +280,7 @@ describe('ServiceCategoryController (e2e)', () => {
     it('should return 404 if the category to delete is not found', async () => {
       const response = await request(app.getHttpServer())
         .delete('/categories/non-existent-id')
+        .set('Authorization', `Bearer ${accessToken}`)
         .expect(404);
 
       expect(response.body.ok).toBe(false);

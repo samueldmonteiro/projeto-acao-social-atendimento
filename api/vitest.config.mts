@@ -29,6 +29,7 @@ export default defineConfig({
   plugins: [swcPlugin],
 
   test: {
+   
     globals: true,
     environment: 'node',
 

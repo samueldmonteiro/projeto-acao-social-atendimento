@@ -1,8 +1,10 @@
-import { Body, Controller, Delete, Get, Param, Post, Put, Query } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Patch, Post, Query, UseGuards } from '@nestjs/common';
 import { BaseController, ApiResponse } from './base.controller';
 import { ServiceCategoryService } from '@/services/service-category.service';
 import { CreateServiceCategoryDto, UpdateServiceCategoryDto } from '../dtos/service-category.dto';
+import { JwtGuard } from '@/auth/jwt.guard';
 
+@UseGuards(JwtGuard)
 @Controller('categories')
 export class ServiceCategoryController extends BaseController {
   constructor(private readonly serviceCategoryService: ServiceCategoryService) {
@@ -17,7 +19,7 @@ export class ServiceCategoryController extends BaseController {
     return this.created(data, 'Categoria de serviço criada com sucesso');
   }
 
-  @Put(':id')
+  @Patch(':id')
   async update(
     @Param('id') id: string,
     @Body() body: UpdateServiceCategoryDto,
