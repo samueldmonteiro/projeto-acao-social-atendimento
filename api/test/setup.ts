@@ -16,6 +16,7 @@ if (!process.env.DATABASE_URL) {
 const testSchema = `test_${randomUUID().replace(/-/g, '_')}`;
 
 const databaseURL = new URL(process.env.DATABASE_URL);
+
 databaseURL.searchParams.set('schema', testSchema);
 
 // Overwrite so Prisma (and any service instantiated inside tests) picks it up.

@@ -4,6 +4,7 @@ import { CreateBeneficiaryDto, UpdateBeneficiaryDto } from '@/http/dtos/benefici
 import { BeneficiaryNotFoundError } from '@/errors/beneficiary-not-found.error';
 import { BeneficiaryAlreadyExistsError } from '@/errors/beneficiary-already-exists.error';
 import { ServiceCategoryNotFoundError } from '@/errors/service-category-not-found.error';
+import { CategoryAlreadyLinkedError } from '@/errors/category-already-linked.error';
 
 @Injectable()
 export class BeneficiaryService {
@@ -94,7 +95,7 @@ export class BeneficiaryService {
       }
     }
 
-    // 4. Check if new Service Category exists (if provided)
+    // 4. Handle serviceCategoryId update
     if (data.serviceCategoryId) {
       const categoryExists = await prisma.serviceCategory.findUnique({
         where: { id: data.serviceCategoryId },
@@ -103,6 +104,17 @@ export class BeneficiaryService {
       if (!categoryExists) {
         throw new ServiceCategoryNotFoundError();
       }
+
+      await prisma.beneficiaryCategory.deleteMany({
+        where: { beneficiaryId: id },
+      });
+
+      await prisma.beneficiaryCategory.create({
+        data: {
+          beneficiaryId: id,
+          serviceCategoryId: data.serviceCategoryId,
+        },
+      });
     }
 
     // 5. Update beneficiary (PATCH style)
@@ -115,15 +127,6 @@ export class BeneficiaryService {
       gender: data.gender,
     };
 
-    if (data.serviceCategoryId) {
-      updateData.categories = {
-        deleteMany: {},
-        create: {
-          serviceCategoryId: data.serviceCategoryId,
-        },
-      };
-    }
-
     return await prisma.beneficiary.update({
       where: { id },
       data: updateData,
@@ -132,6 +135,79 @@ export class BeneficiaryService {
           select: {
             serviceCategoryId: true,
           },
+        },
+      },
+    });
+  }
+
+  async addCategory(id: string, serviceCategoryId: string) {
+    const beneficiary = await prisma.beneficiary.findUnique({
+      where: { id },
+    });
+
+    if (!beneficiary) {
+      throw new BeneficiaryNotFoundError();
+    }
+
+    const category = await prisma.serviceCategory.findUnique({
+      where: { id: serviceCategoryId },
+    });
+
+    if (!category) {
+      throw new ServiceCategoryNotFoundError();
+    }
+
+    const existing = await prisma.beneficiaryCategory.findUnique({
+      where: {
+        beneficiaryId_serviceCategoryId: {
+          beneficiaryId: id,
+          serviceCategoryId,
+        },
+      },
+    });
+
+    if (existing) {
+      throw new CategoryAlreadyLinkedError();
+    }
+
+    return await prisma.beneficiaryCategory.create({
+      data: {
+        beneficiaryId: id,
+        serviceCategoryId,
+      },
+      include: {
+        serviceCategory: true,
+      },
+    });
+  }
+
+  async removeCategory(id: string, serviceCategoryId: string) {
+    const beneficiary = await prisma.beneficiary.findUnique({
+      where: { id },
+    });
+
+    if (!beneficiary) {
+      throw new BeneficiaryNotFoundError();
+    }
+
+    const existing = await prisma.beneficiaryCategory.findUnique({
+      where: {
+        beneficiaryId_serviceCategoryId: {
+          beneficiaryId: id,
+          serviceCategoryId,
+        },
+      },
+    });
+
+    if (!existing) {
+      throw new ServiceCategoryNotFoundError('Vínculo entre beneficiário e categoria não encontrado');
+    }
+
+    await prisma.beneficiaryCategory.delete({
+      where: {
+        beneficiaryId_serviceCategoryId: {
+          beneficiaryId: id,
+          serviceCategoryId,
         },
       },
     });

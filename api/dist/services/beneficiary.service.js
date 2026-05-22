@@ -12,6 +12,7 @@ const prisma_1 = require("../lib/prisma");
 const beneficiary_not_found_error_1 = require("../errors/beneficiary-not-found.error");
 const beneficiary_already_exists_error_1 = require("../errors/beneficiary-already-exists.error");
 const service_category_not_found_error_1 = require("../errors/service-category-not-found.error");
+const category_already_linked_error_1 = require("../errors/category-already-linked.error");
 let BeneficiaryService = class BeneficiaryService {
     async create(data) {
         const categoryExists = await prisma_1.prisma.serviceCategory.findUnique({
@@ -87,6 +88,15 @@ let BeneficiaryService = class BeneficiaryService {
             if (!categoryExists) {
                 throw new service_category_not_found_error_1.ServiceCategoryNotFoundError();
             }
+            await prisma_1.prisma.beneficiaryCategory.deleteMany({
+                where: { beneficiaryId: id },
+            });
+            await prisma_1.prisma.beneficiaryCategory.create({
+                data: {
+                    beneficiaryId: id,
+                    serviceCategoryId: data.serviceCategoryId,
+                },
+            });
         }
         const updateData = {
             fullName: data.fullName,
@@ -96,14 +106,6 @@ let BeneficiaryService = class BeneficiaryService {
             birthDate: data.birthDate ? new Date(data.birthDate) : undefined,
             gender: data.gender,
         };
-        if (data.serviceCategoryId) {
-            updateData.categories = {
-                deleteMany: {},
-                create: {
-                    serviceCategoryId: data.serviceCategoryId,
-                },
-            };
-        }
         return await prisma_1.prisma.beneficiary.update({
             where: { id },
             data: updateData,
@@ -112,6 +114,67 @@ let BeneficiaryService = class BeneficiaryService {
                     select: {
                         serviceCategoryId: true,
                     },
+                },
+            },
+        });
+    }
+    async addCategory(id, serviceCategoryId) {
+        const beneficiary = await prisma_1.prisma.beneficiary.findUnique({
+            where: { id },
+        });
+        if (!beneficiary) {
+            throw new beneficiary_not_found_error_1.BeneficiaryNotFoundError();
+        }
+        const category = await prisma_1.prisma.serviceCategory.findUnique({
+            where: { id: serviceCategoryId },
+        });
+        if (!category) {
+            throw new service_category_not_found_error_1.ServiceCategoryNotFoundError();
+        }
+        const existing = await prisma_1.prisma.beneficiaryCategory.findUnique({
+            where: {
+                beneficiaryId_serviceCategoryId: {
+                    beneficiaryId: id,
+                    serviceCategoryId,
+                },
+            },
+        });
+        if (existing) {
+            throw new category_already_linked_error_1.CategoryAlreadyLinkedError();
+        }
+        return await prisma_1.prisma.beneficiaryCategory.create({
+            data: {
+                beneficiaryId: id,
+                serviceCategoryId,
+            },
+            include: {
+                serviceCategory: true,
+            },
+        });
+    }
+    async removeCategory(id, serviceCategoryId) {
+        const beneficiary = await prisma_1.prisma.beneficiary.findUnique({
+            where: { id },
+        });
+        if (!beneficiary) {
+            throw new beneficiary_not_found_error_1.BeneficiaryNotFoundError();
+        }
+        const existing = await prisma_1.prisma.beneficiaryCategory.findUnique({
+            where: {
+                beneficiaryId_serviceCategoryId: {
+                    beneficiaryId: id,
+                    serviceCategoryId,
+                },
+            },
+        });
+        if (!existing) {
+            throw new service_category_not_found_error_1.ServiceCategoryNotFoundError('Vínculo entre beneficiário e categoria não encontrado');
+        }
+        await prisma_1.prisma.beneficiaryCategory.delete({
+            where: {
+                beneficiaryId_serviceCategoryId: {
+                    beneficiaryId: id,
+                    serviceCategoryId,
                 },
             },
         });

@@ -8,6 +8,9 @@ export declare class CreateBeneficiaryDto {
     gender: Gender;
     serviceCategoryId: string;
 }
+export declare class AddBeneficiaryCategoryDto {
+    serviceCategoryId: string;
+}
 export declare class UpdateBeneficiaryDto {
     fullName?: string;
     cpf?: string;

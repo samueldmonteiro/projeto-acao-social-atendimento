@@ -9,7 +9,7 @@ var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.UpdateBeneficiaryDto = exports.CreateBeneficiaryDto = void 0;
+exports.UpdateBeneficiaryDto = exports.AddBeneficiaryCategoryDto = exports.CreateBeneficiaryDto = void 0;
 const class_validator_1 = require("class-validator");
 const enums_1 = require("../../generated/prisma/enums");
 class CreateBeneficiaryDto {
@@ -58,6 +58,15 @@ __decorate([
     (0, class_validator_1.IsNotEmpty)({ message: 'O ID da categoria de serviço é obrigatório' }),
     __metadata("design:type", String)
 ], CreateBeneficiaryDto.prototype, "serviceCategoryId", void 0);
+class AddBeneficiaryCategoryDto {
+    serviceCategoryId;
+}
+exports.AddBeneficiaryCategoryDto = AddBeneficiaryCategoryDto;
+__decorate([
+    (0, class_validator_1.IsString)({ message: 'O ID da categoria de serviço deve ser uma string' }),
+    (0, class_validator_1.IsNotEmpty)({ message: 'O ID da categoria de serviço é obrigatório' }),
+    __metadata("design:type", String)
+], AddBeneficiaryCategoryDto.prototype, "serviceCategoryId", void 0);
 class UpdateBeneficiaryDto {
     fullName;
     cpf;

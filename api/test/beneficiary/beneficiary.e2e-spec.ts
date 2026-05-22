@@ -582,6 +582,197 @@ describe('BeneficiaryController (e2e)', () => {
     });
   });
 
+  describe('POST /beneficiaries/:id/categories', () => {
+    it('should link a category to an existing beneficiary', async () => {
+      const beneficiary = await prisma.beneficiary.create({
+        data: {
+          fullName: 'João Silva',
+          cpf: '12345678901',
+          birthDate: new Date('1995-05-15'),
+          gender: Gender.MALE,
+        },
+      });
+      const category = await prisma.serviceCategory.create({
+        data: { name: 'Saúde' },
+      });
+
+      const response = await request(app.getHttpServer())
+        .post(`/beneficiaries/${beneficiary.id}/categories`)
+        .set('Authorization', `Bearer ${accessToken}`)
+        .send({ serviceCategoryId: category.id })
+        .expect(201);
+
+      expect(response.body).toEqual({
+        code: 201,
+        ok: true,
+        message: 'Categoria vinculada ao beneficiário com sucesso',
+        data: expect.objectContaining({
+          beneficiaryId: beneficiary.id,
+          serviceCategoryId: category.id,
+        }),
+      });
+    });
+
+    it('should return 404 if beneficiary does not exist', async () => {
+      const category = await prisma.serviceCategory.create({
+        data: { name: 'Saúde' },
+      });
+
+      const response = await request(app.getHttpServer())
+        .post('/beneficiaries/non-existent-id/categories')
+        .set('Authorization', `Bearer ${accessToken}`)
+        .send({ serviceCategoryId: category.id })
+        .expect(404);
+
+      expect(response.body.ok).toBe(false);
+      expect(response.body.message).toBe('Beneficiário não encontrado');
+    });
+
+    it('should return 404 if category does not exist', async () => {
+      const beneficiary = await prisma.beneficiary.create({
+        data: {
+          fullName: 'João Silva',
+          cpf: '12345678901',
+          birthDate: new Date('1995-05-15'),
+          gender: Gender.MALE,
+        },
+      });
+
+      const response = await request(app.getHttpServer())
+        .post(`/beneficiaries/${beneficiary.id}/categories`)
+        .set('Authorization', `Bearer ${accessToken}`)
+        .send({ serviceCategoryId: 'non-existent-category' })
+        .expect(404);
+
+      expect(response.body.ok).toBe(false);
+      expect(response.body.message).toBe('Categoria de serviço não encontrada');
+    });
+
+    it('should return 409 if the link already exists', async () => {
+      const beneficiary = await prisma.beneficiary.create({
+        data: {
+          fullName: 'João Silva',
+          cpf: '12345678901',
+          birthDate: new Date('1995-05-15'),
+          gender: Gender.MALE,
+        },
+      });
+      const category = await prisma.serviceCategory.create({
+        data: { name: 'Saúde' },
+      });
+
+      await prisma.beneficiaryCategory.create({
+        data: {
+          beneficiaryId: beneficiary.id,
+          serviceCategoryId: category.id,
+        },
+      });
+
+      const response = await request(app.getHttpServer())
+        .post(`/beneficiaries/${beneficiary.id}/categories`)
+        .set('Authorization', `Bearer ${accessToken}`)
+        .send({ serviceCategoryId: category.id })
+        .expect(409);
+
+      expect(response.body.ok).toBe(false);
+      expect(response.body.message).toBe('Beneficiário já possui esta categoria vinculada');
+    });
+
+    it('should return 400 when serviceCategoryId is missing', async () => {
+      const beneficiary = await prisma.beneficiary.create({
+        data: {
+          fullName: 'João Silva',
+          cpf: '12345678901',
+          birthDate: new Date('1995-05-15'),
+          gender: Gender.MALE,
+        },
+      });
+
+      const response = await request(app.getHttpServer())
+        .post(`/beneficiaries/${beneficiary.id}/categories`)
+        .set('Authorization', `Bearer ${accessToken}`)
+        .send({})
+        .expect(400);
+
+      expect(response.body.ok).toBe(false);
+      expect(response.body.errors).toContain('O ID da categoria de serviço é obrigatório');
+    });
+  });
+
+  describe('DELETE /beneficiaries/:id/categories/:categoryId', () => {
+    it('should unlink a category from a beneficiary', async () => {
+      const beneficiary = await prisma.beneficiary.create({
+        data: {
+          fullName: 'João Silva',
+          cpf: '12345678901',
+          birthDate: new Date('1995-05-15'),
+          gender: Gender.MALE,
+        },
+      });
+      const category = await prisma.serviceCategory.create({
+        data: { name: 'Saúde' },
+      });
+
+      await prisma.beneficiaryCategory.create({
+        data: {
+          beneficiaryId: beneficiary.id,
+          serviceCategoryId: category.id,
+        },
+      });
+
+      const response = await request(app.getHttpServer())
+        .delete(`/beneficiaries/${beneficiary.id}/categories/${category.id}`)
+        .set('Authorization', `Bearer ${accessToken}`)
+        .expect(200);
+
+      expect(response.body).toEqual({
+        code: 200,
+        ok: true,
+        message: 'Categoria desvinculada do beneficiário com sucesso',
+        data: null,
+      });
+
+      const dbRelation = await prisma.beneficiaryCategory.findUnique({
+        where: {
+          beneficiaryId_serviceCategoryId: {
+            beneficiaryId: beneficiary.id,
+            serviceCategoryId: category.id,
+          },
+        },
+      });
+      expect(dbRelation).toBeNull();
+    });
+
+    it('should return 404 if beneficiary does not exist', async () => {
+      const response = await request(app.getHttpServer())
+        .delete('/beneficiaries/non-existent-id/categories/any-category')
+        .set('Authorization', `Bearer ${accessToken}`)
+        .expect(404);
+
+      expect(response.body.ok).toBe(false);
+      expect(response.body.message).toBe('Beneficiário não encontrado');
+    });
+
+    it('should return 404 if the link does not exist', async () => {
+      const beneficiary = await prisma.beneficiary.create({
+        data: {
+          fullName: 'João Silva',
+          cpf: '12345678901',
+          birthDate: new Date('1995-05-15'),
+          gender: Gender.MALE,
+        },
+      });
+
+      const response = await request(app.getHttpServer())
+        .delete(`/beneficiaries/${beneficiary.id}/categories/non-existent-link`)
+        .set('Authorization', `Bearer ${accessToken}`)
+        .expect(404);
+
+      expect(response.body.ok).toBe(false);
+      expect(response.body.message).toBe('Vínculo entre beneficiário e categoria não encontrado');
+    });
+  });
+
   describe('DELETE /beneficiaries/:id', () => {
     it('should delete a beneficiary successfully', async () => {
       const beneficiary = await prisma.beneficiary.create({

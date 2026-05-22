@@ -32,6 +32,12 @@ export class CreateBeneficiaryDto {
     serviceCategoryId!: string;
 }
 
+export class AddBeneficiaryCategoryDto {
+  @IsString({ message: 'O ID da categoria de serviço deve ser uma string' })
+  @IsNotEmpty({ message: 'O ID da categoria de serviço é obrigatório' })
+    serviceCategoryId!: string;
+}
+
 export class UpdateBeneficiaryDto {
   @IsString({ message: 'O nome deve ser uma string' })
   @MinLength(2, { message: 'O nome deve ter no mínimo 2 caracteres' })

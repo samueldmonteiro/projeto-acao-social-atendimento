@@ -5,6 +5,7 @@ import { AppModule } from '@/app.module';
 import { BeneficiaryNotFoundError } from '@/errors/beneficiary-not-found.error';
 import { BeneficiaryAlreadyExistsError } from '@/errors/beneficiary-already-exists.error';
 import { ServiceCategoryNotFoundError } from '@/errors/service-category-not-found.error';
+import { CategoryAlreadyLinkedError } from '@/errors/category-already-linked.error';
 import { Gender } from '@/generated/prisma/enums';
 
 describe('BeneficiaryService Integration', () => {
@@ -229,6 +230,143 @@ describe('BeneficiaryService Integration', () => {
       await expect(
         service.update(created1.id, { cpf: '98765432109' }),
       ).rejects.toThrow(BeneficiaryAlreadyExistsError);
+    });
+  });
+
+  describe('addCategory', () => {
+    it('should link a category to an existing beneficiary', async () => {
+      const beneficiary = await prisma.beneficiary.create({
+        data: {
+          fullName: 'João Silva',
+          cpf: '12345678901',
+          birthDate: new Date('1995-05-15'),
+          gender: Gender.MALE,
+        },
+      });
+      const category = await prisma.serviceCategory.create({
+        data: { name: 'Saúde' },
+      });
+
+      const result = await service.addCategory(beneficiary.id, category.id);
+
+      expect(result.beneficiaryId).toBe(beneficiary.id);
+      expect(result.serviceCategoryId).toBe(category.id);
+
+      const dbRelation = await prisma.beneficiaryCategory.findUnique({
+        where: {
+          beneficiaryId_serviceCategoryId: {
+            beneficiaryId: beneficiary.id,
+            serviceCategoryId: category.id,
+          },
+        },
+      });
+      expect(dbRelation).not.toBeNull();
+    });
+
+    it('should throw BeneficiaryNotFoundError if beneficiary does not exist', async () => {
+      const category = await prisma.serviceCategory.create({
+        data: { name: 'Saúde' },
+      });
+
+      await expect(
+        service.addCategory('non-existent-id', category.id),
+      ).rejects.toThrow(BeneficiaryNotFoundError);
+    });
+
+    it('should throw ServiceCategoryNotFoundError if category does not exist', async () => {
+      const beneficiary = await prisma.beneficiary.create({
+        data: {
+          fullName: 'João Silva',
+          cpf: '12345678901',
+          birthDate: new Date('1995-05-15'),
+          gender: Gender.MALE,
+        },
+      });
+
+      await expect(
+        service.addCategory(beneficiary.id, 'non-existent-category'),
+      ).rejects.toThrow(ServiceCategoryNotFoundError);
+    });
+
+    it('should throw CategoryAlreadyLinkedError if the link already exists', async () => {
+      const beneficiary = await prisma.beneficiary.create({
+        data: {
+          fullName: 'João Silva',
+          cpf: '12345678901',
+          birthDate: new Date('1995-05-15'),
+          gender: Gender.MALE,
+        },
+      });
+      const category = await prisma.serviceCategory.create({
+        data: { name: 'Saúde' },
+      });
+
+      await prisma.beneficiaryCategory.create({
+        data: {
+          beneficiaryId: beneficiary.id,
+          serviceCategoryId: category.id,
+        },
+      });
+
+      await expect(
+        service.addCategory(beneficiary.id, category.id),
+      ).rejects.toThrow(CategoryAlreadyLinkedError);
+    });
+  });
+
+  describe('removeCategory', () => {
+    it('should unlink a category from a beneficiary', async () => {
+      const beneficiary = await prisma.beneficiary.create({
+        data: {
+          fullName: 'João Silva',
+          cpf: '12345678901',
+          birthDate: new Date('1995-05-15'),
+          gender: Gender.MALE,
+        },
+      });
+      const category = await prisma.serviceCategory.create({
+        data: { name: 'Saúde' },
+      });
+
+      await prisma.beneficiaryCategory.create({
+        data: {
+          beneficiaryId: beneficiary.id,
+          serviceCategoryId: category.id,
+        },
+      });
+
+      await service.removeCategory(beneficiary.id, category.id);
+
+      const dbRelation = await prisma.beneficiaryCategory.findUnique({
+        where: {
+          beneficiaryId_serviceCategoryId: {
+            beneficiaryId: beneficiary.id,
+            serviceCategoryId: category.id,
+          },
+        },
+      });
+      expect(dbRelation).toBeNull();
+    });
+
+    it('should throw BeneficiaryNotFoundError if beneficiary does not exist', async () => {
+      await expect(
+        service.removeCategory('non-existent-id', 'any-category'),
+      ).rejects.toThrow(BeneficiaryNotFoundError);
+    });
+
+    it('should throw ServiceCategoryNotFoundError if the link does not exist', async () => {
+      const beneficiary = await prisma.beneficiary.create({
+        data: {
+          fullName: 'João Silva',
+          cpf: '12345678901',
+          birthDate: new Date('1995-05-15'),
+          gender: Gender.MALE,
+        },
+      });
+
+      await expect(
+        service.removeCategory(beneficiary.id, 'non-existent-link'),
+      ).rejects.toThrow(ServiceCategoryNotFoundError);
     });
   });
 
