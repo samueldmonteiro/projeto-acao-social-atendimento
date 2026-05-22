@@ -16,6 +16,7 @@ class CreateBeneficiaryDto {
     fullName;
     cpf;
     email;
+    phone;
     birthDate;
     gender;
     serviceCategoryId;
@@ -38,6 +39,11 @@ __decorate([
     __metadata("design:type", String)
 ], CreateBeneficiaryDto.prototype, "email", void 0);
 __decorate([
+    (0, class_validator_1.IsString)({ message: 'O telefone deve ser uma string' }),
+    (0, class_validator_1.IsOptional)(),
+    __metadata("design:type", String)
+], CreateBeneficiaryDto.prototype, "phone", void 0);
+__decorate([
     (0, class_validator_1.IsISO8601)({}, { message: 'A data de nascimento deve ser uma data válida no formato ISO 8601' }),
     (0, class_validator_1.IsNotEmpty)({ message: 'A data de nascimento é obrigatória' }),
     __metadata("design:type", String)
@@ -56,6 +62,7 @@ class UpdateBeneficiaryDto {
     fullName;
     cpf;
     email;
+    phone;
     birthDate;
     gender;
     serviceCategoryId;
@@ -77,6 +84,11 @@ __decorate([
     (0, class_validator_1.IsOptional)(),
     __metadata("design:type", String)
 ], UpdateBeneficiaryDto.prototype, "email", void 0);
+__decorate([
+    (0, class_validator_1.IsString)({ message: 'O telefone deve ser uma string' }),
+    (0, class_validator_1.IsOptional)(),
+    __metadata("design:type", String)
+], UpdateBeneficiaryDto.prototype, "phone", void 0);
 __decorate([
     (0, class_validator_1.IsISO8601)({}, { message: 'A data de nascimento deve ser uma data válida no formato ISO 8601' }),
     (0, class_validator_1.IsOptional)(),

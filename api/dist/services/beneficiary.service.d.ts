@@ -6,13 +6,14 @@ export declare class BeneficiaryService {
         }[];
     } & {
         id: string;
-        fullName: string;
-        cpf: string;
         email: string | null;
-        birthDate: Date;
-        gender: import("../generated/prisma/enums").Gender;
         createdAt: Date;
         updatedAt: Date;
+        fullName: string;
+        cpf: string;
+        phone: string | null;
+        birthDate: Date;
+        gender: import("../generated/prisma/enums").Gender;
     }>;
     update(id: string, data: UpdateBeneficiaryDto): Promise<{
         categories: {
@@ -20,13 +21,14 @@ export declare class BeneficiaryService {
         }[];
     } & {
         id: string;
-        fullName: string;
-        cpf: string;
         email: string | null;
-        birthDate: Date;
-        gender: import("../generated/prisma/enums").Gender;
         createdAt: Date;
         updatedAt: Date;
+        fullName: string;
+        cpf: string;
+        phone: string | null;
+        birthDate: Date;
+        gender: import("../generated/prisma/enums").Gender;
     }>;
     delete(id: string): Promise<void>;
     findById(id: string): Promise<{
@@ -35,13 +37,14 @@ export declare class BeneficiaryService {
         }[];
     } & {
         id: string;
-        fullName: string;
-        cpf: string;
         email: string | null;
-        birthDate: Date;
-        gender: import("../generated/prisma/enums").Gender;
         createdAt: Date;
         updatedAt: Date;
+        fullName: string;
+        cpf: string;
+        phone: string | null;
+        birthDate: Date;
+        gender: import("../generated/prisma/enums").Gender;
     }>;
     findMany(filters?: {
         search?: string;
@@ -50,16 +53,22 @@ export declare class BeneficiaryService {
         perPage?: number;
     }): Promise<({
         categories: {
-            serviceCategoryId: string;
+            serviceCategory: {
+                id: string;
+                name: string;
+                createdAt: Date;
+                updatedAt: Date;
+            };
         }[];
     } & {
         id: string;
-        fullName: string;
-        cpf: string;
         email: string | null;
-        birthDate: Date;
-        gender: import("../generated/prisma/enums").Gender;
         createdAt: Date;
         updatedAt: Date;
+        fullName: string;
+        cpf: string;
+        phone: string | null;
+        birthDate: Date;
+        gender: import("../generated/prisma/enums").Gender;
     })[]>;
 }

@@ -39,6 +39,7 @@ export declare const BeneficiaryScalarFieldEnum: {
     readonly fullName: "fullName";
     readonly cpf: "cpf";
     readonly email: "email";
+    readonly phone: "phone";
     readonly birthDate: "birthDate";
     readonly gender: "gender";
     readonly createdAt: "createdAt";

@@ -34,6 +34,7 @@ model Beneficiary {
   fullName  String
   cpf       String   @unique
   email     String?  @unique
+  phone     String?
   birthDate DateTime
   gender    Gender
 

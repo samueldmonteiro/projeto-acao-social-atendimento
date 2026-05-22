@@ -760,6 +760,7 @@ export const BeneficiaryScalarFieldEnum = {
   fullName: 'fullName',
   cpf: 'cpf',
   email: 'email',
+  phone: 'phone',
   birthDate: 'birthDate',
   gender: 'gender',
   createdAt: 'createdAt',

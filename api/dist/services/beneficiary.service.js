@@ -39,6 +39,7 @@ let BeneficiaryService = class BeneficiaryService {
                 fullName: data.fullName,
                 cpf: data.cpf,
                 email: data.email,
+                phone: data.phone,
                 birthDate: new Date(data.birthDate),
                 gender: data.gender,
                 categories: {
@@ -91,6 +92,7 @@ let BeneficiaryService = class BeneficiaryService {
             fullName: data.fullName,
             cpf: data.cpf,
             email: data.email,
+            phone: data.phone,
             birthDate: data.birthDate ? new Date(data.birthDate) : undefined,
             gender: data.gender,
         };
@@ -179,7 +181,7 @@ let BeneficiaryService = class BeneficiaryService {
             include: {
                 categories: {
                     select: {
-                        serviceCategoryId: true,
+                        serviceCategory: true,
                     },
                 },
             },

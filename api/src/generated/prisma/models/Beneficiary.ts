@@ -29,6 +29,7 @@ export type BeneficiaryMinAggregateOutputType = {
   fullName: string | null
   cpf: string | null
   email: string | null
+  phone: string | null
   birthDate: Date | null
   gender: $Enums.Gender | null
   createdAt: Date | null
@@ -40,6 +41,7 @@ export type BeneficiaryMaxAggregateOutputType = {
   fullName: string | null
   cpf: string | null
   email: string | null
+  phone: string | null
   birthDate: Date | null
   gender: $Enums.Gender | null
   createdAt: Date | null
@@ -51,6 +53,7 @@ export type BeneficiaryCountAggregateOutputType = {
   fullName: number
   cpf: number
   email: number
+  phone: number
   birthDate: number
   gender: number
   createdAt: number
@@ -64,6 +67,7 @@ export type BeneficiaryMinAggregateInputType = {
   fullName?: true
   cpf?: true
   email?: true
+  phone?: true
   birthDate?: true
   gender?: true
   createdAt?: true
@@ -75,6 +79,7 @@ export type BeneficiaryMaxAggregateInputType = {
   fullName?: true
   cpf?: true
   email?: true
+  phone?: true
   birthDate?: true
   gender?: true
   createdAt?: true
@@ -86,6 +91,7 @@ export type BeneficiaryCountAggregateInputType = {
   fullName?: true
   cpf?: true
   email?: true
+  phone?: true
   birthDate?: true
   gender?: true
   createdAt?: true
@@ -170,6 +176,7 @@ export type BeneficiaryGroupByOutputType = {
   fullName: string
   cpf: string
   email: string | null
+  phone: string | null
   birthDate: Date
   gender: $Enums.Gender
   createdAt: Date
@@ -202,6 +209,7 @@ export type BeneficiaryWhereInput = {
   fullName?: Prisma.StringFilter<"Beneficiary"> | string
   cpf?: Prisma.StringFilter<"Beneficiary"> | string
   email?: Prisma.StringNullableFilter<"Beneficiary"> | string | null
+  phone?: Prisma.StringNullableFilter<"Beneficiary"> | string | null
   birthDate?: Prisma.DateTimeFilter<"Beneficiary"> | Date | string
   gender?: Prisma.EnumGenderFilter<"Beneficiary"> | $Enums.Gender
   createdAt?: Prisma.DateTimeFilter<"Beneficiary"> | Date | string
@@ -214,6 +222,7 @@ export type BeneficiaryOrderByWithRelationInput = {
   fullName?: Prisma.SortOrder
   cpf?: Prisma.SortOrder
   email?: Prisma.SortOrderInput | Prisma.SortOrder
+  phone?: Prisma.SortOrderInput | Prisma.SortOrder
   birthDate?: Prisma.SortOrder
   gender?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
@@ -229,6 +238,7 @@ export type BeneficiaryWhereUniqueInput = Prisma.AtLeast<{
   OR?: Prisma.BeneficiaryWhereInput[]
   NOT?: Prisma.BeneficiaryWhereInput | Prisma.BeneficiaryWhereInput[]
   fullName?: Prisma.StringFilter<"Beneficiary"> | string
+  phone?: Prisma.StringNullableFilter<"Beneficiary"> | string | null
   birthDate?: Prisma.DateTimeFilter<"Beneficiary"> | Date | string
   gender?: Prisma.EnumGenderFilter<"Beneficiary"> | $Enums.Gender
   createdAt?: Prisma.DateTimeFilter<"Beneficiary"> | Date | string
@@ -241,6 +251,7 @@ export type BeneficiaryOrderByWithAggregationInput = {
   fullName?: Prisma.SortOrder
   cpf?: Prisma.SortOrder
   email?: Prisma.SortOrderInput | Prisma.SortOrder
+  phone?: Prisma.SortOrderInput | Prisma.SortOrder
   birthDate?: Prisma.SortOrder
   gender?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
@@ -258,6 +269,7 @@ export type BeneficiaryScalarWhereWithAggregatesInput = {
   fullName?: Prisma.StringWithAggregatesFilter<"Beneficiary"> | string
   cpf?: Prisma.StringWithAggregatesFilter<"Beneficiary"> | string
   email?: Prisma.StringNullableWithAggregatesFilter<"Beneficiary"> | string | null
+  phone?: Prisma.StringNullableWithAggregatesFilter<"Beneficiary"> | string | null
   birthDate?: Prisma.DateTimeWithAggregatesFilter<"Beneficiary"> | Date | string
   gender?: Prisma.EnumGenderWithAggregatesFilter<"Beneficiary"> | $Enums.Gender
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"Beneficiary"> | Date | string
@@ -269,6 +281,7 @@ export type BeneficiaryCreateInput = {
   fullName: string
   cpf: string
   email?: string | null
+  phone?: string | null
   birthDate: Date | string
   gender: $Enums.Gender
   createdAt?: Date | string
@@ -281,6 +294,7 @@ export type BeneficiaryUncheckedCreateInput = {
   fullName: string
   cpf: string
   email?: string | null
+  phone?: string | null
   birthDate: Date | string
   gender: $Enums.Gender
   createdAt?: Date | string
@@ -293,6 +307,7 @@ export type BeneficiaryUpdateInput = {
   fullName?: Prisma.StringFieldUpdateOperationsInput | string
   cpf?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   birthDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   gender?: Prisma.EnumGenderFieldUpdateOperationsInput | $Enums.Gender
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -305,6 +320,7 @@ export type BeneficiaryUncheckedUpdateInput = {
   fullName?: Prisma.StringFieldUpdateOperationsInput | string
   cpf?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   birthDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   gender?: Prisma.EnumGenderFieldUpdateOperationsInput | $Enums.Gender
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -317,6 +333,7 @@ export type BeneficiaryCreateManyInput = {
   fullName: string
   cpf: string
   email?: string | null
+  phone?: string | null
   birthDate: Date | string
   gender: $Enums.Gender
   createdAt?: Date | string
@@ -328,6 +345,7 @@ export type BeneficiaryUpdateManyMutationInput = {
   fullName?: Prisma.StringFieldUpdateOperationsInput | string
   cpf?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   birthDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   gender?: Prisma.EnumGenderFieldUpdateOperationsInput | $Enums.Gender
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -339,6 +357,7 @@ export type BeneficiaryUncheckedUpdateManyInput = {
   fullName?: Prisma.StringFieldUpdateOperationsInput | string
   cpf?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   birthDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   gender?: Prisma.EnumGenderFieldUpdateOperationsInput | $Enums.Gender
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -350,6 +369,7 @@ export type BeneficiaryCountOrderByAggregateInput = {
   fullName?: Prisma.SortOrder
   cpf?: Prisma.SortOrder
   email?: Prisma.SortOrder
+  phone?: Prisma.SortOrder
   birthDate?: Prisma.SortOrder
   gender?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
@@ -361,6 +381,7 @@ export type BeneficiaryMaxOrderByAggregateInput = {
   fullName?: Prisma.SortOrder
   cpf?: Prisma.SortOrder
   email?: Prisma.SortOrder
+  phone?: Prisma.SortOrder
   birthDate?: Prisma.SortOrder
   gender?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
@@ -372,6 +393,7 @@ export type BeneficiaryMinOrderByAggregateInput = {
   fullName?: Prisma.SortOrder
   cpf?: Prisma.SortOrder
   email?: Prisma.SortOrder
+  phone?: Prisma.SortOrder
   birthDate?: Prisma.SortOrder
   gender?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
@@ -410,6 +432,7 @@ export type BeneficiaryCreateWithoutCategoriesInput = {
   fullName: string
   cpf: string
   email?: string | null
+  phone?: string | null
   birthDate: Date | string
   gender: $Enums.Gender
   createdAt?: Date | string
@@ -421,6 +444,7 @@ export type BeneficiaryUncheckedCreateWithoutCategoriesInput = {
   fullName: string
   cpf: string
   email?: string | null
+  phone?: string | null
   birthDate: Date | string
   gender: $Enums.Gender
   createdAt?: Date | string
@@ -448,6 +472,7 @@ export type BeneficiaryUpdateWithoutCategoriesInput = {
   fullName?: Prisma.StringFieldUpdateOperationsInput | string
   cpf?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   birthDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   gender?: Prisma.EnumGenderFieldUpdateOperationsInput | $Enums.Gender
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -459,6 +484,7 @@ export type BeneficiaryUncheckedUpdateWithoutCategoriesInput = {
   fullName?: Prisma.StringFieldUpdateOperationsInput | string
   cpf?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   birthDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   gender?: Prisma.EnumGenderFieldUpdateOperationsInput | $Enums.Gender
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -501,6 +527,7 @@ export type BeneficiarySelect<ExtArgs extends runtime.Types.Extensions.InternalA
   fullName?: boolean
   cpf?: boolean
   email?: boolean
+  phone?: boolean
   birthDate?: boolean
   gender?: boolean
   createdAt?: boolean
@@ -514,6 +541,7 @@ export type BeneficiarySelectCreateManyAndReturn<ExtArgs extends runtime.Types.E
   fullName?: boolean
   cpf?: boolean
   email?: boolean
+  phone?: boolean
   birthDate?: boolean
   gender?: boolean
   createdAt?: boolean
@@ -525,6 +553,7 @@ export type BeneficiarySelectUpdateManyAndReturn<ExtArgs extends runtime.Types.E
   fullName?: boolean
   cpf?: boolean
   email?: boolean
+  phone?: boolean
   birthDate?: boolean
   gender?: boolean
   createdAt?: boolean
@@ -536,13 +565,14 @@ export type BeneficiarySelectScalar = {
   fullName?: boolean
   cpf?: boolean
   email?: boolean
+  phone?: boolean
   birthDate?: boolean
   gender?: boolean
   createdAt?: boolean
   updatedAt?: boolean
 }
 
-export type BeneficiaryOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "fullName" | "cpf" | "email" | "birthDate" | "gender" | "createdAt" | "updatedAt", ExtArgs["result"]["beneficiary"]>
+export type BeneficiaryOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "fullName" | "cpf" | "email" | "phone" | "birthDate" | "gender" | "createdAt" | "updatedAt", ExtArgs["result"]["beneficiary"]>
 export type BeneficiaryInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   categories?: boolean | Prisma.Beneficiary$categoriesArgs<ExtArgs>
   _count?: boolean | Prisma.BeneficiaryCountOutputTypeDefaultArgs<ExtArgs>
@@ -560,6 +590,7 @@ export type $BeneficiaryPayload<ExtArgs extends runtime.Types.Extensions.Interna
     fullName: string
     cpf: string
     email: string | null
+    phone: string | null
     birthDate: Date
     gender: $Enums.Gender
     createdAt: Date
@@ -992,6 +1023,7 @@ export interface BeneficiaryFieldRefs {
   readonly fullName: Prisma.FieldRef<"Beneficiary", 'String'>
   readonly cpf: Prisma.FieldRef<"Beneficiary", 'String'>
   readonly email: Prisma.FieldRef<"Beneficiary", 'String'>
+  readonly phone: Prisma.FieldRef<"Beneficiary", 'String'>
   readonly birthDate: Prisma.FieldRef<"Beneficiary", 'DateTime'>
   readonly gender: Prisma.FieldRef<"Beneficiary", 'Gender'>
   readonly createdAt: Prisma.FieldRef<"Beneficiary", 'DateTime'>

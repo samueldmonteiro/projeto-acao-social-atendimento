@@ -43,6 +43,7 @@ export class BeneficiaryService {
         fullName: data.fullName,
         cpf: data.cpf,
         email: data.email,
+        phone: data.phone,
         birthDate: new Date(data.birthDate),
         gender: data.gender,
         categories: {
@@ -109,6 +110,7 @@ export class BeneficiaryService {
       fullName: data.fullName,
       cpf: data.cpf,
       email: data.email,
+      phone: data.phone,
       birthDate: data.birthDate ? new Date(data.birthDate) : undefined,
       gender: data.gender,
     };
@@ -215,7 +217,7 @@ export class BeneficiaryService {
       include: {
         categories: {
           select: {
-            serviceCategoryId: true,
+            serviceCategory: true,
           },
         },
       },

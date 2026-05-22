@@ -15,6 +15,10 @@ export class CreateBeneficiaryDto {
   @IsOptional()
     email?: string;
 
+  @IsString({ message: 'O telefone deve ser uma string' })
+  @IsOptional()
+    phone?: string;
+
   @IsISO8601({}, { message: 'A data de nascimento deve ser uma data válida no formato ISO 8601' })
   @IsNotEmpty({ message: 'A data de nascimento é obrigatória' })
     birthDate!: string;
@@ -41,6 +45,10 @@ export class UpdateBeneficiaryDto {
   @IsEmail({}, { message: 'O e-mail deve ser um endereço de e-mail válido' })
   @IsOptional()
     email?: string;
+
+  @IsString({ message: 'O telefone deve ser uma string' })
+  @IsOptional()
+    phone?: string;
 
   @IsISO8601({}, { message: 'A data de nascimento deve ser uma data válida no formato ISO 8601' })
   @IsOptional()
