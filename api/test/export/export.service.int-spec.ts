@@ -43,7 +43,7 @@ describe('ExportService Integration', () => {
 
     const buffer = await service.generateBeneficiariesExcel();
     const workbook = new ExcelJS.Workbook();
-    await workbook.xlsx.load(buffer as Buffer);
+    await workbook.xlsx.load(buffer);
 
     const worksheet = workbook.worksheets[0];
     expect(worksheet).toBeDefined();
@@ -58,7 +58,7 @@ describe('ExportService Integration', () => {
   it('should generate an empty Excel when no beneficiaries exist', async () => {
     const buffer = await service.generateBeneficiariesExcel();
     const workbook = new ExcelJS.Workbook();
-    await workbook.xlsx.load(buffer as Buffer);
+    await workbook.xlsx.load(buffer);
 
     const worksheet = workbook.worksheets[0];
     expect(worksheet).toBeDefined();
