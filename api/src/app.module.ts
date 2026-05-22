@@ -15,6 +15,7 @@ import { ServiceCategoryController } from '@/http/controllers/service-category.c
 import { ServiceCategoryService } from '@/services/service-category.service';
 import { BeneficiaryController } from '@/http/controllers/beneficiary.controller';
 import { BeneficiaryService } from '@/services/beneficiary.service';
+import { ExportService } from '@/services/export.service';
 
 @Module({
   imports: [
@@ -42,6 +43,7 @@ import { BeneficiaryService } from '@/services/beneficiary.service';
     UserService,
     ServiceCategoryService,
     BeneficiaryService,
+    ExportService,
     AuthService,
     JwtGuard,
     JwtStrategy,

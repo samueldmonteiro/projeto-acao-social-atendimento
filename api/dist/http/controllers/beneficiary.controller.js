@@ -16,13 +16,22 @@ exports.BeneficiaryController = void 0;
 const common_1 = require("@nestjs/common");
 const base_controller_1 = require("./base.controller");
 const beneficiary_service_1 = require("../../services/beneficiary.service");
+const export_service_1 = require("../../services/export.service");
 const beneficiary_dto_1 = require("../dtos/beneficiary.dto");
 const jwt_guard_1 = require("../../auth/jwt.guard");
 let BeneficiaryController = class BeneficiaryController extends base_controller_1.BaseController {
     beneficiaryService;
-    constructor(beneficiaryService) {
+    exportService;
+    constructor(beneficiaryService, exportService) {
         super();
         this.beneficiaryService = beneficiaryService;
+        this.exportService = exportService;
+    }
+    async export(res) {
+        const buffer = await this.exportService.generateBeneficiariesExcel();
+        res.setHeader('Content-Type', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+        res.setHeader('Content-Disposition', 'attachment; filename="beneficiarios.xlsx"');
+        res.send(buffer);
     }
     async create(body) {
         const data = await this.beneficiaryService.create(body);
@@ -51,6 +60,13 @@ let BeneficiaryController = class BeneficiaryController extends base_controller_
     }
 };
 exports.BeneficiaryController = BeneficiaryController;
+__decorate([
+    (0, common_1.Get)('export'),
+    __param(0, (0, common_1.Res)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Object]),
+    __metadata("design:returntype", Promise)
+], BeneficiaryController.prototype, "export", null);
 __decorate([
     (0, common_1.Post)(),
     __param(0, (0, common_1.Body)()),
@@ -93,6 +109,7 @@ __decorate([
 exports.BeneficiaryController = BeneficiaryController = __decorate([
     (0, common_1.UseGuards)(jwt_guard_1.JwtGuard),
     (0, common_1.Controller)('beneficiaries'),
-    __metadata("design:paramtypes", [beneficiary_service_1.BeneficiaryService])
+    __metadata("design:paramtypes", [beneficiary_service_1.BeneficiaryService,
+        export_service_1.ExportService])
 ], BeneficiaryController);
 //# sourceMappingURL=beneficiary.controller.js.map

@@ -1,14 +1,28 @@
-import { Body, Controller, Delete, Get, Param, Patch, Post, Query, UseGuards } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Patch, Post, Query, Res, UseGuards } from '@nestjs/common';
+import type { Response } from 'express';
 import { BaseController, ApiResponse } from './base.controller';
 import { BeneficiaryService } from '@/services/beneficiary.service';
+import { ExportService } from '@/services/export.service';
 import { CreateBeneficiaryDto, UpdateBeneficiaryDto } from '../dtos/beneficiary.dto';
 import { JwtGuard } from '@/auth/jwt.guard';
 
 @UseGuards(JwtGuard)
 @Controller('beneficiaries')
 export class BeneficiaryController extends BaseController {
-  constructor(private readonly beneficiaryService: BeneficiaryService) {
+  constructor(
+    private readonly beneficiaryService: BeneficiaryService,
+    private readonly exportService: ExportService,
+  ) {
     super();
+  }
+
+  @Get('export')
+  async export(@Res() res: Response): Promise<void> {
+    const buffer = await this.exportService.generateBeneficiariesExcel();
+
+    res.setHeader('Content-Type', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+    res.setHeader('Content-Disposition', 'attachment; filename="beneficiarios.xlsx"');
+    res.send(buffer);
   }
 
   @Post()

@@ -24,6 +24,7 @@ const service_category_controller_1 = require("./http/controllers/service-catego
 const service_category_service_1 = require("./services/service-category.service");
 const beneficiary_controller_1 = require("./http/controllers/beneficiary.controller");
 const beneficiary_service_1 = require("./services/beneficiary.service");
+const export_service_1 = require("./services/export.service");
 let AppModule = class AppModule {
 };
 exports.AppModule = AppModule;
@@ -54,6 +55,7 @@ exports.AppModule = AppModule = __decorate([
             user_service_1.UserService,
             service_category_service_1.ServiceCategoryService,
             beneficiary_service_1.BeneficiaryService,
+            export_service_1.ExportService,
             auth_service_1.AuthService,
             jwt_guard_1.JwtGuard,
             jwt_strategy_1.JwtStrategy,
