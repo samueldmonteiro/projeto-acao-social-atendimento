@@ -7,7 +7,6 @@ import { JwtService } from '@nestjs/jwt';
 
 describe('UserController (e2e)', () => {
   let app: INestApplication;
-  let accessToken: string;
 
   beforeAll(async () => {
     const moduleFixture: TestingModule = await Test.createTestingModule({
@@ -16,17 +15,6 @@ describe('UserController (e2e)', () => {
 
     app = moduleFixture.createNestApplication();
     await app.init();
-
-    const jwtService = moduleFixture.get<JwtService>(JwtService);
-    await prisma.user.deleteMany();
-    const user = await prisma.user.create({
-      data: {
-        email: 'e2e@test.com',
-        password: 'hash',
-        name: 'E2E User',
-      },
-    });
-    accessToken = jwtService.sign({ username: user.email, sub: user.id });
   });
 
   afterAll(async () => {
