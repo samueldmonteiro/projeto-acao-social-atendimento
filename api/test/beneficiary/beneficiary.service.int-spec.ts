@@ -420,6 +420,50 @@ describe('BeneficiaryService Integration', () => {
   });
 
   describe('findMany', () => {
+    it('should paginate beneficiaries with page and perPage', async () => {
+      const items = Array.from({ length: 15 }, (_, i) => ({
+        fullName: `Beneficiário ${String(i + 1).padStart(2, '0')}`,
+        cpf: String(i + 100).padStart(11, '0'),
+        birthDate: new Date(),
+        gender: i % 2 === 0 ? Gender.MALE : Gender.FEMALE,
+      }));
+
+      await prisma.beneficiary.createMany({ data: items });
+
+      const page1 = await service.findMany({ page: 1, perPage: 5 });
+      expect(page1).toHaveLength(5);
+      expect(page1[0].fullName).toBe('Beneficiário 01');
+      expect(page1[4].fullName).toBe('Beneficiário 05');
+
+      const page2 = await service.findMany({ page: 2, perPage: 5 });
+      expect(page2).toHaveLength(5);
+      expect(page2[0].fullName).toBe('Beneficiário 06');
+      expect(page2[4].fullName).toBe('Beneficiário 10');
+
+      const page3 = await service.findMany({ page: 3, perPage: 5 });
+      expect(page3).toHaveLength(5);
+      expect(page3[0].fullName).toBe('Beneficiário 11');
+      expect(page3[4].fullName).toBe('Beneficiário 15');
+
+      const page4 = await service.findMany({ page: 4, perPage: 5 });
+      expect(page4).toHaveLength(0);
+    });
+
+    it('should default to page 1 with 10 per page', async () => {
+      const items = Array.from({ length: 12 }, (_, i) => ({
+        fullName: `B${String(i + 1).padStart(2, '0')}`,
+        cpf: `${i + 10}`.repeat(11).slice(0, 11),
+        birthDate: new Date(),
+        gender: Gender.MALE,
+      }));
+
+      await prisma.beneficiary.createMany({ data: items });
+
+      const result = await service.findMany({});
+      expect(result).toHaveLength(10);
+      expect(result[0].fullName).toBe('B01');
+    });
+
     it('should list all beneficiaries ordered by name asc', async () => {
       await prisma.beneficiary.createMany({
         data: [

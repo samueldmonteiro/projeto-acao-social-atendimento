@@ -28,17 +28,17 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: '20'
-          cache: 'yarn'
-          cache-dependency-path: frontend/yarn.lock
+          cache: 'npm'
+          cache-dependency-path: frontend/package-lock.json
 
       - name: Install dependencies
-        run: yarn install
+        run: npm ci
 
       - name: Run Linter
-        run: yarn run lint
+        run: npm run lint
         
       - name: Run Typecheck
-        run: yarn run typecheck
+        run: npm run typecheck
         
       - name: Build
-        run: yarn run build
+        run: npm run build

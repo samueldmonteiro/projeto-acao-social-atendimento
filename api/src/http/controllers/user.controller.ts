@@ -1,8 +1,11 @@
-import { Controller, Get } from '@nestjs/common';
+import { Controller, Get, UseGuards } from '@nestjs/common';
 import { UserService } from '@/services/user.service';
 import { UserSafe } from '@/types/user.type';
 import { BaseController, ApiResponse } from './base.controller';
+import { JwtGuard } from '@/auth/jwt.guard';
 
+
+@UseGuards(JwtGuard)
 @Controller('users')
 export class UserController extends BaseController {
   constructor(private readonly userService: UserService) {

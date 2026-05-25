@@ -9,32 +9,32 @@ var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.UserController = void 0;
+exports.DashboardController = void 0;
 const common_1 = require("@nestjs/common");
-const user_service_1 = require("../../services/user.service");
 const base_controller_1 = require("./base.controller");
+const dashboard_service_1 = require("../../services/dashboard.service");
 const jwt_guard_1 = require("../../auth/jwt.guard");
-let UserController = class UserController extends base_controller_1.BaseController {
-    userService;
-    constructor(userService) {
+let DashboardController = class DashboardController extends base_controller_1.BaseController {
+    dashboardService;
+    constructor(dashboardService) {
         super();
-        this.userService = userService;
+        this.dashboardService = dashboardService;
     }
-    async index() {
-        const data = await this.userService.findAll();
-        return this.success(data, 'Usuários recuperados com sucesso');
+    async getSummary() {
+        const data = await this.dashboardService.getSummary();
+        return this.success(data, 'Dados do dashboard carregados com sucesso');
     }
 };
-exports.UserController = UserController;
+exports.DashboardController = DashboardController;
 __decorate([
     (0, common_1.Get)(),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", []),
     __metadata("design:returntype", Promise)
-], UserController.prototype, "index", null);
-exports.UserController = UserController = __decorate([
+], DashboardController.prototype, "getSummary", null);
+exports.DashboardController = DashboardController = __decorate([
     (0, common_1.UseGuards)(jwt_guard_1.JwtGuard),
-    (0, common_1.Controller)('users'),
-    __metadata("design:paramtypes", [user_service_1.UserService])
-], UserController);
-//# sourceMappingURL=user.controller.js.map
+    (0, common_1.Controller)('dashboard'),
+    __metadata("design:paramtypes", [dashboard_service_1.DashboardService])
+], DashboardController);
+//# sourceMappingURL=dashboard.controller.js.map

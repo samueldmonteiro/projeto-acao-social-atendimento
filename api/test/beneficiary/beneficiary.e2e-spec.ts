@@ -259,6 +259,53 @@ describe('BeneficiaryController (e2e)', () => {
   });
 
   describe('GET /beneficiaries', () => {
+    it('should paginate beneficiaries with page and perPage', async () => {
+      const items = Array.from({ length: 12 }, (_, i) => ({
+        fullName: `Beneficiário ${String(i + 1).padStart(2, '0')}`,
+        cpf: String(i + 100).padStart(11, '0'),
+        birthDate: new Date(),
+        gender: i % 2 === 0 ? Gender.MALE : Gender.FEMALE,
+      }));
+
+      await prisma.beneficiary.createMany({ data: items });
+
+      const page1 = await request(app.getHttpServer())
+        .get('/beneficiaries')
+        .set('Authorization', `Bearer ${accessToken}`)
+        .query({ page: 1, perPage: 5 })
+        .expect(200);
+
+      expect(page1.body.data).toHaveLength(5);
+      expect(page1.body.data[0].fullName).toBe('Beneficiário 01');
+      expect(page1.body.data[4].fullName).toBe('Beneficiário 05');
+
+      const page2 = await request(app.getHttpServer())
+        .get('/beneficiaries')
+        .set('Authorization', `Bearer ${accessToken}`)
+        .query({ page: 2, perPage: 5 })
+        .expect(200);
+
+      expect(page2.body.data).toHaveLength(5);
+      expect(page2.body.data[0].fullName).toBe('Beneficiário 06');
+
+      const page3 = await request(app.getHttpServer())
+        .get('/beneficiaries')
+        .set('Authorization', `Bearer ${accessToken}`)
+        .query({ page: 3, perPage: 5 })
+        .expect(200);
+
+      expect(page3.body.data).toHaveLength(2);
+      expect(page3.body.data[0].fullName).toBe('Beneficiário 11');
+
+      const emptyPage = await request(app.getHttpServer())
+        .get('/beneficiaries')
+        .set('Authorization', `Bearer ${accessToken}`)
+        .query({ page: 4, perPage: 5 })
+        .expect(200);
+
+      expect(emptyPage.body.data).toHaveLength(0);
+    });
+
     it('should retrieve all beneficiaries ordered alphabetically by name', async () => {
       await prisma.beneficiary.createMany({
         data: [

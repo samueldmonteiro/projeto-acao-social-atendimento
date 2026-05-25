@@ -1,5 +1,4 @@
 import { Test } from '@nestjs/testing';
-import { JwtModule } from '@nestjs/jwt';
 import { prisma } from '@/lib/prisma';
 import * as argon2 from 'argon2';
 import { AuthService } from '@/services/auth.service';
@@ -11,7 +10,7 @@ describe('AuthService Integration', () => {
 
   beforeAll(async () => {
     const module = await Test.createTestingModule({
-      imports: [JwtModule.register({ secret: 'test_secret' }), AppModule],
+      imports: [AppModule],
     }).compile();
 
     service = module.get<AuthService>(AuthService);

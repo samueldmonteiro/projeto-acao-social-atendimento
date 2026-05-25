@@ -16,6 +16,8 @@ import { ServiceCategoryService } from '@/services/service-category.service';
 import { BeneficiaryController } from '@/http/controllers/beneficiary.controller';
 import { BeneficiaryService } from '@/services/beneficiary.service';
 import { ExportService } from '@/services/export.service';
+import { DashboardController } from '@/http/controllers/dashboard.controller';
+import { DashboardService } from '@/services/dashboard.service';
 
 @Module({
   imports: [
@@ -27,7 +29,7 @@ import { ExportService } from '@/services/export.service';
       inject: [ConfigService],
       useFactory: () => ({
         secret: process.env.JWT_TOKEN,
-        signOptions: { expiresIn: '7d' },
+        signOptions: { expiresIn: '30min' },
       }),
     }),
   ],
@@ -37,6 +39,7 @@ import { ExportService } from '@/services/export.service';
     AuthController,
     ServiceCategoryController,
     BeneficiaryController,
+    DashboardController,
   ],
   providers: [
     AppService,
@@ -44,6 +47,7 @@ import { ExportService } from '@/services/export.service';
     ServiceCategoryService,
     BeneficiaryService,
     ExportService,
+    DashboardService,
     AuthService,
     JwtGuard,
     JwtStrategy,

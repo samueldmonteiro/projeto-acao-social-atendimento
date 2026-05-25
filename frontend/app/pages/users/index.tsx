@@ -1,7 +1,5 @@
-import { useEffect, useState } from 'react';
 import { Link } from 'react-router';
-import { findUsers } from '@/requests/user.request';
-import { type User } from '@/types/user.type';
+import { useUsers } from '../../hooks/queries/useUsers';
 
 export function meta() {
   return [
@@ -11,14 +9,24 @@ export function meta() {
 }
 
 export default function Users() {
+  const { data: response, isLoading, isError } = useUsers();
+  const users = response?.data;
 
-  const [users, setUsers] = useState<User[]>();
+  if (isLoading) {
+    return (
+      <div className="flex justify-center items-center h-64 text-indigo-400">
+        <p className="text-lg font-medium animate-pulse">Carregando usuários...</p>
+      </div>
+    );
+  }
 
-  useEffect(() => {
-    findUsers().then((response) => {
-      setUsers(response.data);
-    });
-  }, []);
+  if (isError) {
+    return (
+      <div className="flex justify-center items-center h-64 text-red-400">
+        <p className="text-lg font-medium">Erro ao carregar usuários.</p>
+      </div>
+    );
+  }
 
   return (
     <div className="space-y-8">
@@ -46,7 +54,7 @@ export default function Users() {
                 <p className="text-xs text-gray-500 font-medium uppercase tracking-wider">Membro</p>
               </div>
             </div>
-            
+
             <div className="space-y-3">
               <div className="flex items-center gap-2 text-sm text-gray-400">
                 <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">

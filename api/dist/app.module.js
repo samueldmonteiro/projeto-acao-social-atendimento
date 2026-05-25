@@ -25,6 +25,8 @@ const service_category_service_1 = require("./services/service-category.service"
 const beneficiary_controller_1 = require("./http/controllers/beneficiary.controller");
 const beneficiary_service_1 = require("./services/beneficiary.service");
 const export_service_1 = require("./services/export.service");
+const dashboard_controller_1 = require("./http/controllers/dashboard.controller");
+const dashboard_service_1 = require("./services/dashboard.service");
 let AppModule = class AppModule {
 };
 exports.AppModule = AppModule;
@@ -39,7 +41,7 @@ exports.AppModule = AppModule = __decorate([
                 inject: [config_1.ConfigService],
                 useFactory: () => ({
                     secret: process.env.JWT_TOKEN,
-                    signOptions: { expiresIn: '7d' },
+                    signOptions: { expiresIn: '30min' },
                 }),
             }),
         ],
@@ -49,6 +51,7 @@ exports.AppModule = AppModule = __decorate([
             auth_controller_1.AuthController,
             service_category_controller_1.ServiceCategoryController,
             beneficiary_controller_1.BeneficiaryController,
+            dashboard_controller_1.DashboardController,
         ],
         providers: [
             app_service_1.AppService,
@@ -56,6 +59,7 @@ exports.AppModule = AppModule = __decorate([
             service_category_service_1.ServiceCategoryService,
             beneficiary_service_1.BeneficiaryService,
             export_service_1.ExportService,
+            dashboard_service_1.DashboardService,
             auth_service_1.AuthService,
             jwt_guard_1.JwtGuard,
             jwt_strategy_1.JwtStrategy,

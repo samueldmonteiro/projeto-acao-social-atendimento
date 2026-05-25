@@ -3,9 +3,11 @@ import { INestApplication } from '@nestjs/common';
 import request from 'supertest';
 import { prisma } from '@/lib/prisma';
 import { AppModule } from '@/app.module';
+import { JwtService } from '@nestjs/jwt';
 
 describe('UserController (e2e)', () => {
   let app: INestApplication;
+  let accessToken: string;
 
   beforeAll(async () => {
     const moduleFixture: TestingModule = await Test.createTestingModule({
@@ -14,9 +16,21 @@ describe('UserController (e2e)', () => {
 
     app = moduleFixture.createNestApplication();
     await app.init();
+
+    const jwtService = moduleFixture.get<JwtService>(JwtService);
+    await prisma.user.deleteMany();
+    const user = await prisma.user.create({
+      data: {
+        email: 'e2e@test.com',
+        password: 'hash',
+        name: 'E2E User',
+      },
+    });
+    accessToken = jwtService.sign({ username: user.email, sub: user.id });
   });
 
   afterAll(async () => {
+    await prisma.user.deleteMany();
     await app.close();
   });
 
@@ -24,9 +38,24 @@ describe('UserController (e2e)', () => {
     await prisma.user.deleteMany();
   });
 
+  it('should return 401 when token is missing', async () => {
+    await request(app.getHttpServer())
+      .get('/users')
+      .expect(401);
+  });
+
   it('GET /users - should return empty list when no users exist', async () => {
+    const jwtService = app.get(JwtService);
+    const tempUser = await prisma.user.create({
+      data: { email: 'temp@test.com', password: 'hash', name: 'Temp' },
+    });
+    const token = jwtService.sign({ username: tempUser.email, sub: tempUser.id });
+
+    await prisma.user.deleteMany();
+
     const response = await request(app.getHttpServer())
       .get('/users')
+      .set('Authorization', `Bearer ${token}`)
       .expect(200);
 
     expect(response.body).toEqual({
@@ -38,6 +67,15 @@ describe('UserController (e2e)', () => {
   });
 
   it('GET /users - should return all users without password', async () => {
+    await prisma.user.create({
+      data: { email: 'e2e@test.com', password: 'hash', name: 'E2E User' },
+    });
+    const jwtService = app.get(JwtService);
+    const token = jwtService.sign({
+      username: 'e2e@test.com',
+      sub: 'any-id',
+    });
+
     await prisma.user.createMany({
       data: [
         { email: 'alice@test.com', password: 'hash1', name: 'Alice' },
@@ -47,12 +85,13 @@ describe('UserController (e2e)', () => {
 
     const response = await request(app.getHttpServer())
       .get('/users')
+      .set('Authorization', `Bearer ${token}`)
       .expect(200);
 
     expect(response.body.ok).toBe(true);
-    expect(response.body.data).toHaveLength(2);
-    expect(response.body.data[0].name).toBeDefined();
-    expect(response.body.data[0].email).toBeDefined();
-    expect(response.body.data[0].password).toBeUndefined();
+    expect(response.body.data).toHaveLength(3);
+    response.body.data.forEach((u: any) => {
+      expect(u.password).toBeUndefined();
+    });
   });
 });

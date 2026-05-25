@@ -47,17 +47,17 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: '22'
-          cache: 'yarn'
-          cache-dependency-path: api/yarn.lock
+          cache: 'npm'
+          cache-dependency-path: api/package-lock.json
 
       - name: Install dependencies
-        run: yarn install
+        run: npm ci
 
       - name: Run Prisma Generate
         run: npx prisma generate
 
       - name: Run Linter
-        run: yarn run lint
+        run: npm run lint
 
       - name: Run Tests
-        run: yarn run test
+        run: npm run test
