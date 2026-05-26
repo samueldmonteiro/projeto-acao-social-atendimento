@@ -1,28 +1,28 @@
 import { Test } from '@nestjs/testing';
 import { prisma } from '@/lib/prisma';
-import { BeneficiaryCategoryService } from '@/services/beneficiary-category.service';
+import { AppointmentService } from '@/services/appointment.service';
 import { AppModule } from '@/app.module';
 import { Gender } from '@/generated/prisma/enums';
 
-describe('BeneficiaryCategoryService Integration', () => {
-  let service: BeneficiaryCategoryService;
+describe('AppointmentService Integration', () => {
+  let service: AppointmentService;
 
   beforeAll(async () => {
     const module = await Test.createTestingModule({
       imports: [AppModule],
     }).compile();
 
-    service = module.get<BeneficiaryCategoryService>(BeneficiaryCategoryService);
+    service = module.get<AppointmentService>(AppointmentService);
   });
 
   beforeEach(async () => {
-    await prisma.beneficiaryCategory.deleteMany();
+    await prisma.appointment.deleteMany();
     await prisma.beneficiary.deleteMany();
     await prisma.serviceCategory.deleteMany();
   });
 
   describe('findMany', () => {
-    it('should return beneficiary category linkages with beneficiary and category objects included', async () => {
+    it('should return appointments with beneficiary and category objects included', async () => {
       const category = await prisma.serviceCategory.create({
         data: { name: 'Assistência Médica', prefix: 'MED' },
       });
@@ -37,7 +37,7 @@ describe('BeneficiaryCategoryService Integration', () => {
         },
       });
 
-      await prisma.beneficiaryCategory.create({
+      await prisma.appointment.create({
         data: {
           beneficiaryId: beneficiary.id,
           serviceCategoryId: category.id,
@@ -47,17 +47,17 @@ describe('BeneficiaryCategoryService Integration', () => {
 
       const result = await service.findMany();
 
-      expect(result.data).toHaveLength(1);
-      expect(result.data[0].beneficiaryId).toBe(beneficiary.id);
-      expect(result.data[0].serviceCategoryId).toBe(category.id);
-      expect(result.data[0].callCode).toBe('MED-0001');
-      expect(result.data[0].beneficiary).not.toBeNull();
-      expect(result.data[0].beneficiary.fullName).toBe('Maria da Silva');
-      expect(result.data[0].serviceCategory).not.toBeNull();
-      expect(result.data[0].serviceCategory.name).toBe('Assistência Médica');
+      expect(result.items).toHaveLength(1);
+      expect(result.items[0].beneficiaryId).toBe(beneficiary.id);
+      expect(result.items[0].serviceCategoryId).toBe(category.id);
+      expect(result.items[0].callCode).toBe('MED-0001');
+      expect(result.items[0].beneficiary).not.toBeNull();
+      expect(result.items[0].beneficiary.fullName).toBe('Maria da Silva');
+      expect(result.items[0].serviceCategory).not.toBeNull();
+      expect(result.items[0].serviceCategory.name).toBe('Assistência Médica');
     });
 
-    it('should filter linkages by categoryId', async () => {
+    it('should filter appointments by categoryId', async () => {
       const category1 = await prisma.serviceCategory.create({
         data: { name: 'Odontologia', prefix: 'ODO' },
       });
@@ -75,7 +75,7 @@ describe('BeneficiaryCategoryService Integration', () => {
         },
       });
 
-      await prisma.beneficiaryCategory.create({
+      await prisma.appointment.create({
         data: {
           beneficiaryId: beneficiary.id,
           serviceCategoryId: category1.id,
@@ -83,7 +83,7 @@ describe('BeneficiaryCategoryService Integration', () => {
         },
       });
 
-      await prisma.beneficiaryCategory.create({
+      await prisma.appointment.create({
         data: {
           beneficiaryId: beneficiary.id,
           serviceCategoryId: category2.id,
@@ -93,12 +93,12 @@ describe('BeneficiaryCategoryService Integration', () => {
 
       const result = await service.findMany({ categoryId: category1.id });
 
-      expect(result.data).toHaveLength(1);
-      expect(result.data[0].serviceCategoryId).toBe(category1.id);
-      expect(result.data[0].callCode).toBe('ODO-0001');
+      expect(result.items).toHaveLength(1);
+      expect(result.items[0].serviceCategoryId).toBe(category1.id);
+      expect(result.items[0].callCode).toBe('ODO-0001');
     });
 
-    it('should filter linkages by search term matching beneficiary fields', async () => {
+    it('should filter appointments by search term matching beneficiary fields', async () => {
       const category = await prisma.serviceCategory.create({
         data: { name: 'Fisioterapia', prefix: 'FIS' },
       });
@@ -123,7 +123,7 @@ describe('BeneficiaryCategoryService Integration', () => {
         },
       });
 
-      await prisma.beneficiaryCategory.create({
+      await prisma.appointment.create({
         data: {
           beneficiaryId: beneficiary1.id,
           serviceCategoryId: category.id,
@@ -131,7 +131,7 @@ describe('BeneficiaryCategoryService Integration', () => {
         },
       });
 
-      await prisma.beneficiaryCategory.create({
+      await prisma.appointment.create({
         data: {
           beneficiaryId: beneficiary2.id,
           serviceCategoryId: category.id,
@@ -141,18 +141,18 @@ describe('BeneficiaryCategoryService Integration', () => {
 
       // Search by name
       const searchByName = await service.findMany({ search: 'Carlos' });
-      expect(searchByName.data).toHaveLength(1);
-      expect(searchByName.data[0].beneficiary.fullName).toBe('Carlos Alberto');
+      expect(searchByName.items).toHaveLength(1);
+      expect(searchByName.items[0].beneficiary.fullName).toBe('Carlos Alberto');
 
       // Search by CPF
-      const searchByCpf = await service.findMany({ search: '444555' });
-      expect(searchByCpf.data).toHaveLength(1);
-      expect(searchByCpf.data[0].beneficiary.fullName).toBe('Roberto Santos');
+      const searchByCpf = await service.findMany({ search: '444555666' });
+      expect(searchByCpf.items).toHaveLength(1);
+      expect(searchByCpf.items[0].beneficiary.fullName).toBe('Roberto Santos');
 
       // Search by email
       const searchByEmail = await service.findMany({ search: 'carlos@' });
-      expect(searchByEmail.data).toHaveLength(1);
-      expect(searchByEmail.data[0].beneficiary.fullName).toBe('Carlos Alberto');
+      expect(searchByEmail.items).toHaveLength(1);
+      expect(searchByEmail.items[0].beneficiary.fullName).toBe('Carlos Alberto');
     });
 
     it('should support pagination with page and perPage parameters', async () => {
@@ -177,21 +177,21 @@ describe('BeneficiaryCategoryService Integration', () => {
         data: { name: 'Nutrição 3', prefix: 'NU3' },
       });
 
-      await prisma.beneficiaryCategory.create({
+      await prisma.appointment.create({
         data: { beneficiaryId: beneficiary.id, serviceCategoryId: category.id, callCode: 'NUT-0001' },
       });
-      await prisma.beneficiaryCategory.create({
+      await prisma.appointment.create({
         data: { beneficiaryId: beneficiary.id, serviceCategoryId: cat2.id, callCode: 'NU2-0001' },
       });
-      await prisma.beneficiaryCategory.create({
+      await prisma.appointment.create({
         data: { beneficiaryId: beneficiary.id, serviceCategoryId: cat3.id, callCode: 'NU3-0001' },
       });
 
       const page1 = await service.findMany({ page: 1, perPage: 2 });
       const page2 = await service.findMany({ page: 2, perPage: 2 });
 
-      expect(page1.data).toHaveLength(2);
-      expect(page2.data).toHaveLength(1);
+      expect(page1.items).toHaveLength(2);
+      expect(page2.items).toHaveLength(1);
     });
   });
 });

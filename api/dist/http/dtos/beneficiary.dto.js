@@ -19,7 +19,7 @@ class CreateBeneficiaryDto {
     phone;
     birthDate;
     gender;
-    serviceCategoryId;
+    address;
 }
 exports.CreateBeneficiaryDto = CreateBeneficiaryDto;
 __decorate([
@@ -54,10 +54,10 @@ __decorate([
     __metadata("design:type", String)
 ], CreateBeneficiaryDto.prototype, "gender", void 0);
 __decorate([
-    (0, class_validator_1.IsString)({ message: 'O ID da categoria de serviço deve ser uma string' }),
-    (0, class_validator_1.IsNotEmpty)({ message: 'O ID da categoria de serviço é obrigatório' }),
+    (0, class_validator_1.IsString)({ message: 'O endereço deve ser uma string' }),
+    (0, class_validator_1.IsOptional)(),
     __metadata("design:type", String)
-], CreateBeneficiaryDto.prototype, "serviceCategoryId", void 0);
+], CreateBeneficiaryDto.prototype, "address", void 0);
 class AddBeneficiaryCategoryDto {
     serviceCategoryId;
 }
@@ -74,7 +74,7 @@ class UpdateBeneficiaryDto {
     phone;
     birthDate;
     gender;
-    serviceCategoryId;
+    address;
 }
 exports.UpdateBeneficiaryDto = UpdateBeneficiaryDto;
 __decorate([
@@ -109,8 +109,8 @@ __decorate([
     __metadata("design:type", String)
 ], UpdateBeneficiaryDto.prototype, "gender", void 0);
 __decorate([
-    (0, class_validator_1.IsString)({ message: 'O ID da categoria de serviço deve ser uma string' }),
+    (0, class_validator_1.IsString)({ message: 'O endereço deve ser uma string' }),
     (0, class_validator_1.IsOptional)(),
     __metadata("design:type", String)
-], UpdateBeneficiaryDto.prototype, "serviceCategoryId", void 0);
+], UpdateBeneficiaryDto.prototype, "address", void 0);
 //# sourceMappingURL=beneficiary.dto.js.map

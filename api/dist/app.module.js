@@ -27,8 +27,8 @@ const beneficiary_service_1 = require("./services/beneficiary.service");
 const export_service_1 = require("./services/export.service");
 const dashboard_controller_1 = require("./http/controllers/dashboard.controller");
 const dashboard_service_1 = require("./services/dashboard.service");
-const beneficiary_category_controller_1 = require("./http/controllers/beneficiary-category.controller");
-const beneficiary_category_service_1 = require("./services/beneficiary-category.service");
+const appointment_controller_1 = require("./http/controllers/appointment.controller");
+const appointment_service_1 = require("./services/appointment.service");
 let AppModule = class AppModule {
 };
 exports.AppModule = AppModule;
@@ -54,7 +54,7 @@ exports.AppModule = AppModule = __decorate([
             service_category_controller_1.ServiceCategoryController,
             beneficiary_controller_1.BeneficiaryController,
             dashboard_controller_1.DashboardController,
-            beneficiary_category_controller_1.BeneficiaryCategoryController,
+            appointment_controller_1.AppointmentController,
         ],
         providers: [
             app_service_1.AppService,
@@ -66,7 +66,7 @@ exports.AppModule = AppModule = __decorate([
             auth_service_1.AuthService,
             jwt_guard_1.JwtGuard,
             jwt_strategy_1.JwtStrategy,
-            beneficiary_category_service_1.BeneficiaryCategoryService,
+            appointment_service_1.AppointmentService,
         ],
     })
 ], AppModule);

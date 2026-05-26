@@ -36,7 +36,7 @@ describe('DashboardController (e2e)', () => {
   });
 
   beforeEach(async () => {
-    await prisma.beneficiaryCategory.deleteMany();
+    await prisma.appointment.deleteMany();
     await prisma.beneficiary.deleteMany();
     await prisma.serviceCategory.deleteMany();
   });
@@ -61,7 +61,7 @@ describe('DashboardController (e2e)', () => {
         overview: {
           totalBeneficiaries: 0,
           totalCategories: 0,
-          totalLinks: 0,
+          totalAppointments: 0,
           beneficiariesWithoutCategory: 0,
           averageCategoriesPerBeneficiary: 0,
         },
@@ -74,7 +74,7 @@ describe('DashboardController (e2e)', () => {
   });
 
   it('should return dashboard with populated data', async () => {
-    const cat = await prisma.serviceCategory.create({ data: { name: 'Assistência Social' } });
+    const cat = await prisma.serviceCategory.create({ data: { name: 'Assistência Social', prefix: 'A' } });
 
     await prisma.beneficiary.create({
       data: {
@@ -83,7 +83,7 @@ describe('DashboardController (e2e)', () => {
         email: 'joao@example.com',
         birthDate: new Date('1995-05-15'),
         gender: Gender.MALE,
-        categories: { create: { serviceCategoryId: cat.id } },
+        appointments: { create: { serviceCategoryId: cat.id, callCode: 'TST-0001' } },
       },
     });
 
@@ -95,7 +95,7 @@ describe('DashboardController (e2e)', () => {
     expect(response.body.ok).toBe(true);
     expect(response.body.data.overview.totalBeneficiaries).toBe(1);
     expect(response.body.data.overview.totalCategories).toBe(1);
-    expect(response.body.data.overview.totalLinks).toBe(1);
+    expect(response.body.data.overview.totalAppointments).toBe(1);
     expect(response.body.data.topCategory).not.toBeNull();
     expect(response.body.data.topCategory.name).toBe('Assistência Social');
     expect(response.body.data.categoriesRanking).toHaveLength(1);
@@ -103,5 +103,52 @@ describe('DashboardController (e2e)', () => {
     expect(response.body.data.genderDistribution[0].gender).toBe(Gender.MALE);
     expect(response.body.data.recentBeneficiaries).toHaveLength(1);
     expect(response.body.data.recentBeneficiaries[0].fullName).toBe('João da Silva');
+  });
+
+  it('should return categories ranked by beneficiary count', async () => {
+    const cat1 = await prisma.serviceCategory.create({ data: { name: 'Saúde', prefix: 'S' } });
+    const cat2 = await prisma.serviceCategory.create({ data: { name: 'Educação', prefix: 'E' } });
+
+    await prisma.beneficiary.create({
+      data: {
+        fullName: 'João',
+        cpf: '11111111111',
+        birthDate: new Date('1990-01-01'),
+        gender: Gender.MALE,
+        appointments: { create: { serviceCategoryId: cat1.id, callCode: 'TST-0002' } },
+      },
+    });
+
+    await prisma.beneficiary.create({
+      data: {
+        fullName: 'Maria',
+        cpf: '22222222222',
+        birthDate: new Date('1990-01-01'),
+        gender: Gender.FEMALE,
+        appointments: { create: { serviceCategoryId: cat1.id, callCode: 'TST-0003' } },
+      },
+    });
+
+    await prisma.beneficiary.create({
+      data: {
+        fullName: 'Carlos',
+        cpf: '33333333333',
+        birthDate: new Date('1990-01-01'),
+        gender: Gender.MALE,
+        appointments: { create: { serviceCategoryId: cat2.id, callCode: 'TST-0004' } },
+      },
+    });
+
+    const response = await request(app.getHttpServer())
+      .get('/dashboard')
+      .set('Authorization', `Bearer ${accessToken}`)
+      .expect(200);
+
+    expect(response.body.data.categoriesRanking).toHaveLength(2);
+    expect(response.body.data.categoriesRanking[0].name).toBe('Saúde');
+    expect(response.body.data.categoriesRanking[0].totalBeneficiaries).toBe(2);
+    expect(response.body.data.categoriesRanking[1].name).toBe('Educação');
+    expect(response.body.data.categoriesRanking[1].totalBeneficiaries).toBe(1);
+    expect(response.body.data.topCategory.name).toBe('Saúde');
   });
 });

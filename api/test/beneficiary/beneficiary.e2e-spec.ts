@@ -44,7 +44,7 @@ describe('BeneficiaryController (e2e)', () => {
   });
 
   beforeEach(async () => {
-    await prisma.beneficiaryCategory.deleteMany();
+    await prisma.appointment.deleteMany();
     await prisma.beneficiary.deleteMany();
     await prisma.serviceCategory.deleteMany();
   });
@@ -59,17 +59,13 @@ describe('BeneficiaryController (e2e)', () => {
 
   describe('POST /beneficiaries', () => {
     it('should create a beneficiary successfully', async () => {
-      const category = await prisma.serviceCategory.create({
-        data: { name: 'Assistência Social' },
-      });
-
       const payload = {
         fullName: 'João da Silva',
         cpf: '12345678901',
         email: 'joao@example.com',
         birthDate: '1995-05-15T00:00:00.000Z',
         gender: Gender.MALE,
-        serviceCategoryId: category.id,
+        address: 'Rua das Flores, 123',
       };
 
       const response = await request(app.getHttpServer())
@@ -87,12 +83,9 @@ describe('BeneficiaryController (e2e)', () => {
           fullName: 'João da Silva',
           cpf: '12345678901',
           email: 'joao@example.com',
+          address: 'Rua das Flores, 123',
           gender: Gender.MALE,
-          categories: expect.arrayContaining([
-            expect.objectContaining({
-              serviceCategoryId: category.id,
-            }),
-          ]),
+          appointments: [],
         }),
       });
 
@@ -116,14 +109,9 @@ describe('BeneficiaryController (e2e)', () => {
       expect(response.body.errors).toContain('O CPF é obrigatório');
       expect(response.body.errors).toContain('A data de nascimento é obrigatória');
       expect(response.body.errors).toContain('O gênero deve ser MALE, FEMALE ou OTHER');
-      expect(response.body.errors).toContain('O ID da categoria de serviço deve ser uma string');
     });
 
     it('should return 400 when name is too short', async () => {
-      const category = await prisma.serviceCategory.create({
-        data: { name: 'Assistência Social' },
-      });
-
       const response = await request(app.getHttpServer())
         .post('/beneficiaries')
         .set('Authorization', `Bearer ${accessToken}`)
@@ -132,7 +120,6 @@ describe('BeneficiaryController (e2e)', () => {
           cpf: '12345678901',
           birthDate: '1995-05-15T00:00:00.000Z',
           gender: Gender.MALE,
-          serviceCategoryId: category.id,
         })
         .expect(400);
 
@@ -142,10 +129,6 @@ describe('BeneficiaryController (e2e)', () => {
     });
 
     it('should return 400 when email format is invalid', async () => {
-      const category = await prisma.serviceCategory.create({
-        data: { name: 'Assistência Social' },
-      });
-
       const response = await request(app.getHttpServer())
         .post('/beneficiaries')
         .set('Authorization', `Bearer ${accessToken}`)
@@ -155,7 +138,6 @@ describe('BeneficiaryController (e2e)', () => {
           email: 'invalid-email',
           birthDate: '1995-05-15T00:00:00.000Z',
           gender: Gender.MALE,
-          serviceCategoryId: category.id,
         })
         .expect(400);
 
@@ -163,7 +145,7 @@ describe('BeneficiaryController (e2e)', () => {
       expect(response.body.errors).toContain('O e-mail deve ser um endereço de e-mail válido');
     });
 
-    it('should return 404 when the service category does not exist', async () => {
+    it('should return 400 when gender is invalid', async () => {
       const response = await request(app.getHttpServer())
         .post('/beneficiaries')
         .set('Authorization', `Bearer ${accessToken}`)
@@ -171,25 +153,15 @@ describe('BeneficiaryController (e2e)', () => {
           fullName: 'João da Silva',
           cpf: '12345678901',
           birthDate: '1995-05-15T00:00:00.000Z',
-          gender: Gender.MALE,
-          serviceCategoryId: 'non-existent-category-id',
+          gender: 'INVALID_GENDER',
         })
-        .expect(404);
+        .expect(400);
 
-      expect(response.body).toEqual(
-        expect.objectContaining({
-          code: 404,
-          ok: false,
-          message: 'Categoria de serviço não encontrada',
-        }),
-      );
+      expect(response.body.ok).toBe(false);
+      expect(response.body.errors).toContain('O gênero deve ser MALE, FEMALE ou OTHER');
     });
 
     it('should return 409 when the beneficiary CPF already exists', async () => {
-      const category = await prisma.serviceCategory.create({
-        data: { name: 'Assistência Social' },
-      });
-
       await prisma.beneficiary.create({
         data: {
           fullName: 'Maria da Silva',
@@ -207,7 +179,6 @@ describe('BeneficiaryController (e2e)', () => {
           cpf: '12345678901',
           birthDate: '1995-05-15T00:00:00.000Z',
           gender: Gender.MALE,
-          serviceCategoryId: category.id,
         })
         .expect(409);
 
@@ -221,10 +192,6 @@ describe('BeneficiaryController (e2e)', () => {
     });
 
     it('should return 409 when the beneficiary email already exists', async () => {
-      const category = await prisma.serviceCategory.create({
-        data: { name: 'Assistência Social' },
-      });
-
       await prisma.beneficiary.create({
         data: {
           fullName: 'Maria da Silva',
@@ -244,7 +211,6 @@ describe('BeneficiaryController (e2e)', () => {
           email: 'duplicate@example.com',
           birthDate: '1995-05-15T00:00:00.000Z',
           gender: Gender.MALE,
-          serviceCategoryId: category.id,
         })
         .expect(409);
 
@@ -275,9 +241,9 @@ describe('BeneficiaryController (e2e)', () => {
         .query({ page: 1, perPage: 5 })
         .expect(200);
 
-      expect(page1.body.data).toHaveLength(5);
-      expect(page1.body.data[0].fullName).toBe('Beneficiário 01');
-      expect(page1.body.data[4].fullName).toBe('Beneficiário 05');
+      expect(page1.body.data.items).toHaveLength(5);
+      expect(page1.body.data.items[0].fullName).toBe('Beneficiário 01');
+      expect(page1.body.data.items[4].fullName).toBe('Beneficiário 05');
 
       const page2 = await request(app.getHttpServer())
         .get('/beneficiaries')
@@ -285,8 +251,8 @@ describe('BeneficiaryController (e2e)', () => {
         .query({ page: 2, perPage: 5 })
         .expect(200);
 
-      expect(page2.body.data).toHaveLength(5);
-      expect(page2.body.data[0].fullName).toBe('Beneficiário 06');
+      expect(page2.body.data.items).toHaveLength(5);
+      expect(page2.body.data.items[0].fullName).toBe('Beneficiário 06');
 
       const page3 = await request(app.getHttpServer())
         .get('/beneficiaries')
@@ -294,8 +260,8 @@ describe('BeneficiaryController (e2e)', () => {
         .query({ page: 3, perPage: 5 })
         .expect(200);
 
-      expect(page3.body.data).toHaveLength(2);
-      expect(page3.body.data[0].fullName).toBe('Beneficiário 11');
+      expect(page3.body.data.items).toHaveLength(2);
+      expect(page3.body.data.items[0].fullName).toBe('Beneficiário 11');
 
       const emptyPage = await request(app.getHttpServer())
         .get('/beneficiaries')
@@ -303,7 +269,7 @@ describe('BeneficiaryController (e2e)', () => {
         .query({ page: 4, perPage: 5 })
         .expect(200);
 
-      expect(emptyPage.body.data).toHaveLength(0);
+      expect(emptyPage.body.data.items).toHaveLength(0);
     });
 
     it('should retrieve all beneficiaries ordered alphabetically by name', async () => {
@@ -322,10 +288,10 @@ describe('BeneficiaryController (e2e)', () => {
 
       expect(response.body.ok).toBe(true);
       expect(response.body.message).toBe('Beneficiários listados com sucesso');
-      expect(response.body.data).toHaveLength(3);
-      expect(response.body.data[0].fullName).toBe('Ana Silva');
-      expect(response.body.data[1].fullName).toBe('Bruna Silva');
-      expect(response.body.data[2].fullName).toBe('Carlos Silva');
+      expect(response.body.data.items).toHaveLength(3);
+      expect(response.body.data.items[0].fullName).toBe('Ana Silva');
+      expect(response.body.data.items[1].fullName).toBe('Bruna Silva');
+      expect(response.body.data.items[2].fullName).toBe('Carlos Silva');
     });
 
     it('should filter beneficiaries when a search query is passed', async () => {
@@ -343,8 +309,8 @@ describe('BeneficiaryController (e2e)', () => {
         .query({ search: 'carlos' })
         .expect(200);
 
-      expect(searchByName.body.data).toHaveLength(1);
-      expect(searchByName.body.data[0].fullName).toBe('Carlos Alberto');
+      expect(searchByName.body.data.items).toHaveLength(1);
+      expect(searchByName.body.data.items[0].fullName).toBe('Carlos Alberto');
 
       // Search by CPF
       const searchByCpf = await request(app.getHttpServer())
@@ -353,8 +319,8 @@ describe('BeneficiaryController (e2e)', () => {
         .query({ search: '67890' })
         .expect(200);
 
-      expect(searchByCpf.body.data).toHaveLength(1);
-      expect(searchByCpf.body.data[0].fullName).toBe('Ana Maria');
+      expect(searchByCpf.body.data.items).toHaveLength(1);
+      expect(searchByCpf.body.data.items[0].fullName).toBe('Ana Maria');
 
       // Search by Email
       const searchByEmail = await request(app.getHttpServer())
@@ -363,13 +329,13 @@ describe('BeneficiaryController (e2e)', () => {
         .query({ search: 'carlos@example' })
         .expect(200);
 
-      expect(searchByEmail.body.data).toHaveLength(1);
-      expect(searchByEmail.body.data[0].fullName).toBe('Carlos Alberto');
+      expect(searchByEmail.body.data.items).toHaveLength(1);
+      expect(searchByEmail.body.data.items[0].fullName).toBe('Carlos Alberto');
     });
 
     it('should filter beneficiaries by serviceCategoryId', async () => {
       const cat = await prisma.serviceCategory.create({
-        data: { name: 'Saúde' },
+        data: { name: 'Saúde', prefix: 'S' },
       });
 
       await prisma.beneficiary.create({
@@ -378,8 +344,8 @@ describe('BeneficiaryController (e2e)', () => {
           cpf: '123',
           birthDate: new Date(),
           gender: Gender.MALE,
-          categories: {
-            create: { serviceCategoryId: cat.id },
+          appointments: {
+            create: { serviceCategoryId: cat.id, callCode: 'TST-0001' },
           },
         },
       });
@@ -399,8 +365,8 @@ describe('BeneficiaryController (e2e)', () => {
         .query({ serviceCategoryId: cat.id })
         .expect(200);
 
-      expect(response.body.data).toHaveLength(1);
-      expect(response.body.data[0].fullName).toBe('Carlos Alberto');
+      expect(response.body.data.items).toHaveLength(1);
+      expect(response.body.data.items[0].fullName).toBe('Carlos Alberto');
     });
   });
 
@@ -480,43 +446,6 @@ describe('BeneficiaryController (e2e)', () => {
       expect(dbBeneficiary?.fullName).toBe('João de Silva');
     });
 
-    it('should update service category successfully', async () => {
-      const cat1 = await prisma.serviceCategory.create({
-        data: { name: 'Saúde' },
-      });
-
-      const cat2 = await prisma.serviceCategory.create({
-        data: { name: 'Educação' },
-      });
-
-      const beneficiary = await prisma.beneficiary.create({
-        data: {
-          fullName: 'João Silva',
-          cpf: '12345678901',
-          birthDate: new Date('1995-05-15T00:00:00.000Z'),
-          gender: Gender.MALE,
-          categories: {
-            create: { serviceCategoryId: cat1.id },
-          },
-        },
-      });
-
-      const response = await request(app.getHttpServer())
-        .patch(`/beneficiaries/${beneficiary.id}`)
-        .set('Authorization', `Bearer ${accessToken}`)
-        .send({ serviceCategoryId: cat2.id })
-        .expect(200);
-
-      expect(response.body.data.categories).toHaveLength(1);
-      expect(response.body.data.categories[0].serviceCategoryId).toBe(cat2.id);
-
-      const dbCategoryRelations = await prisma.beneficiaryCategory.findMany({
-        where: { beneficiaryId: beneficiary.id },
-      });
-      expect(dbCategoryRelations).toHaveLength(1);
-      expect(dbCategoryRelations[0].serviceCategoryId).toBe(cat2.id);
-    });
-
     it('should return 400 when validation fails', async () => {
       const beneficiary = await prisma.beneficiary.create({
         data: {
@@ -546,26 +475,6 @@ describe('BeneficiaryController (e2e)', () => {
 
       expect(response.body.ok).toBe(false);
       expect(response.body.message).toBe('Beneficiário não encontrado');
-    });
-
-    it('should return 404 when updating service category to a non-existent category', async () => {
-      const beneficiary = await prisma.beneficiary.create({
-        data: {
-          fullName: 'João Silva',
-          cpf: '12345678901',
-          birthDate: new Date('1995-05-15T00:00:00.000Z'),
-          gender: Gender.MALE,
-        },
-      });
-
-      const response = await request(app.getHttpServer())
-        .patch(`/beneficiaries/${beneficiary.id}`)
-        .set('Authorization', `Bearer ${accessToken}`)
-        .send({ serviceCategoryId: 'non-existent-category-id' })
-        .expect(404);
-
-      expect(response.body.ok).toBe(false);
-      expect(response.body.message).toBe('Categoria de serviço não encontrada');
     });
 
     it('should return 409 if updated CPF is already taken by another beneficiary', async () => {
@@ -640,7 +549,7 @@ describe('BeneficiaryController (e2e)', () => {
         },
       });
       const category = await prisma.serviceCategory.create({
-        data: { name: 'Saúde' },
+        data: { name: 'Saúde', prefix: 'S' },
       });
 
       const response = await request(app.getHttpServer())
@@ -653,16 +562,12 @@ describe('BeneficiaryController (e2e)', () => {
         code: 201,
         ok: true,
         message: 'Categoria vinculada ao beneficiário com sucesso',
-        data: expect.objectContaining({
-          beneficiaryId: beneficiary.id,
-          serviceCategoryId: category.id,
-        }),
       });
     });
 
     it('should return 404 if beneficiary does not exist', async () => {
       const category = await prisma.serviceCategory.create({
-        data: { name: 'Saúde' },
+        data: { name: 'Saúde', prefix: 'S' },
       });
 
       const response = await request(app.getHttpServer())
@@ -705,13 +610,14 @@ describe('BeneficiaryController (e2e)', () => {
         },
       });
       const category = await prisma.serviceCategory.create({
-        data: { name: 'Saúde' },
+        data: { name: 'Saúde', prefix: 'S' },
       });
 
-      await prisma.beneficiaryCategory.create({
+      await prisma.appointment.create({
         data: {
           beneficiaryId: beneficiary.id,
           serviceCategoryId: category.id,
+          callCode: 'TST-0003',
         },
       });
 
@@ -757,13 +663,14 @@ describe('BeneficiaryController (e2e)', () => {
         },
       });
       const category = await prisma.serviceCategory.create({
-        data: { name: 'Saúde' },
+        data: { name: 'Saúde', prefix: 'S' },
       });
 
-      await prisma.beneficiaryCategory.create({
+      await prisma.appointment.create({
         data: {
           beneficiaryId: beneficiary.id,
           serviceCategoryId: category.id,
+          callCode: 'TST-0004',
         },
       });
 
@@ -779,7 +686,7 @@ describe('BeneficiaryController (e2e)', () => {
         data: null,
       });
 
-      const dbRelation = await prisma.beneficiaryCategory.findUnique({
+      const dbRelation = await prisma.appointment.findUnique({
         where: {
           beneficiaryId_serviceCategoryId: {
             beneficiaryId: beneficiary.id,

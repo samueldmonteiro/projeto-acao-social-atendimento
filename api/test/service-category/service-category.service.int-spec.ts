@@ -17,7 +17,7 @@ describe('ServiceCategoryService Integration', () => {
   });
 
   beforeEach(async () => {
-    await prisma.beneficiaryCategory.deleteMany();
+    await prisma.appointment.deleteMany();
     await prisma.serviceCategory.deleteMany();
   });
 
@@ -27,17 +27,31 @@ describe('ServiceCategoryService Integration', () => {
 
       expect(category).toHaveProperty('id');
       expect(category.name).toBe('Saúde');
+      expect(category.prefix).toBe('S');
 
       const dbCategory = await prisma.serviceCategory.findUnique({
         where: { id: category.id },
       });
       expect(dbCategory).not.toBeNull();
       expect(dbCategory?.name).toBe('Saúde');
+      expect(dbCategory?.prefix).toBe('S');
+    });
+
+    it('should generate prefix from first letters of each word (max 5)', async () => {
+      const category = await service.create({ name: 'Assistência Social' });
+
+      expect(category.prefix).toBe('AS');
+    });
+
+    it('should generate prefix uppercase and limited to 5 characters', async () => {
+      const category = await service.create({ name: 'Assistência Social Médica Odontológica Jurídica' });
+
+      expect(category.prefix).toBe('ASMOJ');
     });
 
     it('should throw ServiceCategoryAlreadyExistsError if a category with the same name exists', async () => {
       await prisma.serviceCategory.create({
-        data: { name: 'Saúde' },
+        data: { name: 'Saúde', prefix: 'S' },
       });
 
       await expect(service.create({ name: 'Saúde' })).rejects.toThrow(
@@ -49,7 +63,7 @@ describe('ServiceCategoryService Integration', () => {
   describe('update', () => {
     it('should update a service category name successfully', async () => {
       const created = await prisma.serviceCategory.create({
-        data: { name: 'Alimentação' },
+        data: { name: 'Alimentação', prefix: 'A' },
       });
 
       const updated = await service.update(created.id, { name: 'Alimentação Saudável' });
@@ -64,7 +78,7 @@ describe('ServiceCategoryService Integration', () => {
 
     it('should allow updating the category even if name is not changed (retains existing)', async () => {
       const created = await prisma.serviceCategory.create({
-        data: { name: 'Educação' },
+        data: { name: 'Educação', prefix: 'E' },
       });
 
       const updated = await service.update(created.id, { name: 'Educação' });
@@ -74,10 +88,10 @@ describe('ServiceCategoryService Integration', () => {
 
     it('should throw ServiceCategoryAlreadyExistsError if the name is already taken by another category', async () => {
       await prisma.serviceCategory.create({
-        data: { name: 'Educação' },
+        data: { name: 'Educação', prefix: 'E' },
       });
       const cat2 = await prisma.serviceCategory.create({
-        data: { name: 'Saúde' },
+        data: { name: 'Saúde', prefix: 'S' },
       }); 
 
       await expect(
@@ -95,7 +109,7 @@ describe('ServiceCategoryService Integration', () => {
   describe('delete', () => {
     it('should delete a service category successfully', async () => {
       const created = await prisma.serviceCategory.create({
-        data: { name: 'Lazer' },
+        data: { name: 'Lazer', prefix: 'L' },
       });
 
       await service.delete(created.id);
@@ -116,7 +130,7 @@ describe('ServiceCategoryService Integration', () => {
   describe('findById', () => {
     it('should retrieve a category by its ID', async () => {
       const created = await prisma.serviceCategory.create({
-        data: { name: 'Cultura' },
+        data: { name: 'Cultura', prefix: 'C' },
       });
 
       const found = await service.findById(created.id);
@@ -135,7 +149,11 @@ describe('ServiceCategoryService Integration', () => {
   describe('findMany', () => {
     it('should list all categories ordered by name asc', async () => {
       await prisma.serviceCategory.createMany({
-        data: [{ name: 'Cultura' }, { name: 'Alimentação' }, { name: 'Saúde' }],
+        data: [
+          { name: 'Cultura', prefix: 'C' },
+          { name: 'Alimentação', prefix: 'A' },
+          { name: 'Saúde', prefix: 'S' },
+        ],
       });
 
       const list = await service.findMany();
@@ -149,9 +167,9 @@ describe('ServiceCategoryService Integration', () => {
     it('should return matching categories case-insensitively when search query is passed', async () => {
       await prisma.serviceCategory.createMany({
         data: [
-          { name: 'Assistência Social' },
-          { name: 'Assistência Médica' },
-          { name: 'Educação' },
+          { name: 'Assistência Social', prefix: 'AS' },
+          { name: 'Assistência Médica', prefix: 'AM' },
+          { name: 'Educação', prefix: 'E' },
         ],
       });
 

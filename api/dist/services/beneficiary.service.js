@@ -14,38 +14,8 @@ const beneficiary_already_exists_error_1 = require("../errors/beneficiary-alread
 const service_category_not_found_error_1 = require("../errors/service-category-not-found.error");
 const category_already_linked_error_1 = require("../errors/category-already-linked.error");
 let BeneficiaryService = class BeneficiaryService {
-    async generateCallCode(serviceCategoryId, tx) {
-        const category = await tx.serviceCategory.findUnique({
-            where: { id: serviceCategoryId },
-            select: { prefix: true },
-        });
-        if (!category) {
-            throw new service_category_not_found_error_1.ServiceCategoryNotFoundError();
-        }
-        const last = await tx.beneficiaryCategory.findFirst({
-            where: { serviceCategoryId },
-            orderBy: { callCode: 'desc' },
-            select: { callCode: true },
-        });
-        let nextNumber = 1;
-        if (last) {
-            const parts = last.callCode.split('-');
-            const lastNumber = parseInt(parts[parts.length - 1], 10);
-            if (!isNaN(lastNumber)) {
-                nextNumber = lastNumber + 1;
-            }
-        }
-        const paddedNumber = String(nextNumber).padStart(4, '0');
-        return `${category.prefix}-${paddedNumber}`;
-    }
     async create(data) {
         return await prisma_1.prisma.$transaction(async (tx) => {
-            const categoryExists = await tx.serviceCategory.findUnique({
-                where: { id: data.serviceCategoryId },
-            });
-            if (!categoryExists) {
-                throw new service_category_not_found_error_1.ServiceCategoryNotFoundError();
-            }
             const cpfExists = await tx.beneficiary.findUnique({
                 where: { cpf: data.cpf },
             });
@@ -60,7 +30,6 @@ let BeneficiaryService = class BeneficiaryService {
                     throw new beneficiary_already_exists_error_1.BeneficiaryAlreadyExistsError('Beneficiário com este e-mail já cadastrado');
                 }
             }
-            const callCode = await this.generateCallCode(data.serviceCategoryId, tx);
             return await tx.beneficiary.create({
                 data: {
                     fullName: data.fullName,
@@ -69,23 +38,10 @@ let BeneficiaryService = class BeneficiaryService {
                     phone: data.phone,
                     birthDate: new Date(data.birthDate),
                     gender: data.gender,
-                    categories: {
-                        create: {
-                            serviceCategoryId: data.serviceCategoryId,
-                            callCode,
-                        },
-                    },
+                    address: data.address,
                 },
                 include: {
-                    categories: {
-                        select: {
-                            callCode: true,
-                            serviceCategoryId: true,
-                            serviceCategory: {
-                                select: { id: true, name: true, prefix: true },
-                            },
-                        },
-                    },
+                    appointments: { include: { serviceCategory: true } },
                 },
             });
         });
@@ -114,25 +70,6 @@ let BeneficiaryService = class BeneficiaryService {
                     throw new beneficiary_already_exists_error_1.BeneficiaryAlreadyExistsError('Beneficiário com este e-mail já cadastrado');
                 }
             }
-            if (data.serviceCategoryId) {
-                const categoryExists = await tx.serviceCategory.findUnique({
-                    where: { id: data.serviceCategoryId },
-                });
-                if (!categoryExists) {
-                    throw new service_category_not_found_error_1.ServiceCategoryNotFoundError();
-                }
-                await tx.beneficiaryCategory.deleteMany({
-                    where: { beneficiaryId: id },
-                });
-                const callCode = await this.generateCallCode(data.serviceCategoryId, tx);
-                await tx.beneficiaryCategory.create({
-                    data: {
-                        beneficiaryId: id,
-                        serviceCategoryId: data.serviceCategoryId,
-                        callCode,
-                    },
-                });
-            }
             const updateData = {
                 fullName: data.fullName,
                 cpf: data.cpf,
@@ -140,12 +77,13 @@ let BeneficiaryService = class BeneficiaryService {
                 phone: data.phone,
                 birthDate: data.birthDate ? new Date(data.birthDate) : undefined,
                 gender: data.gender,
+                address: data.address,
             };
             return await tx.beneficiary.update({
                 where: { id },
                 data: updateData,
                 include: {
-                    categories: {
+                    appointments: {
                         select: {
                             callCode: true,
                             serviceCategoryId: true,
@@ -172,7 +110,7 @@ let BeneficiaryService = class BeneficiaryService {
             if (!category) {
                 throw new service_category_not_found_error_1.ServiceCategoryNotFoundError();
             }
-            const existing = await tx.beneficiaryCategory.findUnique({
+            const existing = await tx.appointment.findUnique({
                 where: {
                     beneficiaryId_serviceCategoryId: {
                         beneficiaryId: id,
@@ -183,19 +121,6 @@ let BeneficiaryService = class BeneficiaryService {
             if (existing) {
                 throw new category_already_linked_error_1.CategoryAlreadyLinkedError();
             }
-            const callCode = await this.generateCallCode(serviceCategoryId, tx);
-            return await tx.beneficiaryCategory.create({
-                data: {
-                    beneficiaryId: id,
-                    serviceCategoryId,
-                    callCode,
-                },
-                include: {
-                    serviceCategory: {
-                        select: { id: true, name: true, prefix: true },
-                    },
-                },
-            });
         });
     }
     async removeCategory(id, serviceCategoryId) {
@@ -205,7 +130,7 @@ let BeneficiaryService = class BeneficiaryService {
         if (!beneficiary) {
             throw new beneficiary_not_found_error_1.BeneficiaryNotFoundError();
         }
-        const existing = await prisma_1.prisma.beneficiaryCategory.findUnique({
+        const existing = await prisma_1.prisma.appointment.findUnique({
             where: {
                 beneficiaryId_serviceCategoryId: {
                     beneficiaryId: id,
@@ -216,7 +141,7 @@ let BeneficiaryService = class BeneficiaryService {
         if (!existing) {
             throw new service_category_not_found_error_1.ServiceCategoryNotFoundError('Vínculo entre beneficiário e categoria não encontrado');
         }
-        await prisma_1.prisma.beneficiaryCategory.delete({
+        await prisma_1.prisma.appointment.delete({
             where: {
                 beneficiaryId_serviceCategoryId: {
                     beneficiaryId: id,
@@ -240,7 +165,7 @@ let BeneficiaryService = class BeneficiaryService {
         const beneficiary = await prisma_1.prisma.beneficiary.findUnique({
             where: { id },
             include: {
-                categories: {
+                appointments: {
                     select: {
                         callCode: true,
                         serviceCategoryId: true,
@@ -283,7 +208,7 @@ let BeneficiaryService = class BeneficiaryService {
             ];
         }
         if (filters.serviceCategoryId) {
-            where.categories = {
+            where.appointments = {
                 some: {
                     serviceCategoryId: filters.serviceCategoryId,
                 },
@@ -293,7 +218,7 @@ let BeneficiaryService = class BeneficiaryService {
             prisma_1.prisma.beneficiary.findMany({
                 where,
                 include: {
-                    categories: {
+                    appointments: {
                         select: {
                             callCode: true,
                             serviceCategoryId: true,

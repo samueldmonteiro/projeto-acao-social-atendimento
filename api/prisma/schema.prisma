@@ -30,16 +30,17 @@ model User {
 }
 
 model Beneficiary {
-  id         String                @id @default(uuid())
-  fullName   String
-  cpf        String                @unique
-  email      String?               @unique
-  phone      String?
-  birthDate  DateTime
-  gender     Gender
-  categories BeneficiaryCategory[]
-  createdAt  DateTime              @default(now())
-  updatedAt  DateTime              @updatedAt
+  id           String        @id @default(uuid())
+  fullName     String
+  cpf          String        @unique
+  email        String?       @unique
+  phone        String?
+  birthDate    DateTime
+  gender       Gender
+  address      String?
+  appointments Appointment[]
+  createdAt    DateTime      @default(now())
+  updatedAt    DateTime      @updatedAt
 
   @@map("beneficiaries")
 }
@@ -49,7 +50,7 @@ model ServiceCategory {
   name   String @unique
   prefix String
 
-  beneficiaries BeneficiaryCategory[]
+  appointments Appointment[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -57,16 +58,19 @@ model ServiceCategory {
   @@map("service_categories")
 }
 
-model BeneficiaryCategory {
+model Appointment {
   beneficiaryId     String
   serviceCategoryId String
-  callCode          String   @unique
-
+  callCode          String @unique
+  priority          Boolean @default(false)
   beneficiary     Beneficiary     @relation(fields: [beneficiaryId], references: [id], onDelete: Cascade)
   serviceCategory ServiceCategory @relation(fields: [serviceCategoryId], references: [id], onDelete: Cascade)
+  canceled          Boolean @default(false)
+  startedAt  DateTime?
+  finishedAt DateTime?
 
   createdAt DateTime @default(now())
 
   @@id([beneficiaryId, serviceCategoryId])
-  @@map("beneficiary_service_categories")
+  @@map("appointments")
 }

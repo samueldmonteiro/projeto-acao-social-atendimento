@@ -8,7 +8,7 @@ export class DashboardService {
     const [
       totalBeneficiaries,
       totalCategories,
-      totalLinks,
+      totalAppointments,
       categoriesRaw,
       genderDistribution,
       recentBeneficiaries,
@@ -19,24 +19,21 @@ export class DashboardService {
       // Total de categorias de atendimento
       prisma.serviceCategory.count(),
 
-      // Total de vínculos beneficiário↔categoria (atendimentos registrados)
-      prisma.beneficiaryCategory.count(),
+      // Total de atendimentos ativos (não cancelados)
+      prisma.appointment.count({ where: { canceled: false } }),
 
-      // Categorias com contagem de beneficiários vinculados (ranking)
+      // Categorias com contagem de atendimentos ativos (ranking)
       prisma.serviceCategory.findMany({
         select: {
           id: true,
           name: true,
           _count: {
-            select: { beneficiaries: true },
+            select: {
+              appointments: { where: { canceled: false } },
+            },
           },
         },
-        orderBy: {
-          beneficiaries: {
-            _count: 'desc',
-          },
-        },
-      }),
+      }).then((cats) => cats.sort((a, b) => b._count.appointments - a._count.appointments)),
 
       // Distribuição por gênero
       prisma.beneficiary.groupBy({
@@ -51,7 +48,8 @@ export class DashboardService {
           fullName: true,
           gender: true,
           createdAt: true,
-          categories: {
+          appointments: {
+            where: { canceled: false },
             select: {
               serviceCategory: {
                 select: { id: true, name: true },
@@ -67,9 +65,9 @@ export class DashboardService {
     // Categoria mais atendida (top 1)
     const topCategory = categoriesRaw[0] ?? null;
 
-    // Beneficiários sem nenhuma categoria vinculada
+    // Beneficiários sem nenhum atendimento ativo
     const beneficiariesWithoutCategory = await prisma.beneficiary.count({
-      where: { categories: { none: {} } },
+      where: { appointments: { none: { canceled: false } } },
     });
 
     // Formata ranking de categorias
@@ -77,10 +75,10 @@ export class DashboardService {
       rank: index + 1,
       id: cat.id,
       name: cat.name,
-      totalBeneficiaries: cat._count.beneficiaries,
+      totalBeneficiaries: cat._count.appointments,
       percentage:
         totalBeneficiaries > 0
-          ? Number(((cat._count.beneficiaries / totalBeneficiaries) * 100).toFixed(1))
+          ? Number(((cat._count.appointments / totalBeneficiaries) * 100).toFixed(1))
           : 0,
     }));
 
@@ -107,25 +105,25 @@ export class DashboardService {
       fullName: b.fullName,
       gender: b.gender,
       createdAt: b.createdAt,
-      categories: b.categories.map((c) => c.serviceCategory),
+      appointments: b.appointments.map((c) => c.serviceCategory),
     }));
 
     return {
       overview: {
         totalBeneficiaries,
         totalCategories,
-        totalLinks,
+        totalAppointments,
         beneficiariesWithoutCategory,
         averageCategoriesPerBeneficiary:
           totalBeneficiaries > 0
-            ? Number((totalLinks / totalBeneficiaries).toFixed(2))
+            ? Number((totalAppointments / totalBeneficiaries).toFixed(2))
             : 0,
       },
       topCategory: topCategory
         ? {
           id: topCategory.id,
           name: topCategory.name,
-          totalBeneficiaries: topCategory._count.beneficiaries,
+          totalBeneficiaries: topCategory._count.appointments,
         }
         : null,
       categoriesRanking,

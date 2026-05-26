@@ -6,7 +6,7 @@ export declare class CreateBeneficiaryDto {
     phone?: string;
     birthDate: string;
     gender: Gender;
-    serviceCategoryId: string;
+    address?: string;
 }
 export declare class AddBeneficiaryCategoryDto {
     serviceCategoryId: string;
@@ -18,5 +18,5 @@ export declare class UpdateBeneficiaryDto {
     phone?: string;
     birthDate?: string;
     gender?: Gender;
-    serviceCategoryId?: string;
+    address?: string;
 }

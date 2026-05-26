@@ -14,7 +14,7 @@ export declare const ModelName: {
     readonly User: "User";
     readonly Beneficiary: "Beneficiary";
     readonly ServiceCategory: "ServiceCategory";
-    readonly BeneficiaryCategory: "BeneficiaryCategory";
+    readonly Appointment: "Appointment";
 };
 export type ModelName = (typeof ModelName)[keyof typeof ModelName];
 export declare const TransactionIsolationLevel: {
@@ -42,6 +42,7 @@ export declare const BeneficiaryScalarFieldEnum: {
     readonly phone: "phone";
     readonly birthDate: "birthDate";
     readonly gender: "gender";
+    readonly address: "address";
     readonly createdAt: "createdAt";
     readonly updatedAt: "updatedAt";
 };
@@ -54,13 +55,17 @@ export declare const ServiceCategoryScalarFieldEnum: {
     readonly updatedAt: "updatedAt";
 };
 export type ServiceCategoryScalarFieldEnum = (typeof ServiceCategoryScalarFieldEnum)[keyof typeof ServiceCategoryScalarFieldEnum];
-export declare const BeneficiaryCategoryScalarFieldEnum: {
+export declare const AppointmentScalarFieldEnum: {
     readonly beneficiaryId: "beneficiaryId";
     readonly serviceCategoryId: "serviceCategoryId";
     readonly callCode: "callCode";
+    readonly priority: "priority";
+    readonly canceled: "canceled";
+    readonly startedAt: "startedAt";
+    readonly finishedAt: "finishedAt";
     readonly createdAt: "createdAt";
 };
-export type BeneficiaryCategoryScalarFieldEnum = (typeof BeneficiaryCategoryScalarFieldEnum)[keyof typeof BeneficiaryCategoryScalarFieldEnum];
+export type AppointmentScalarFieldEnum = (typeof AppointmentScalarFieldEnum)[keyof typeof AppointmentScalarFieldEnum];
 export declare const SortOrder: {
     readonly asc: "asc";
     readonly desc: "desc";

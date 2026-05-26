@@ -1,3 +1,3 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-//# sourceMappingURL=BeneficiaryCategory.js.map
+//# sourceMappingURL=Appointment.js.map

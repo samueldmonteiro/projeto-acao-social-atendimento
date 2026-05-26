@@ -1,0 +1,1 @@
+{"version":3,"file":"appointment-already-exists.error.js","sourceRoot":"","sources":["../../src/errors/appointment-already-exists.error.ts"],"names":[],"mappings":";;;AAAA,iDAA6C;AAE7C,MAAa,6BAA8B,SAAQ,0BAAW;IACnD,UAAU,GAAG,GAAG,CAAC;IAC1B,YAAY,OAAO,GAAG,qCAAqC;QACzD,KAAK,CAAC,OAAO,CAAC,CAAC;IACjB,CAAC;CACF;AALD,sEAKC"}

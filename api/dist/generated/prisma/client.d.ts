@@ -9,4 +9,4 @@ export { Prisma };
 export type User = Prisma.UserModel;
 export type Beneficiary = Prisma.BeneficiaryModel;
 export type ServiceCategory = Prisma.ServiceCategoryModel;
-export type BeneficiaryCategory = Prisma.BeneficiaryCategoryModel;
+export type Appointment = Prisma.AppointmentModel;

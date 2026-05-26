@@ -33,7 +33,7 @@ var __importStar = (this && this.__importStar) || (function () {
     };
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.defineExtension = exports.NullsOrder = exports.QueryMode = exports.SortOrder = exports.BeneficiaryCategoryScalarFieldEnum = exports.ServiceCategoryScalarFieldEnum = exports.BeneficiaryScalarFieldEnum = exports.UserScalarFieldEnum = exports.TransactionIsolationLevel = exports.ModelName = exports.AnyNull = exports.JsonNull = exports.DbNull = exports.NullTypes = exports.prismaVersion = exports.getExtensionContext = exports.Decimal = exports.Sql = exports.raw = exports.join = exports.empty = exports.sql = exports.PrismaClientValidationError = exports.PrismaClientInitializationError = exports.PrismaClientRustPanicError = exports.PrismaClientUnknownRequestError = exports.PrismaClientKnownRequestError = void 0;
+exports.defineExtension = exports.NullsOrder = exports.QueryMode = exports.SortOrder = exports.AppointmentScalarFieldEnum = exports.ServiceCategoryScalarFieldEnum = exports.BeneficiaryScalarFieldEnum = exports.UserScalarFieldEnum = exports.TransactionIsolationLevel = exports.ModelName = exports.AnyNull = exports.JsonNull = exports.DbNull = exports.NullTypes = exports.prismaVersion = exports.getExtensionContext = exports.Decimal = exports.Sql = exports.raw = exports.join = exports.empty = exports.sql = exports.PrismaClientValidationError = exports.PrismaClientInitializationError = exports.PrismaClientRustPanicError = exports.PrismaClientUnknownRequestError = exports.PrismaClientKnownRequestError = void 0;
 const runtime = __importStar(require("@prisma/client/runtime/client"));
 exports.PrismaClientKnownRequestError = runtime.PrismaClientKnownRequestError;
 exports.PrismaClientUnknownRequestError = runtime.PrismaClientUnknownRequestError;
@@ -63,7 +63,7 @@ exports.ModelName = {
     User: 'User',
     Beneficiary: 'Beneficiary',
     ServiceCategory: 'ServiceCategory',
-    BeneficiaryCategory: 'BeneficiaryCategory'
+    Appointment: 'Appointment'
 };
 exports.TransactionIsolationLevel = runtime.makeStrictEnum({
     ReadUncommitted: 'ReadUncommitted',
@@ -88,6 +88,7 @@ exports.BeneficiaryScalarFieldEnum = {
     phone: 'phone',
     birthDate: 'birthDate',
     gender: 'gender',
+    address: 'address',
     createdAt: 'createdAt',
     updatedAt: 'updatedAt'
 };
@@ -98,10 +99,14 @@ exports.ServiceCategoryScalarFieldEnum = {
     createdAt: 'createdAt',
     updatedAt: 'updatedAt'
 };
-exports.BeneficiaryCategoryScalarFieldEnum = {
+exports.AppointmentScalarFieldEnum = {
     beneficiaryId: 'beneficiaryId',
     serviceCategoryId: 'serviceCategoryId',
     callCode: 'callCode',
+    priority: 'priority',
+    canceled: 'canceled',
+    startedAt: 'startedAt',
+    finishedAt: 'finishedAt',
     createdAt: 'createdAt'
 };
 exports.SortOrder = {

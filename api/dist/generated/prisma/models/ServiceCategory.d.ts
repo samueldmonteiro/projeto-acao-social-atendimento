@@ -96,7 +96,7 @@ export type ServiceCategoryWhereInput = {
     prefix?: Prisma.StringFilter<"ServiceCategory"> | string;
     createdAt?: Prisma.DateTimeFilter<"ServiceCategory"> | Date | string;
     updatedAt?: Prisma.DateTimeFilter<"ServiceCategory"> | Date | string;
-    beneficiaries?: Prisma.BeneficiaryCategoryListRelationFilter;
+    appointments?: Prisma.AppointmentListRelationFilter;
 };
 export type ServiceCategoryOrderByWithRelationInput = {
     id?: Prisma.SortOrder;
@@ -104,7 +104,7 @@ export type ServiceCategoryOrderByWithRelationInput = {
     prefix?: Prisma.SortOrder;
     createdAt?: Prisma.SortOrder;
     updatedAt?: Prisma.SortOrder;
-    beneficiaries?: Prisma.BeneficiaryCategoryOrderByRelationAggregateInput;
+    appointments?: Prisma.AppointmentOrderByRelationAggregateInput;
 };
 export type ServiceCategoryWhereUniqueInput = Prisma.AtLeast<{
     id?: string;
@@ -115,7 +115,7 @@ export type ServiceCategoryWhereUniqueInput = Prisma.AtLeast<{
     prefix?: Prisma.StringFilter<"ServiceCategory"> | string;
     createdAt?: Prisma.DateTimeFilter<"ServiceCategory"> | Date | string;
     updatedAt?: Prisma.DateTimeFilter<"ServiceCategory"> | Date | string;
-    beneficiaries?: Prisma.BeneficiaryCategoryListRelationFilter;
+    appointments?: Prisma.AppointmentListRelationFilter;
 }, "id" | "name">;
 export type ServiceCategoryOrderByWithAggregationInput = {
     id?: Prisma.SortOrder;
@@ -143,7 +143,7 @@ export type ServiceCategoryCreateInput = {
     prefix: string;
     createdAt?: Date | string;
     updatedAt?: Date | string;
-    beneficiaries?: Prisma.BeneficiaryCategoryCreateNestedManyWithoutServiceCategoryInput;
+    appointments?: Prisma.AppointmentCreateNestedManyWithoutServiceCategoryInput;
 };
 export type ServiceCategoryUncheckedCreateInput = {
     id?: string;
@@ -151,7 +151,7 @@ export type ServiceCategoryUncheckedCreateInput = {
     prefix: string;
     createdAt?: Date | string;
     updatedAt?: Date | string;
-    beneficiaries?: Prisma.BeneficiaryCategoryUncheckedCreateNestedManyWithoutServiceCategoryInput;
+    appointments?: Prisma.AppointmentUncheckedCreateNestedManyWithoutServiceCategoryInput;
 };
 export type ServiceCategoryUpdateInput = {
     id?: Prisma.StringFieldUpdateOperationsInput | string;
@@ -159,7 +159,7 @@ export type ServiceCategoryUpdateInput = {
     prefix?: Prisma.StringFieldUpdateOperationsInput | string;
     createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
     updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
-    beneficiaries?: Prisma.BeneficiaryCategoryUpdateManyWithoutServiceCategoryNestedInput;
+    appointments?: Prisma.AppointmentUpdateManyWithoutServiceCategoryNestedInput;
 };
 export type ServiceCategoryUncheckedUpdateInput = {
     id?: Prisma.StringFieldUpdateOperationsInput | string;
@@ -167,7 +167,7 @@ export type ServiceCategoryUncheckedUpdateInput = {
     prefix?: Prisma.StringFieldUpdateOperationsInput | string;
     createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
     updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
-    beneficiaries?: Prisma.BeneficiaryCategoryUncheckedUpdateManyWithoutServiceCategoryNestedInput;
+    appointments?: Prisma.AppointmentUncheckedUpdateManyWithoutServiceCategoryNestedInput;
 };
 export type ServiceCategoryCreateManyInput = {
     id?: string;
@@ -215,53 +215,53 @@ export type ServiceCategoryScalarRelationFilter = {
     is?: Prisma.ServiceCategoryWhereInput;
     isNot?: Prisma.ServiceCategoryWhereInput;
 };
-export type ServiceCategoryCreateNestedOneWithoutBeneficiariesInput = {
-    create?: Prisma.XOR<Prisma.ServiceCategoryCreateWithoutBeneficiariesInput, Prisma.ServiceCategoryUncheckedCreateWithoutBeneficiariesInput>;
-    connectOrCreate?: Prisma.ServiceCategoryCreateOrConnectWithoutBeneficiariesInput;
+export type ServiceCategoryCreateNestedOneWithoutAppointmentsInput = {
+    create?: Prisma.XOR<Prisma.ServiceCategoryCreateWithoutAppointmentsInput, Prisma.ServiceCategoryUncheckedCreateWithoutAppointmentsInput>;
+    connectOrCreate?: Prisma.ServiceCategoryCreateOrConnectWithoutAppointmentsInput;
     connect?: Prisma.ServiceCategoryWhereUniqueInput;
 };
-export type ServiceCategoryUpdateOneRequiredWithoutBeneficiariesNestedInput = {
-    create?: Prisma.XOR<Prisma.ServiceCategoryCreateWithoutBeneficiariesInput, Prisma.ServiceCategoryUncheckedCreateWithoutBeneficiariesInput>;
-    connectOrCreate?: Prisma.ServiceCategoryCreateOrConnectWithoutBeneficiariesInput;
-    upsert?: Prisma.ServiceCategoryUpsertWithoutBeneficiariesInput;
+export type ServiceCategoryUpdateOneRequiredWithoutAppointmentsNestedInput = {
+    create?: Prisma.XOR<Prisma.ServiceCategoryCreateWithoutAppointmentsInput, Prisma.ServiceCategoryUncheckedCreateWithoutAppointmentsInput>;
+    connectOrCreate?: Prisma.ServiceCategoryCreateOrConnectWithoutAppointmentsInput;
+    upsert?: Prisma.ServiceCategoryUpsertWithoutAppointmentsInput;
     connect?: Prisma.ServiceCategoryWhereUniqueInput;
-    update?: Prisma.XOR<Prisma.XOR<Prisma.ServiceCategoryUpdateToOneWithWhereWithoutBeneficiariesInput, Prisma.ServiceCategoryUpdateWithoutBeneficiariesInput>, Prisma.ServiceCategoryUncheckedUpdateWithoutBeneficiariesInput>;
+    update?: Prisma.XOR<Prisma.XOR<Prisma.ServiceCategoryUpdateToOneWithWhereWithoutAppointmentsInput, Prisma.ServiceCategoryUpdateWithoutAppointmentsInput>, Prisma.ServiceCategoryUncheckedUpdateWithoutAppointmentsInput>;
 };
-export type ServiceCategoryCreateWithoutBeneficiariesInput = {
+export type ServiceCategoryCreateWithoutAppointmentsInput = {
     id?: string;
     name: string;
     prefix: string;
     createdAt?: Date | string;
     updatedAt?: Date | string;
 };
-export type ServiceCategoryUncheckedCreateWithoutBeneficiariesInput = {
+export type ServiceCategoryUncheckedCreateWithoutAppointmentsInput = {
     id?: string;
     name: string;
     prefix: string;
     createdAt?: Date | string;
     updatedAt?: Date | string;
 };
-export type ServiceCategoryCreateOrConnectWithoutBeneficiariesInput = {
+export type ServiceCategoryCreateOrConnectWithoutAppointmentsInput = {
     where: Prisma.ServiceCategoryWhereUniqueInput;
-    create: Prisma.XOR<Prisma.ServiceCategoryCreateWithoutBeneficiariesInput, Prisma.ServiceCategoryUncheckedCreateWithoutBeneficiariesInput>;
+    create: Prisma.XOR<Prisma.ServiceCategoryCreateWithoutAppointmentsInput, Prisma.ServiceCategoryUncheckedCreateWithoutAppointmentsInput>;
 };
-export type ServiceCategoryUpsertWithoutBeneficiariesInput = {
-    update: Prisma.XOR<Prisma.ServiceCategoryUpdateWithoutBeneficiariesInput, Prisma.ServiceCategoryUncheckedUpdateWithoutBeneficiariesInput>;
-    create: Prisma.XOR<Prisma.ServiceCategoryCreateWithoutBeneficiariesInput, Prisma.ServiceCategoryUncheckedCreateWithoutBeneficiariesInput>;
+export type ServiceCategoryUpsertWithoutAppointmentsInput = {
+    update: Prisma.XOR<Prisma.ServiceCategoryUpdateWithoutAppointmentsInput, Prisma.ServiceCategoryUncheckedUpdateWithoutAppointmentsInput>;
+    create: Prisma.XOR<Prisma.ServiceCategoryCreateWithoutAppointmentsInput, Prisma.ServiceCategoryUncheckedCreateWithoutAppointmentsInput>;
     where?: Prisma.ServiceCategoryWhereInput;
 };
-export type ServiceCategoryUpdateToOneWithWhereWithoutBeneficiariesInput = {
+export type ServiceCategoryUpdateToOneWithWhereWithoutAppointmentsInput = {
     where?: Prisma.ServiceCategoryWhereInput;
-    data: Prisma.XOR<Prisma.ServiceCategoryUpdateWithoutBeneficiariesInput, Prisma.ServiceCategoryUncheckedUpdateWithoutBeneficiariesInput>;
+    data: Prisma.XOR<Prisma.ServiceCategoryUpdateWithoutAppointmentsInput, Prisma.ServiceCategoryUncheckedUpdateWithoutAppointmentsInput>;
 };
-export type ServiceCategoryUpdateWithoutBeneficiariesInput = {
+export type ServiceCategoryUpdateWithoutAppointmentsInput = {
     id?: Prisma.StringFieldUpdateOperationsInput | string;
     name?: Prisma.StringFieldUpdateOperationsInput | string;
     prefix?: Prisma.StringFieldUpdateOperationsInput | string;
     createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
     updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
 };
-export type ServiceCategoryUncheckedUpdateWithoutBeneficiariesInput = {
+export type ServiceCategoryUncheckedUpdateWithoutAppointmentsInput = {
     id?: Prisma.StringFieldUpdateOperationsInput | string;
     name?: Prisma.StringFieldUpdateOperationsInput | string;
     prefix?: Prisma.StringFieldUpdateOperationsInput | string;
@@ -269,16 +269,16 @@ export type ServiceCategoryUncheckedUpdateWithoutBeneficiariesInput = {
     updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
 };
 export type ServiceCategoryCountOutputType = {
-    beneficiaries: number;
+    appointments: number;
 };
 export type ServiceCategoryCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-    beneficiaries?: boolean | ServiceCategoryCountOutputTypeCountBeneficiariesArgs;
+    appointments?: boolean | ServiceCategoryCountOutputTypeCountAppointmentsArgs;
 };
 export type ServiceCategoryCountOutputTypeDefaultArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
     select?: Prisma.ServiceCategoryCountOutputTypeSelect<ExtArgs> | null;
 };
-export type ServiceCategoryCountOutputTypeCountBeneficiariesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-    where?: Prisma.BeneficiaryCategoryWhereInput;
+export type ServiceCategoryCountOutputTypeCountAppointmentsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+    where?: Prisma.AppointmentWhereInput;
 };
 export type ServiceCategorySelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
     id?: boolean;
@@ -286,7 +286,7 @@ export type ServiceCategorySelect<ExtArgs extends runtime.Types.Extensions.Inter
     prefix?: boolean;
     createdAt?: boolean;
     updatedAt?: boolean;
-    beneficiaries?: boolean | Prisma.ServiceCategory$beneficiariesArgs<ExtArgs>;
+    appointments?: boolean | Prisma.ServiceCategory$appointmentsArgs<ExtArgs>;
     _count?: boolean | Prisma.ServiceCategoryCountOutputTypeDefaultArgs<ExtArgs>;
 }, ExtArgs["result"]["serviceCategory"]>;
 export type ServiceCategorySelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -312,7 +312,7 @@ export type ServiceCategorySelectScalar = {
 };
 export type ServiceCategoryOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "name" | "prefix" | "createdAt" | "updatedAt", ExtArgs["result"]["serviceCategory"]>;
 export type ServiceCategoryInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-    beneficiaries?: boolean | Prisma.ServiceCategory$beneficiariesArgs<ExtArgs>;
+    appointments?: boolean | Prisma.ServiceCategory$appointmentsArgs<ExtArgs>;
     _count?: boolean | Prisma.ServiceCategoryCountOutputTypeDefaultArgs<ExtArgs>;
 };
 export type ServiceCategoryIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {};
@@ -320,7 +320,7 @@ export type ServiceCategoryIncludeUpdateManyAndReturn<ExtArgs extends runtime.Ty
 export type $ServiceCategoryPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
     name: "ServiceCategory";
     objects: {
-        beneficiaries: Prisma.$BeneficiaryCategoryPayload<ExtArgs>[];
+        appointments: Prisma.$AppointmentPayload<ExtArgs>[];
     };
     scalars: runtime.Types.Extensions.GetPayloadResult<{
         id: string;
@@ -380,7 +380,7 @@ export interface ServiceCategoryDelegate<ExtArgs extends runtime.Types.Extension
 }
 export interface Prisma__ServiceCategoryClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
     readonly [Symbol.toStringTag]: "PrismaPromise";
-    beneficiaries<T extends Prisma.ServiceCategory$beneficiariesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.ServiceCategory$beneficiariesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$BeneficiaryCategoryPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>;
+    appointments<T extends Prisma.ServiceCategory$appointmentsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.ServiceCategory$appointmentsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$AppointmentPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>;
     then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): runtime.Types.Utils.JsPromise<TResult1 | TResult2>;
     catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): runtime.Types.Utils.JsPromise<T | TResult>;
     finally(onfinally?: (() => void) | undefined | null): runtime.Types.Utils.JsPromise<T>;
@@ -490,16 +490,16 @@ export type ServiceCategoryDeleteManyArgs<ExtArgs extends runtime.Types.Extensio
     where?: Prisma.ServiceCategoryWhereInput;
     limit?: number;
 };
-export type ServiceCategory$beneficiariesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-    select?: Prisma.BeneficiaryCategorySelect<ExtArgs> | null;
-    omit?: Prisma.BeneficiaryCategoryOmit<ExtArgs> | null;
-    include?: Prisma.BeneficiaryCategoryInclude<ExtArgs> | null;
-    where?: Prisma.BeneficiaryCategoryWhereInput;
-    orderBy?: Prisma.BeneficiaryCategoryOrderByWithRelationInput | Prisma.BeneficiaryCategoryOrderByWithRelationInput[];
-    cursor?: Prisma.BeneficiaryCategoryWhereUniqueInput;
+export type ServiceCategory$appointmentsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+    select?: Prisma.AppointmentSelect<ExtArgs> | null;
+    omit?: Prisma.AppointmentOmit<ExtArgs> | null;
+    include?: Prisma.AppointmentInclude<ExtArgs> | null;
+    where?: Prisma.AppointmentWhereInput;
+    orderBy?: Prisma.AppointmentOrderByWithRelationInput | Prisma.AppointmentOrderByWithRelationInput[];
+    cursor?: Prisma.AppointmentWhereUniqueInput;
     take?: number;
     skip?: number;
-    distinct?: Prisma.BeneficiaryCategoryScalarFieldEnum | Prisma.BeneficiaryCategoryScalarFieldEnum[];
+    distinct?: Prisma.AppointmentScalarFieldEnum | Prisma.AppointmentScalarFieldEnum[];
 };
 export type ServiceCategoryDefaultArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
     select?: Prisma.ServiceCategorySelect<ExtArgs> | null;

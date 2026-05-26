@@ -20,62 +20,38 @@ describe('BeneficiaryService Integration', () => {
   });
 
   beforeEach(async () => {
-    await prisma.beneficiaryCategory.deleteMany();
+    await prisma.appointment.deleteMany();
     await prisma.beneficiary.deleteMany();
     await prisma.serviceCategory.deleteMany();
   });
 
   describe('create', () => {
-    it('should create a beneficiary successfully and link to a service category', async () => {
-      const category = await prisma.serviceCategory.create({
-        data: { name: 'Saúde' },
-      });
-
+    it('should create a beneficiary successfully', async () => {
       const beneficiary = await service.create({
         fullName: 'João Silva',
         cpf: '12345678901',
         email: 'joao@example.com',
         birthDate: '1995-05-15T00:00:00.000Z',
         gender: Gender.MALE,
-        serviceCategoryId: category.id,
+        address: 'Rua das Flores, 123',
       });
 
       expect(beneficiary).toHaveProperty('id');
       expect(beneficiary.fullName).toBe('João Silva');
       expect(beneficiary.cpf).toBe('12345678901');
       expect(beneficiary.email).toBe('joao@example.com');
-      expect(beneficiary.categories).toHaveLength(1);
-      expect(beneficiary.categories[0].serviceCategoryId).toBe(category.id);
+      expect(beneficiary.address).toBe('Rua das Flores, 123');
+      expect(beneficiary.appointments).toHaveLength(0);
 
       const dbBeneficiary = await prisma.beneficiary.findUnique({
         where: { id: beneficiary.id },
-        include: { categories: true },
       });
 
       expect(dbBeneficiary).not.toBeNull();
       expect(dbBeneficiary?.fullName).toBe('João Silva');
-      expect(dbBeneficiary?.categories).toHaveLength(1);
-      expect(dbBeneficiary?.categories[0].serviceCategoryId).toBe(category.id);
-    });
-
-    it('should throw ServiceCategoryNotFoundError if the category does not exist', async () => {
-      await expect(
-        service.create({
-          fullName: 'João Silva',
-          cpf: '12345678901',
-          email: 'joao@example.com',
-          birthDate: '1995-05-15T00:00:00.000Z',
-          gender: Gender.MALE,
-          serviceCategoryId: 'non-existent-category-id',
-        }),
-      ).rejects.toThrow(ServiceCategoryNotFoundError);
     });
 
     it('should throw BeneficiaryAlreadyExistsError if a beneficiary with the same CPF exists', async () => {
-      const category = await prisma.serviceCategory.create({
-        data: { name: 'Saúde' },
-      });
-
       await prisma.beneficiary.create({
         data: {
           fullName: 'Maria Silva',
@@ -91,16 +67,11 @@ describe('BeneficiaryService Integration', () => {
           cpf: '12345678901',
           birthDate: '1995-05-15T00:00:00.000Z',
           gender: Gender.MALE,
-          serviceCategoryId: category.id,
         }),
       ).rejects.toThrow(BeneficiaryAlreadyExistsError);
     });
 
     it('should throw BeneficiaryAlreadyExistsError if a beneficiary with the same email exists', async () => {
-      const category = await prisma.serviceCategory.create({
-        data: { name: 'Saúde' },
-      });
-
       await prisma.beneficiary.create({
         data: {
           fullName: 'Maria Silva',
@@ -118,7 +89,6 @@ describe('BeneficiaryService Integration', () => {
           email: 'duplicate@example.com',
           birthDate: '1995-05-15T00:00:00.000Z',
           gender: Gender.MALE,
-          serviceCategoryId: category.id,
         }),
       ).rejects.toThrow(BeneficiaryAlreadyExistsError);
     });
@@ -126,10 +96,6 @@ describe('BeneficiaryService Integration', () => {
 
   describe('update', () => {
     it('should patch a beneficiary successfully without updating everything', async () => {
-      const category = await prisma.serviceCategory.create({
-        data: { name: 'Saúde' },
-      });
-
       const created = await prisma.beneficiary.create({
         data: {
           fullName: 'João Silva',
@@ -137,9 +103,6 @@ describe('BeneficiaryService Integration', () => {
           email: 'joao@example.com',
           birthDate: new Date('1995-05-15T00:00:00.000Z'),
           gender: Gender.MALE,
-          categories: {
-            create: { serviceCategoryId: category.id },
-          },
         },
       });
 
@@ -152,60 +115,10 @@ describe('BeneficiaryService Integration', () => {
       expect(updated.email).toBe('joao@example.com'); // remains unchanged
     });
 
-    it('should update service category successfully', async () => {
-      const category1 = await prisma.serviceCategory.create({
-        data: { name: 'Saúde' },
-      });
-
-      const category2 = await prisma.serviceCategory.create({
-        data: { name: 'Educação' },
-      });
-
-      const created = await prisma.beneficiary.create({
-        data: {
-          fullName: 'João Silva',
-          cpf: '12345678901',
-          birthDate: new Date('1995-05-15T00:00:00.000Z'),
-          gender: Gender.MALE,
-          categories: {
-            create: { serviceCategoryId: category1.id },
-          },
-        },
-      });
-
-      const updated = await service.update(created.id, {
-        serviceCategoryId: category2.id,
-      });
-
-      expect(updated.categories).toHaveLength(1);
-      expect(updated.categories[0].serviceCategoryId).toBe(category2.id);
-
-      const dbCategoryRelations = await prisma.beneficiaryCategory.findMany({
-        where: { beneficiaryId: created.id },
-      });
-      expect(dbCategoryRelations).toHaveLength(1);
-      expect(dbCategoryRelations[0].serviceCategoryId).toBe(category2.id);
-    });
-
     it('should throw BeneficiaryNotFoundError when updating a non-existent beneficiary', async () => {
       await expect(
         service.update('non-existent-id', { fullName: 'Teste' }),
       ).rejects.toThrow(BeneficiaryNotFoundError);
-    });
-
-    it('should throw ServiceCategoryNotFoundError when updating to a non-existent category', async () => {
-      const created = await prisma.beneficiary.create({
-        data: {
-          fullName: 'João Silva',
-          cpf: '12345678901',
-          birthDate: new Date('1995-05-15T00:00:00.000Z'),
-          gender: Gender.MALE,
-        },
-      });
-
-      await expect(
-        service.update(created.id, { serviceCategoryId: 'non-existent-cat' }),
-      ).rejects.toThrow(ServiceCategoryNotFoundError);
     });
 
     it('should throw BeneficiaryAlreadyExistsError if updated CPF is already taken', async () => {
@@ -234,7 +147,7 @@ describe('BeneficiaryService Integration', () => {
   });
 
   describe('addCategory', () => {
-    it('should link a category to an existing beneficiary', async () => {
+    it('should validate that a category can be linked to an existing beneficiary', async () => {
       const beneficiary = await prisma.beneficiary.create({
         data: {
           fullName: 'João Silva',
@@ -244,28 +157,17 @@ describe('BeneficiaryService Integration', () => {
         },
       });
       const category = await prisma.serviceCategory.create({
-        data: { name: 'Saúde' },
+        data: { name: 'Saúde', prefix: 'S' },
       });
 
-      const result = await service.addCategory(beneficiary.id, category.id);
-
-      expect(result.beneficiaryId).toBe(beneficiary.id);
-      expect(result.serviceCategoryId).toBe(category.id);
-
-      const dbRelation = await prisma.beneficiaryCategory.findUnique({
-        where: {
-          beneficiaryId_serviceCategoryId: {
-            beneficiaryId: beneficiary.id,
-            serviceCategoryId: category.id,
-          },
-        },
-      });
-      expect(dbRelation).not.toBeNull();
+      await expect(
+        service.addCategory(beneficiary.id, category.id),
+      ).resolves.not.toThrow();
     });
 
     it('should throw BeneficiaryNotFoundError if beneficiary does not exist', async () => {
       const category = await prisma.serviceCategory.create({
-        data: { name: 'Saúde' },
+        data: { name: 'Saúde', prefix: 'S' },
       });
 
       await expect(
@@ -298,13 +200,14 @@ describe('BeneficiaryService Integration', () => {
         },
       });
       const category = await prisma.serviceCategory.create({
-        data: { name: 'Saúde' },
+        data: { name: 'Saúde', prefix: 'S' },
       });
 
-      await prisma.beneficiaryCategory.create({
+      await prisma.appointment.create({
         data: {
           beneficiaryId: beneficiary.id,
           serviceCategoryId: category.id,
+          callCode: 'TST-0001',
         },
       });
 
@@ -325,19 +228,20 @@ describe('BeneficiaryService Integration', () => {
         },
       });
       const category = await prisma.serviceCategory.create({
-        data: { name: 'Saúde' },
+        data: { name: 'Saúde', prefix: 'S' },
       });
 
-      await prisma.beneficiaryCategory.create({
+      await prisma.appointment.create({
         data: {
           beneficiaryId: beneficiary.id,
           serviceCategoryId: category.id,
+          callCode: 'TST-0001',
         },
       });
 
       await service.removeCategory(beneficiary.id, category.id);
 
-      const dbRelation = await prisma.beneficiaryCategory.findUnique({
+      const dbRelation = await prisma.appointment.findUnique({
         where: {
           beneficiaryId_serviceCategoryId: {
             beneficiaryId: beneficiary.id,
@@ -431,29 +335,29 @@ describe('BeneficiaryService Integration', () => {
       await prisma.beneficiary.createMany({ data: items });
 
       const page1 = await service.findMany({ page: 1, perPage: 5 });
-      expect(page1.data).toHaveLength(5);
-      expect(page1.data[0].fullName).toBe('Beneficiário 01');
-      expect(page1.data[4].fullName).toBe('Beneficiário 05');
+      expect(page1.items).toHaveLength(5);
+      expect(page1.items[0].fullName).toBe('Beneficiário 01');
+      expect(page1.items[4].fullName).toBe('Beneficiário 05');
       expect(page1.pagination.total).toBe(15);
       expect(page1.pagination.page).toBe(1);
       expect(page1.pagination.hasNextPage).toBe(true);
       expect(page1.pagination.hasPrevPage).toBe(false);
 
       const page2 = await service.findMany({ page: 2, perPage: 5 });
-      expect(page2.data).toHaveLength(5);
-      expect(page2.data[0].fullName).toBe('Beneficiário 06');
-      expect(page2.data[4].fullName).toBe('Beneficiário 10');
+      expect(page2.items).toHaveLength(5);
+      expect(page2.items[0].fullName).toBe('Beneficiário 06');
+      expect(page2.items[4].fullName).toBe('Beneficiário 10');
       expect(page2.pagination.page).toBe(2);
       expect(page2.pagination.hasNextPage).toBe(true);
       expect(page2.pagination.hasPrevPage).toBe(true);
 
       const page3 = await service.findMany({ page: 3, perPage: 5 });
-      expect(page3.data).toHaveLength(5);
-      expect(page3.data[0].fullName).toBe('Beneficiário 11');
-      expect(page3.data[4].fullName).toBe('Beneficiário 15');
+      expect(page3.items).toHaveLength(5);
+      expect(page3.items[0].fullName).toBe('Beneficiário 11');
+      expect(page3.items[4].fullName).toBe('Beneficiário 15');
 
       const page4 = await service.findMany({ page: 4, perPage: 5 });
-      expect(page4.data).toHaveLength(0);
+      expect(page4.items).toHaveLength(0);
       expect(page4.pagination.hasNextPage).toBe(false);
       expect(page4.pagination.hasPrevPage).toBe(true);
     });
@@ -469,9 +373,9 @@ describe('BeneficiaryService Integration', () => {
       await prisma.beneficiary.createMany({ data: items });
 
       const result = await service.findMany({});
-      expect(result.data).toHaveLength(10);
-      expect(result.data[0].fullName).toBe('B01');
-      expect(result.pagination.limit).toBe(10);
+      expect(result.items).toHaveLength(10);
+      expect(result.items[0].fullName).toBe('B01');
+      expect(result.pagination.perPage).toBe(10);
     });
 
     it('should list all beneficiaries ordered by name asc', async () => {
@@ -484,10 +388,10 @@ describe('BeneficiaryService Integration', () => {
       });
 
       const list = await service.findMany({});
-      expect(list.data).toHaveLength(3);
-      expect(list.data[0].fullName).toBe('Ana Silva');
-      expect(list.data[1].fullName).toBe('Bruna Silva');
-      expect(list.data[2].fullName).toBe('Carlos Silva');
+      expect(list.items).toHaveLength(3);
+      expect(list.items[0].fullName).toBe('Ana Silva');
+      expect(list.items[1].fullName).toBe('Bruna Silva');
+      expect(list.items[2].fullName).toBe('Carlos Silva');
     });
 
     it('should filter beneficiaries by search parameter', async () => {
@@ -499,17 +403,17 @@ describe('BeneficiaryService Integration', () => {
       });
 
       const searchByName = await service.findMany({ search: 'carlos' });
-      expect(searchByName.data).toHaveLength(1);
-      expect(searchByName.data[0].fullName).toBe('Carlos Alberto');
+      expect(searchByName.items).toHaveLength(1);
+      expect(searchByName.items[0].fullName).toBe('Carlos Alberto');
 
       const searchByCpf = await service.findMany({ search: '456' });
-      expect(searchByCpf.data).toHaveLength(1);
-      expect(searchByCpf.data[0].fullName).toBe('Ana Maria');
+      expect(searchByCpf.items).toHaveLength(1);
+      expect(searchByCpf.items[0].fullName).toBe('Ana Maria');
     });
 
     it('should filter beneficiaries by serviceCategoryId', async () => {
       const cat = await prisma.serviceCategory.create({
-        data: { name: 'Saúde' },
+        data: { name: 'Saúde', prefix: 'S' },
       });
 
       await prisma.beneficiary.create({
@@ -518,8 +422,8 @@ describe('BeneficiaryService Integration', () => {
           cpf: '123',
           birthDate: new Date(),
           gender: Gender.MALE,
-          categories: {
-            create: { serviceCategoryId: cat.id },
+          appointments: {
+            create: { serviceCategoryId: cat.id, callCode: 'TST-0001' },
           },
         },
       });
@@ -534,8 +438,8 @@ describe('BeneficiaryService Integration', () => {
       });
 
       const listFiltered = await service.findMany({ serviceCategoryId: cat.id });
-      expect(listFiltered.data).toHaveLength(1);
-      expect(listFiltered.data[0].fullName).toBe('Carlos Alberto');
+      expect(listFiltered.items).toHaveLength(1);
+      expect(listFiltered.items[0].fullName).toBe('Carlos Alberto');
     });
   });
 });

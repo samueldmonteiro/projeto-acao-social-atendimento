@@ -11,24 +11,21 @@ const common_1 = require("@nestjs/common");
 const prisma_1 = require("../lib/prisma");
 let DashboardService = class DashboardService {
     async getSummary() {
-        const [totalBeneficiaries, totalCategories, totalLinks, categoriesRaw, genderDistribution, recentBeneficiaries,] = await Promise.all([
+        const [totalBeneficiaries, totalCategories, totalAppointments, categoriesRaw, genderDistribution, recentBeneficiaries,] = await Promise.all([
             prisma_1.prisma.beneficiary.count(),
             prisma_1.prisma.serviceCategory.count(),
-            prisma_1.prisma.beneficiaryCategory.count(),
+            prisma_1.prisma.appointment.count({ where: { canceled: false } }),
             prisma_1.prisma.serviceCategory.findMany({
                 select: {
                     id: true,
                     name: true,
                     _count: {
-                        select: { beneficiaries: true },
+                        select: {
+                            appointments: { where: { canceled: false } },
+                        },
                     },
                 },
-                orderBy: {
-                    beneficiaries: {
-                        _count: 'desc',
-                    },
-                },
-            }),
+            }).then((cats) => cats.sort((a, b) => b._count.appointments - a._count.appointments)),
             prisma_1.prisma.beneficiary.groupBy({
                 by: ['gender'],
                 _count: { id: true },
@@ -39,7 +36,8 @@ let DashboardService = class DashboardService {
                     fullName: true,
                     gender: true,
                     createdAt: true,
-                    categories: {
+                    appointments: {
+                        where: { canceled: false },
                         select: {
                             serviceCategory: {
                                 select: { id: true, name: true },
@@ -53,15 +51,15 @@ let DashboardService = class DashboardService {
         ]);
         const topCategory = categoriesRaw[0] ?? null;
         const beneficiariesWithoutCategory = await prisma_1.prisma.beneficiary.count({
-            where: { categories: { none: {} } },
+            where: { appointments: { none: { canceled: false } } },
         });
         const categoriesRanking = categoriesRaw.map((cat, index) => ({
             rank: index + 1,
             id: cat.id,
             name: cat.name,
-            totalBeneficiaries: cat._count.beneficiaries,
+            totalBeneficiaries: cat._count.appointments,
             percentage: totalBeneficiaries > 0
-                ? Number(((cat._count.beneficiaries / totalBeneficiaries) * 100).toFixed(1))
+                ? Number(((cat._count.appointments / totalBeneficiaries) * 100).toFixed(1))
                 : 0,
         }));
         const genderMap = {
@@ -82,23 +80,23 @@ let DashboardService = class DashboardService {
             fullName: b.fullName,
             gender: b.gender,
             createdAt: b.createdAt,
-            categories: b.categories.map((c) => c.serviceCategory),
+            appointments: b.appointments.map((c) => c.serviceCategory),
         }));
         return {
             overview: {
                 totalBeneficiaries,
                 totalCategories,
-                totalLinks,
+                totalAppointments,
                 beneficiariesWithoutCategory,
                 averageCategoriesPerBeneficiary: totalBeneficiaries > 0
-                    ? Number((totalLinks / totalBeneficiaries).toFixed(2))
+                    ? Number((totalAppointments / totalBeneficiaries).toFixed(2))
                     : 0,
             },
             topCategory: topCategory
                 ? {
                     id: topCategory.id,
                     name: topCategory.name,
-                    totalBeneficiaries: topCategory._count.beneficiaries,
+                    totalBeneficiaries: topCategory._count.appointments,
                 }
                 : null,
             categoriesRanking,

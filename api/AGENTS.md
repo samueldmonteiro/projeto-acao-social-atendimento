@@ -87,7 +87,7 @@ npm run prisma:studio  # Prisma Studio na porta 5555
 - Prisma queries com logging em dev
 
 ## Padrão de Testes
-
+Ao rodar os testes, execute pelo container: docker exec -it atendimento-api (restante...)
 - **int**: `test/**/*.int-spec.ts` — com banco real (schema isolado)
 - **e2e**: `test/**/*.e2e-spec.ts` — requests HTTP reais com Supertest
 - Setup cria schema PostgreSQL único (`test_<uuid>`) e roda migrate, depois dropa no `afterAll`

@@ -17,7 +17,7 @@ export type DashboardRecentBeneficiary = {
     fullName: string;
     gender: Gender;
     createdAt: Date;
-    categories: {
+    appointments: {
         id: string;
         name: string;
     }[];
@@ -30,7 +30,7 @@ export type DashboardTopCategory = {
 export type DashboardOverview = {
     totalBeneficiaries: number;
     totalCategories: number;
-    totalLinks: number;
+    totalAppointments: number;
     beneficiariesWithoutCategory: number;
     averageCategoriesPerBeneficiary: number;
 };

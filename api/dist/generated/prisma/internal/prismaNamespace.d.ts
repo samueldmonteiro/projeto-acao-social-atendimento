@@ -160,7 +160,7 @@ export declare const ModelName: {
     readonly User: "User";
     readonly Beneficiary: "Beneficiary";
     readonly ServiceCategory: "ServiceCategory";
-    readonly BeneficiaryCategory: "BeneficiaryCategory";
+    readonly Appointment: "Appointment";
 };
 export type ModelName = (typeof ModelName)[keyof typeof ModelName];
 export interface TypeMapCb<GlobalOmitOptions = {}> extends runtime.Types.Utils.Fn<{
@@ -173,7 +173,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         omit: GlobalOmitOptions;
     };
     meta: {
-        modelProps: "user" | "beneficiary" | "serviceCategory" | "beneficiaryCategory";
+        modelProps: "user" | "beneficiary" | "serviceCategory" | "appointment";
         txIsolationLevel: TransactionIsolationLevel;
     };
     model: {
@@ -399,77 +399,77 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
                 };
             };
         };
-        BeneficiaryCategory: {
-            payload: Prisma.$BeneficiaryCategoryPayload<ExtArgs>;
-            fields: Prisma.BeneficiaryCategoryFieldRefs;
+        Appointment: {
+            payload: Prisma.$AppointmentPayload<ExtArgs>;
+            fields: Prisma.AppointmentFieldRefs;
             operations: {
                 findUnique: {
-                    args: Prisma.BeneficiaryCategoryFindUniqueArgs<ExtArgs>;
-                    result: runtime.Types.Utils.PayloadToResult<Prisma.$BeneficiaryCategoryPayload> | null;
+                    args: Prisma.AppointmentFindUniqueArgs<ExtArgs>;
+                    result: runtime.Types.Utils.PayloadToResult<Prisma.$AppointmentPayload> | null;
                 };
                 findUniqueOrThrow: {
-                    args: Prisma.BeneficiaryCategoryFindUniqueOrThrowArgs<ExtArgs>;
-                    result: runtime.Types.Utils.PayloadToResult<Prisma.$BeneficiaryCategoryPayload>;
+                    args: Prisma.AppointmentFindUniqueOrThrowArgs<ExtArgs>;
+                    result: runtime.Types.Utils.PayloadToResult<Prisma.$AppointmentPayload>;
                 };
                 findFirst: {
-                    args: Prisma.BeneficiaryCategoryFindFirstArgs<ExtArgs>;
-                    result: runtime.Types.Utils.PayloadToResult<Prisma.$BeneficiaryCategoryPayload> | null;
+                    args: Prisma.AppointmentFindFirstArgs<ExtArgs>;
+                    result: runtime.Types.Utils.PayloadToResult<Prisma.$AppointmentPayload> | null;
                 };
                 findFirstOrThrow: {
-                    args: Prisma.BeneficiaryCategoryFindFirstOrThrowArgs<ExtArgs>;
-                    result: runtime.Types.Utils.PayloadToResult<Prisma.$BeneficiaryCategoryPayload>;
+                    args: Prisma.AppointmentFindFirstOrThrowArgs<ExtArgs>;
+                    result: runtime.Types.Utils.PayloadToResult<Prisma.$AppointmentPayload>;
                 };
                 findMany: {
-                    args: Prisma.BeneficiaryCategoryFindManyArgs<ExtArgs>;
-                    result: runtime.Types.Utils.PayloadToResult<Prisma.$BeneficiaryCategoryPayload>[];
+                    args: Prisma.AppointmentFindManyArgs<ExtArgs>;
+                    result: runtime.Types.Utils.PayloadToResult<Prisma.$AppointmentPayload>[];
                 };
                 create: {
-                    args: Prisma.BeneficiaryCategoryCreateArgs<ExtArgs>;
-                    result: runtime.Types.Utils.PayloadToResult<Prisma.$BeneficiaryCategoryPayload>;
+                    args: Prisma.AppointmentCreateArgs<ExtArgs>;
+                    result: runtime.Types.Utils.PayloadToResult<Prisma.$AppointmentPayload>;
                 };
                 createMany: {
-                    args: Prisma.BeneficiaryCategoryCreateManyArgs<ExtArgs>;
+                    args: Prisma.AppointmentCreateManyArgs<ExtArgs>;
                     result: BatchPayload;
                 };
                 createManyAndReturn: {
-                    args: Prisma.BeneficiaryCategoryCreateManyAndReturnArgs<ExtArgs>;
-                    result: runtime.Types.Utils.PayloadToResult<Prisma.$BeneficiaryCategoryPayload>[];
+                    args: Prisma.AppointmentCreateManyAndReturnArgs<ExtArgs>;
+                    result: runtime.Types.Utils.PayloadToResult<Prisma.$AppointmentPayload>[];
                 };
                 delete: {
-                    args: Prisma.BeneficiaryCategoryDeleteArgs<ExtArgs>;
-                    result: runtime.Types.Utils.PayloadToResult<Prisma.$BeneficiaryCategoryPayload>;
+                    args: Prisma.AppointmentDeleteArgs<ExtArgs>;
+                    result: runtime.Types.Utils.PayloadToResult<Prisma.$AppointmentPayload>;
                 };
                 update: {
-                    args: Prisma.BeneficiaryCategoryUpdateArgs<ExtArgs>;
-                    result: runtime.Types.Utils.PayloadToResult<Prisma.$BeneficiaryCategoryPayload>;
+                    args: Prisma.AppointmentUpdateArgs<ExtArgs>;
+                    result: runtime.Types.Utils.PayloadToResult<Prisma.$AppointmentPayload>;
                 };
                 deleteMany: {
-                    args: Prisma.BeneficiaryCategoryDeleteManyArgs<ExtArgs>;
+                    args: Prisma.AppointmentDeleteManyArgs<ExtArgs>;
                     result: BatchPayload;
                 };
                 updateMany: {
-                    args: Prisma.BeneficiaryCategoryUpdateManyArgs<ExtArgs>;
+                    args: Prisma.AppointmentUpdateManyArgs<ExtArgs>;
                     result: BatchPayload;
                 };
                 updateManyAndReturn: {
-                    args: Prisma.BeneficiaryCategoryUpdateManyAndReturnArgs<ExtArgs>;
-                    result: runtime.Types.Utils.PayloadToResult<Prisma.$BeneficiaryCategoryPayload>[];
+                    args: Prisma.AppointmentUpdateManyAndReturnArgs<ExtArgs>;
+                    result: runtime.Types.Utils.PayloadToResult<Prisma.$AppointmentPayload>[];
                 };
                 upsert: {
-                    args: Prisma.BeneficiaryCategoryUpsertArgs<ExtArgs>;
-                    result: runtime.Types.Utils.PayloadToResult<Prisma.$BeneficiaryCategoryPayload>;
+                    args: Prisma.AppointmentUpsertArgs<ExtArgs>;
+                    result: runtime.Types.Utils.PayloadToResult<Prisma.$AppointmentPayload>;
                 };
                 aggregate: {
-                    args: Prisma.BeneficiaryCategoryAggregateArgs<ExtArgs>;
-                    result: runtime.Types.Utils.Optional<Prisma.AggregateBeneficiaryCategory>;
+                    args: Prisma.AppointmentAggregateArgs<ExtArgs>;
+                    result: runtime.Types.Utils.Optional<Prisma.AggregateAppointment>;
                 };
                 groupBy: {
-                    args: Prisma.BeneficiaryCategoryGroupByArgs<ExtArgs>;
-                    result: runtime.Types.Utils.Optional<Prisma.BeneficiaryCategoryGroupByOutputType>[];
+                    args: Prisma.AppointmentGroupByArgs<ExtArgs>;
+                    result: runtime.Types.Utils.Optional<Prisma.AppointmentGroupByOutputType>[];
                 };
                 count: {
-                    args: Prisma.BeneficiaryCategoryCountArgs<ExtArgs>;
-                    result: runtime.Types.Utils.Optional<Prisma.BeneficiaryCategoryCountAggregateOutputType> | number;
+                    args: Prisma.AppointmentCountArgs<ExtArgs>;
+                    result: runtime.Types.Utils.Optional<Prisma.AppointmentCountAggregateOutputType> | number;
                 };
             };
         };
@@ -522,6 +522,7 @@ export declare const BeneficiaryScalarFieldEnum: {
     readonly phone: "phone";
     readonly birthDate: "birthDate";
     readonly gender: "gender";
+    readonly address: "address";
     readonly createdAt: "createdAt";
     readonly updatedAt: "updatedAt";
 };
@@ -534,13 +535,17 @@ export declare const ServiceCategoryScalarFieldEnum: {
     readonly updatedAt: "updatedAt";
 };
 export type ServiceCategoryScalarFieldEnum = (typeof ServiceCategoryScalarFieldEnum)[keyof typeof ServiceCategoryScalarFieldEnum];
-export declare const BeneficiaryCategoryScalarFieldEnum: {
+export declare const AppointmentScalarFieldEnum: {
     readonly beneficiaryId: "beneficiaryId";
     readonly serviceCategoryId: "serviceCategoryId";
     readonly callCode: "callCode";
+    readonly priority: "priority";
+    readonly canceled: "canceled";
+    readonly startedAt: "startedAt";
+    readonly finishedAt: "finishedAt";
     readonly createdAt: "createdAt";
 };
-export type BeneficiaryCategoryScalarFieldEnum = (typeof BeneficiaryCategoryScalarFieldEnum)[keyof typeof BeneficiaryCategoryScalarFieldEnum];
+export type AppointmentScalarFieldEnum = (typeof AppointmentScalarFieldEnum)[keyof typeof AppointmentScalarFieldEnum];
 export declare const SortOrder: {
     readonly asc: "asc";
     readonly desc: "desc";
@@ -564,6 +569,7 @@ export type DateTimeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel
 export type ListDateTimeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'DateTime[]'>;
 export type EnumGenderFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Gender'>;
 export type ListEnumGenderFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Gender[]'>;
+export type BooleanFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Boolean'>;
 export type IntFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Int'>;
 export type ListIntFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Int[]'>;
 export type BatchPayload = {
@@ -594,7 +600,7 @@ export type GlobalOmitConfig = {
     user?: Prisma.UserOmit;
     beneficiary?: Prisma.BeneficiaryOmit;
     serviceCategory?: Prisma.ServiceCategoryOmit;
-    beneficiaryCategory?: Prisma.BeneficiaryCategoryOmit;
+    appointment?: Prisma.AppointmentOmit;
 };
 export type LogLevel = 'info' | 'query' | 'warn' | 'error';
 export type LogDefinition = {

@@ -36,7 +36,7 @@ describe('ExportController (e2e)', () => {
   });
 
   beforeEach(async () => {
-    await prisma.beneficiaryCategory.deleteMany();
+    await prisma.appointment.deleteMany();
     await prisma.beneficiary.deleteMany();
     await prisma.serviceCategory.deleteMany();
   });
@@ -49,7 +49,7 @@ describe('ExportController (e2e)', () => {
 
   it('should export an Excel file with beneficiaries', async () => {
     const category = await prisma.serviceCategory.create({
-      data: { name: 'Assistência Social' },
+      data: { name: 'Assistência Social', prefix: 'A' },
     });
 
     await prisma.beneficiary.create({
@@ -60,8 +60,8 @@ describe('ExportController (e2e)', () => {
         phone: '11999999999',
         birthDate: new Date('1995-05-15'),
         gender: Gender.MALE,
-        categories: {
-          create: { serviceCategoryId: category.id },
+        appointments: {
+          create: { serviceCategoryId: category.id, callCode: 'TST-0001' },
         },
       },
     });

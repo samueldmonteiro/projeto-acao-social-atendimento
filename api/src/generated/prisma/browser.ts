@@ -33,7 +33,7 @@ export type Beneficiary = Prisma.BeneficiaryModel
  */
 export type ServiceCategory = Prisma.ServiceCategoryModel
 /**
- * Model BeneficiaryCategory
+ * Model Appointment
  * 
  */
-export type BeneficiaryCategory = Prisma.BeneficiaryCategoryModel
+export type Appointment = Prisma.AppointmentModel

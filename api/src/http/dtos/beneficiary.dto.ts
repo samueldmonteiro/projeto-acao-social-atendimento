@@ -27,9 +27,9 @@ export class CreateBeneficiaryDto {
   @IsNotEmpty({ message: 'O gênero é obrigatório' })
     gender!: Gender;
 
-  @IsString({ message: 'O ID da categoria de serviço deve ser uma string' })
-  @IsNotEmpty({ message: 'O ID da categoria de serviço é obrigatório' })
-    serviceCategoryId!: string;
+  @IsString({ message: 'O endereço deve ser uma string' })
+  @IsOptional()
+    address?: string;
 }
 
 export class AddBeneficiaryCategoryDto {
@@ -64,7 +64,7 @@ export class UpdateBeneficiaryDto {
   @IsOptional()
     gender?: Gender;
 
-  @IsString({ message: 'O ID da categoria de serviço deve ser uma string' })
+  @IsString({ message: 'O endereço deve ser uma string' })
   @IsOptional()
-    serviceCategoryId?: string;
+    address?: string;
 }

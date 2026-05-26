@@ -1,83 +1,83 @@
 import { CreateBeneficiaryDto, UpdateBeneficiaryDto } from "../http/dtos/beneficiary.dto";
 import { PaginationResponse } from "../types/pagination.type";
 export declare class BeneficiaryService {
-    private generateCallCode;
     create(data: CreateBeneficiaryDto): Promise<{
-        categories: {
+        appointments: ({
             serviceCategory: {
-                name: string;
                 id: string;
+                name: string;
+                createdAt: Date;
+                updatedAt: Date;
                 prefix: string;
             };
-            callCode: string;
+        } & {
+            createdAt: Date;
+            beneficiaryId: string;
             serviceCategoryId: string;
-        }[];
+            callCode: string;
+            priority: boolean;
+            canceled: boolean;
+            startedAt: Date | null;
+            finishedAt: Date | null;
+        })[];
     } & {
         id: string;
-        fullName: string;
-        cpf: string;
         email: string | null;
-        phone: string | null;
-        birthDate: Date;
-        gender: import("@/generated/prisma/client").Gender;
         createdAt: Date;
         updatedAt: Date;
+        fullName: string;
+        cpf: string;
+        phone: string | null;
+        birthDate: Date;
+        gender: import("../generated/prisma/enums").Gender;
+        address: string | null;
     }>;
     update(id: string, data: UpdateBeneficiaryDto): Promise<{
-        categories: {
+        appointments: {
+            serviceCategoryId: string;
+            callCode: string;
             serviceCategory: {
-                name: string;
                 id: string;
+                name: string;
                 prefix: string;
             };
-            callCode: string;
-            serviceCategoryId: string;
         }[];
     } & {
         id: string;
-        fullName: string;
-        cpf: string;
         email: string | null;
-        phone: string | null;
-        birthDate: Date;
-        gender: import("@/generated/prisma/client").Gender;
         createdAt: Date;
         updatedAt: Date;
+        fullName: string;
+        cpf: string;
+        phone: string | null;
+        birthDate: Date;
+        gender: import("../generated/prisma/enums").Gender;
+        address: string | null;
     }>;
-    addCategory(id: string, serviceCategoryId: string): Promise<{
-        serviceCategory: {
-            name: string;
-            id: string;
-            prefix: string;
-        };
-    } & {
-        createdAt: Date;
-        callCode: string;
-        serviceCategoryId: string;
-        beneficiaryId: string;
-    }>;
+    addCategory(id: string, serviceCategoryId: string): Promise<void>;
     removeCategory(id: string, serviceCategoryId: string): Promise<void>;
     delete(id: string): Promise<void>;
     findById(id: string): Promise<{
-        categories: {
+        appointments: {
+            serviceCategoryId: string;
+            callCode: string;
             serviceCategory: {
-                name: string;
                 id: string;
+                name: string;
                 prefix: string;
             };
-            callCode: string;
-            serviceCategoryId: string;
         }[];
     } & {
         id: string;
-        fullName: string;
-        cpf: string;
         email: string | null;
-        phone: string | null;
-        birthDate: Date;
-        gender: import("@/generated/prisma/client").Gender;
         createdAt: Date;
         updatedAt: Date;
+        fullName: string;
+        cpf: string;
+        phone: string | null;
+        birthDate: Date;
+        gender: import("../generated/prisma/enums").Gender;
+        address: string | null;
     }>;
     findMany(filters?: {
         search?: string;
@@ -85,24 +85,25 @@ export declare class BeneficiaryService {
         page?: number;
         perPage?: number;
     }): Promise<PaginationResponse<({
-        categories: {
+        appointments: {
+            serviceCategoryId: string;
+            callCode: string;
             serviceCategory: {
-                name: string;
                 id: string;
+                name: string;
                 prefix: string;
             };
-            callCode: string;
-            serviceCategoryId: string;
         }[];
     } & {
         id: string;
-        fullName: string;
-        cpf: string;
         email: string | null;
-        phone: string | null;
-        birthDate: Date;
-        gender: import("@/generated/prisma/client").Gender;
         createdAt: Date;
         updatedAt: Date;
+        fullName: string;
+        cpf: string;
+        phone: string | null;
+        birthDate: Date;
+        gender: import("../generated/prisma/enums").Gender;
+        address: string | null;
     })[]>>;
 }

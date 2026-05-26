@@ -7,7 +7,7 @@ import { HttpExceptionFilter } from '@/http/filters/http-exception.filter';
 import { Gender } from '@/generated/prisma/enums';
 import { JwtService } from '@nestjs/jwt';
 
-describe('BeneficiaryCategoryController (e2e)', () => {
+describe('AppointmentController (e2e)', () => {
   let app: INestApplication;
   let accessToken: string;
 
@@ -32,7 +32,7 @@ describe('BeneficiaryCategoryController (e2e)', () => {
       data: {
         email: 'e2e-cat@test.com',
         password: 'password_hash',
-        name: 'E2E Category User',
+        name: 'E2E Appointment User',
       },
     });
     accessToken = jwtService.sign({ username: user.email, sub: user.id });
@@ -44,7 +44,7 @@ describe('BeneficiaryCategoryController (e2e)', () => {
   });
 
   beforeEach(async () => {
-    await prisma.beneficiaryCategory.deleteMany();
+    await prisma.appointment.deleteMany();
     await prisma.beneficiary.deleteMany();
     await prisma.serviceCategory.deleteMany();
   });
@@ -52,13 +52,13 @@ describe('BeneficiaryCategoryController (e2e)', () => {
   describe('Unauthorized access', () => {
     it('should return 401 when token is missing', async () => {
       await request(app.getHttpServer())
-        .get('/beneficiary-categories')
+        .get('/appointments')
         .expect(401);
     });
   });
 
-  describe('GET /beneficiary-categories', () => {
-    it('should list all beneficiary categories with relationships', async () => {
+  describe('GET /appointments', () => {
+    it('should list all appointments with relationships', async () => {
       const category = await prisma.serviceCategory.create({
         data: { name: 'Odonto E2E', prefix: 'ODO' },
       });
@@ -72,7 +72,7 @@ describe('BeneficiaryCategoryController (e2e)', () => {
         },
       });
 
-      await prisma.beneficiaryCategory.create({
+      await prisma.appointment.create({
         data: {
           beneficiaryId: beneficiary.id,
           serviceCategoryId: category.id,
@@ -81,29 +81,36 @@ describe('BeneficiaryCategoryController (e2e)', () => {
       });
 
       const response = await request(app.getHttpServer())
-        .get('/beneficiary-categories')
+        .get('/appointments')
         .set('Authorization', `Bearer ${accessToken}`)
         .expect(200);
 
       expect(response.body).toEqual({
         code: 200,
         ok: true,
-        message: 'Vínculos de beneficiários e categorias listados com sucesso',
-        data: expect.arrayContaining([
-          expect.objectContaining({
-            beneficiaryId: beneficiary.id,
-            serviceCategoryId: category.id,
-            callCode: 'ODO-0001',
-            beneficiary: expect.objectContaining({
-              fullName: 'Fulano de Tal',
-              cpf: '12345678901',
+        message: 'Atendimentos listados com sucesso',
+        data: {
+          items: expect.arrayContaining([
+            expect.objectContaining({
+              beneficiaryId: beneficiary.id,
+              serviceCategoryId: category.id,
+              callCode: 'ODO-0001',
+              beneficiary: expect.objectContaining({
+                fullName: 'Fulano de Tal',
+                cpf: '12345678901',
+              }),
+              serviceCategory: expect.objectContaining({
+                name: 'Odonto E2E',
+                prefix: 'ODO',
+              }),
             }),
-            serviceCategory: expect.objectContaining({
-              name: 'Odonto E2E',
-              prefix: 'ODO',
-            }),
+          ]),
+          pagination: expect.objectContaining({
+            total: expect.any(Number),
+            page: expect.any(Number),
+            perPage: expect.any(Number),
           }),
-        ]),
+        },
       });
     });
 
@@ -130,7 +137,7 @@ describe('BeneficiaryCategoryController (e2e)', () => {
         },
       });
 
-      await prisma.beneficiaryCategory.create({
+      await prisma.appointment.create({
         data: {
           beneficiaryId: beneficiary1.id,
           serviceCategoryId: category.id,
@@ -138,7 +145,7 @@ describe('BeneficiaryCategoryController (e2e)', () => {
         },
       });
 
-      await prisma.beneficiaryCategory.create({
+      await prisma.appointment.create({
         data: {
           beneficiaryId: beneficiary2.id,
           serviceCategoryId: category.id,
@@ -147,13 +154,13 @@ describe('BeneficiaryCategoryController (e2e)', () => {
       });
 
       const response = await request(app.getHttpServer())
-        .get('/beneficiary-categories')
+        .get('/appointments')
         .query({ search: 'Ciclano' })
         .set('Authorization', `Bearer ${accessToken}`)
         .expect(200);
 
-      expect(response.body.data).toHaveLength(1);
-      expect(response.body.data[0].beneficiary.fullName).toBe('Ciclano de Tal');
+      expect(response.body.data.items).toHaveLength(1);
+      expect(response.body.data.items[0].beneficiary.fullName).toBe('Ciclano de Tal');
     });
   });
 });

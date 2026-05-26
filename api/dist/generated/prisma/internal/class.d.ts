@@ -39,7 +39,7 @@ export interface PrismaClient<in LogOpts extends Prisma.LogLevel = never, in out
     get serviceCategory(): Prisma.ServiceCategoryDelegate<ExtArgs, {
         omit: OmitOpts;
     }>;
-    get beneficiaryCategory(): Prisma.BeneficiaryCategoryDelegate<ExtArgs, {
+    get appointment(): Prisma.AppointmentDelegate<ExtArgs, {
         omit: OmitOpts;
     }>;
 }

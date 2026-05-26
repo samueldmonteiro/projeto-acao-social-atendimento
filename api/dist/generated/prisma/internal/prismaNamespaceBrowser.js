@@ -33,7 +33,7 @@ var __importStar = (this && this.__importStar) || (function () {
     };
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.NullsOrder = exports.QueryMode = exports.SortOrder = exports.BeneficiaryCategoryScalarFieldEnum = exports.ServiceCategoryScalarFieldEnum = exports.BeneficiaryScalarFieldEnum = exports.UserScalarFieldEnum = exports.TransactionIsolationLevel = exports.ModelName = exports.AnyNull = exports.JsonNull = exports.DbNull = exports.NullTypes = exports.Decimal = void 0;
+exports.NullsOrder = exports.QueryMode = exports.SortOrder = exports.AppointmentScalarFieldEnum = exports.ServiceCategoryScalarFieldEnum = exports.BeneficiaryScalarFieldEnum = exports.UserScalarFieldEnum = exports.TransactionIsolationLevel = exports.ModelName = exports.AnyNull = exports.JsonNull = exports.DbNull = exports.NullTypes = exports.Decimal = void 0;
 const runtime = __importStar(require("@prisma/client/runtime/index-browser"));
 exports.Decimal = runtime.Decimal;
 exports.NullTypes = {
@@ -48,7 +48,7 @@ exports.ModelName = {
     User: 'User',
     Beneficiary: 'Beneficiary',
     ServiceCategory: 'ServiceCategory',
-    BeneficiaryCategory: 'BeneficiaryCategory'
+    Appointment: 'Appointment'
 };
 exports.TransactionIsolationLevel = runtime.makeStrictEnum({
     ReadUncommitted: 'ReadUncommitted',
@@ -73,6 +73,7 @@ exports.BeneficiaryScalarFieldEnum = {
     phone: 'phone',
     birthDate: 'birthDate',
     gender: 'gender',
+    address: 'address',
     createdAt: 'createdAt',
     updatedAt: 'updatedAt'
 };
@@ -83,10 +84,14 @@ exports.ServiceCategoryScalarFieldEnum = {
     createdAt: 'createdAt',
     updatedAt: 'updatedAt'
 };
-exports.BeneficiaryCategoryScalarFieldEnum = {
+exports.AppointmentScalarFieldEnum = {
     beneficiaryId: 'beneficiaryId',
     serviceCategoryId: 'serviceCategoryId',
     callCode: 'callCode',
+    priority: 'priority',
+    canceled: 'canceled',
+    startedAt: 'startedAt',
+    finishedAt: 'finishedAt',
     createdAt: 'createdAt'
 };
 exports.SortOrder = {

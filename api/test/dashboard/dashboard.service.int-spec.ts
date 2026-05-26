@@ -16,7 +16,7 @@ describe('DashboardService Integration', () => {
   });
 
   beforeEach(async () => {
-    await prisma.beneficiaryCategory.deleteMany();
+    await prisma.appointment.deleteMany();
     await prisma.beneficiary.deleteMany();
     await prisma.serviceCategory.deleteMany();
   });
@@ -26,7 +26,7 @@ describe('DashboardService Integration', () => {
 
     expect(result.overview.totalBeneficiaries).toBe(0);
     expect(result.overview.totalCategories).toBe(0);
-    expect(result.overview.totalLinks).toBe(0);
+    expect(result.overview.totalAppointments).toBe(0);
     expect(result.overview.beneficiariesWithoutCategory).toBe(0);
     expect(result.overview.averageCategoriesPerBeneficiary).toBe(0);
     expect(result.topCategory).toBeNull();
@@ -36,8 +36,8 @@ describe('DashboardService Integration', () => {
   });
 
   it('should return correct overview numbers', async () => {
-    const cat1 = await prisma.serviceCategory.create({ data: { name: 'Saúde' } });
-    const cat2 = await prisma.serviceCategory.create({ data: { name: 'Educação' } });
+    const cat1 = await prisma.serviceCategory.create({ data: { name: 'Saúde', prefix: 'S' } });
+    const cat2 = await prisma.serviceCategory.create({ data: { name: 'Educação', prefix: 'E' } });
 
     await prisma.beneficiary.create({
       data: {
@@ -45,7 +45,7 @@ describe('DashboardService Integration', () => {
         cpf: '11111111111',
         birthDate: new Date('1990-01-01'),
         gender: Gender.MALE,
-        categories: { create: { serviceCategoryId: cat1.id } },
+        appointments: { create: { serviceCategoryId: cat1.id, callCode: 'TST-0001' } },
       },
     });
 
@@ -55,10 +55,10 @@ describe('DashboardService Integration', () => {
         cpf: '22222222222',
         birthDate: new Date('1995-05-15'),
         gender: Gender.FEMALE,
-        categories: {
+        appointments: {
           create: [
-            { serviceCategoryId: cat1.id },
-            { serviceCategoryId: cat2.id },
+            { serviceCategoryId: cat1.id, callCode: 'TST-0002' },
+            { serviceCategoryId: cat2.id, callCode: 'TST-0003' },
           ],
         },
       },
@@ -77,14 +77,14 @@ describe('DashboardService Integration', () => {
 
     expect(result.overview.totalBeneficiaries).toBe(3);
     expect(result.overview.totalCategories).toBe(2);
-    expect(result.overview.totalLinks).toBe(3);
+    expect(result.overview.totalAppointments).toBe(3);
     expect(result.overview.beneficiariesWithoutCategory).toBe(1);
     expect(result.overview.averageCategoriesPerBeneficiary).toBe(1);
   });
 
   it('should return top category and ranking ordered by count desc', async () => {
-    const cat1 = await prisma.serviceCategory.create({ data: { name: 'Saúde' } });
-    const cat2 = await prisma.serviceCategory.create({ data: { name: 'Educação' } });
+    const cat1 = await prisma.serviceCategory.create({ data: { name: 'Saúde', prefix: 'S' } });
+    const cat2 = await prisma.serviceCategory.create({ data: { name: 'Educação', prefix: 'E' } });
 
     await prisma.beneficiary.create({
       data: {
@@ -92,7 +92,7 @@ describe('DashboardService Integration', () => {
         cpf: '1',
         birthDate: new Date(),
         gender: Gender.FEMALE,
-        categories: { create: { serviceCategoryId: cat1.id } },
+        appointments: { create: { serviceCategoryId: cat1.id, callCode: 'TST-0004' } },
       },
     });
 
@@ -102,7 +102,7 @@ describe('DashboardService Integration', () => {
         cpf: '2',
         birthDate: new Date(),
         gender: Gender.FEMALE,
-        categories: { create: { serviceCategoryId: cat1.id } },
+        appointments: { create: { serviceCategoryId: cat1.id, callCode: 'TST-0005' } },
       },
     });
 
@@ -112,7 +112,7 @@ describe('DashboardService Integration', () => {
         cpf: '3',
         birthDate: new Date(),
         gender: Gender.MALE,
-        categories: { create: { serviceCategoryId: cat2.id } },
+        appointments: { create: { serviceCategoryId: cat2.id, callCode: 'TST-0006' } },
       },
     });
 
@@ -188,7 +188,7 @@ describe('DashboardService Integration', () => {
   });
 
   it('should include categories in recent beneficiaries', async () => {
-    const cat = await prisma.serviceCategory.create({ data: { name: 'Saúde' } });
+    const cat = await prisma.serviceCategory.create({ data: { name: 'Saúde', prefix: 'S' } });
 
     await prisma.beneficiary.create({
       data: {
@@ -196,15 +196,15 @@ describe('DashboardService Integration', () => {
         cpf: '12345678901',
         birthDate: new Date(),
         gender: Gender.MALE,
-        categories: { create: { serviceCategoryId: cat.id } },
+        appointments: { create: { serviceCategoryId: cat.id, callCode: 'TST-0007' } },
       },
     });
 
     const result = await service.getSummary();
 
     expect(result.recentBeneficiaries).toHaveLength(1);
-    expect(result.recentBeneficiaries[0].categories).toHaveLength(1);
-    expect(result.recentBeneficiaries[0].categories[0].id).toBe(cat.id);
-    expect(result.recentBeneficiaries[0].categories[0].name).toBe('Saúde');
+    expect(result.recentBeneficiaries[0].appointments).toHaveLength(1);
+    expect(result.recentBeneficiaries[0].appointments[0].id).toBe(cat.id);
+    expect(result.recentBeneficiaries[0].appointments[0].name).toBe('Saúde');
   });
 });

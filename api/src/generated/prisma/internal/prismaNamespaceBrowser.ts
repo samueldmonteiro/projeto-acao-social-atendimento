@@ -54,7 +54,7 @@ export const ModelName = {
   User: 'User',
   Beneficiary: 'Beneficiary',
   ServiceCategory: 'ServiceCategory',
-  BeneficiaryCategory: 'BeneficiaryCategory'
+  Appointment: 'Appointment'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -94,6 +94,7 @@ export const BeneficiaryScalarFieldEnum = {
   phone: 'phone',
   birthDate: 'birthDate',
   gender: 'gender',
+  address: 'address',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 } as const
@@ -112,14 +113,18 @@ export const ServiceCategoryScalarFieldEnum = {
 export type ServiceCategoryScalarFieldEnum = (typeof ServiceCategoryScalarFieldEnum)[keyof typeof ServiceCategoryScalarFieldEnum]
 
 
-export const BeneficiaryCategoryScalarFieldEnum = {
+export const AppointmentScalarFieldEnum = {
   beneficiaryId: 'beneficiaryId',
   serviceCategoryId: 'serviceCategoryId',
   callCode: 'callCode',
+  priority: 'priority',
+  canceled: 'canceled',
+  startedAt: 'startedAt',
+  finishedAt: 'finishedAt',
   createdAt: 'createdAt'
 } as const
 
-export type BeneficiaryCategoryScalarFieldEnum = (typeof BeneficiaryCategoryScalarFieldEnum)[keyof typeof BeneficiaryCategoryScalarFieldEnum]
+export type AppointmentScalarFieldEnum = (typeof AppointmentScalarFieldEnum)[keyof typeof AppointmentScalarFieldEnum]
 
 
 export const SortOrder = {

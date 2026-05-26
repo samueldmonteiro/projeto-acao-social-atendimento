@@ -43,7 +43,7 @@ describe('ServiceCategoryController (e2e)', () => {
   });
 
   beforeEach(async () => {
-    await prisma.beneficiaryCategory.deleteMany();
+    await prisma.appointment.deleteMany();
     await prisma.serviceCategory.deleteMany();
   });
 
@@ -70,6 +70,7 @@ describe('ServiceCategoryController (e2e)', () => {
         data: expect.objectContaining({
           id: expect.any(String),
           name: 'Esportes',
+          prefix: 'E',
         }),
       });
 
@@ -77,6 +78,7 @@ describe('ServiceCategoryController (e2e)', () => {
         where: { name: 'Esportes' },
       });
       expect(dbCategory).not.toBeNull();
+      expect(dbCategory?.prefix).toBe('E');
     });
 
     it('should return 400 when validation fails (empty name)', async () => {
@@ -105,7 +107,7 @@ describe('ServiceCategoryController (e2e)', () => {
 
     it('should return 409 when the category name already exists', async () => {
       await prisma.serviceCategory.create({
-        data: { name: 'Esportes' },
+        data: { name: 'Esportes', prefix: 'E' },
       });
 
       const response = await request(app.getHttpServer())
@@ -127,7 +129,7 @@ describe('ServiceCategoryController (e2e)', () => {
   describe('GET /categories', () => {
     it('should retrieve all service categories ordered alphabetically by name', async () => {
       await prisma.serviceCategory.createMany({
-        data: [{ name: 'Lazer' }, { name: 'Alimentação' }, { name: 'Saúde' }],
+        data: [{ name: 'Lazer', prefix: 'L' }, { name: 'Alimentação', prefix: 'A' }, { name: 'Saúde', prefix: 'S' }],
       });
 
       const response = await request(app.getHttpServer())
@@ -144,7 +146,7 @@ describe('ServiceCategoryController (e2e)', () => {
 
     it('should return filtered categories when a search query is passed', async () => {
       await prisma.serviceCategory.createMany({
-        data: [{ name: 'Cultura e Lazer' }, { name: 'Saúde Alimentar' }, { name: 'Saúde' }],
+        data: [{ name: 'Cultura e Lazer', prefix: 'CL' }, { name: 'Saúde Alimentar', prefix: 'SA' }, { name: 'Saúde', prefix: 'S' }],
       });
 
       const response = await request(app.getHttpServer())
@@ -163,7 +165,7 @@ describe('ServiceCategoryController (e2e)', () => {
   describe('GET /categories/:id', () => {
     it('should return a category by its ID', async () => {
       const category = await prisma.serviceCategory.create({
-        data: { name: 'Habitação' },
+        data: { name: 'Habitação', prefix: 'H' },
       });
 
       const response = await request(app.getHttpServer())
@@ -175,12 +177,11 @@ describe('ServiceCategoryController (e2e)', () => {
         code: 200,
         ok: true,
         message: 'Categoria de serviço encontrada com sucesso',
-        data: {
+        data: expect.objectContaining({
           id: category.id,
           name: 'Habitação',
-          createdAt: expect.any(String),
-          updatedAt: expect.any(String),
-        },
+          prefix: 'H',
+        }),
       });
     });
 
@@ -198,7 +199,7 @@ describe('ServiceCategoryController (e2e)', () => {
   describe('PATCH /categories/:id', () => {
     it('should update a service category successfully', async () => {
       const category = await prisma.serviceCategory.create({
-        data: { name: 'Educação' },
+        data: { name: 'Educação', prefix: 'E' },
       });
 
       const response = await request(app.getHttpServer())
@@ -225,10 +226,10 @@ describe('ServiceCategoryController (e2e)', () => {
 
     it('should return 409 if updating to a name that already exists', async () => {
       await prisma.serviceCategory.create({
-        data: { name: 'Educação' },
+        data: { name: 'Educação', prefix: 'E' },
       });
       const cat2 = await prisma.serviceCategory.create({
-        data: { name: 'Saúde' },
+        data: { name: 'Saúde', prefix: 'S' },
       });
 
       const response = await request(app.getHttpServer())
@@ -256,7 +257,7 @@ describe('ServiceCategoryController (e2e)', () => {
   describe('DELETE /categories/:id', () => {
     it('should delete a category successfully', async () => {
       const category = await prisma.serviceCategory.create({
-        data: { name: 'Tecnologia' },
+        data: { name: 'Tecnologia', prefix: 'T' },
       });
 
       const response = await request(app.getHttpServer())
