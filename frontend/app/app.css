@@ -1,15 +1,35 @@
 @import "tailwindcss";
+@import url("https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,400&family=DM+Mono:wght@400;500&display=swap");
 
 @theme {
-  --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif,
+  --font-sans: "DM Sans", ui-sans-serif, system-ui, sans-serif,
     "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+  --font-mono: "DM Mono", ui-monospace, "Cascadia Code", "Courier New", monospace;
+
+  /* Cores padrão do sistema de design (AGENTS.md / Anhanguera) */
+  --color-brand-orange-400: #fb923c;
+  /* orange-400 */
+  --color-brand-orange-500: #f97316;
+  /* orange-500 */
+  --color-brand-orange-600: #ea580c;
+  /* orange-600 */
+  --color-brand-bg: #0a0a0a;
+  /* Fundo escuro premium */
+
+  --color-anhanguera: #f25a24;
+  /* Laranja característico da Anhanguera */
+  --color-anhanguera-hover: #d84816;
 }
 
 html,
 body {
-  @apply bg-white dark:bg-gray-950;
+  @apply bg-brand-bg text-white;
 
   @media (prefers-color-scheme: dark) {
     color-scheme: dark;
   }
+}
+
+button {
+  cursor: pointer;
 }

@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { useAuthStore } from '../hooks/store/useAuth';
+import { useAuthStore } from '../hooks/store/use-auth';
 
 export const http = axios.create({
   baseURL: 'http://localhost:3000',

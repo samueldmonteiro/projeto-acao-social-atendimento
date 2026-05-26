@@ -1,5 +1,6 @@
+import { isAxiosError } from 'axios';
 import { Link } from 'react-router';
-import { useUsers } from '../../hooks/queries/useUsers';
+import { useUsers } from '../../hooks/queries/use-users';
 
 export function meta() {
   return [
@@ -9,7 +10,7 @@ export function meta() {
 }
 
 export default function Users() {
-  const { data: response, isLoading, isError } = useUsers();
+  const { data: response, isLoading, isError, error } = useUsers();
   const users = response?.data;
 
   if (isLoading) {
@@ -21,9 +22,11 @@ export default function Users() {
   }
 
   if (isError) {
+    const message = isAxiosError(error)
+      ?? error.response?.data?.message;
     return (
       <div className="flex justify-center items-center h-64 text-red-400">
-        <p className="text-lg font-medium">Erro ao carregar usuários.</p>
+        <p className="text-lg font-medium">{message}</p>
       </div>
     );
   }
