@@ -9,18 +9,21 @@ export type AggregateServiceCategory = {
 export type ServiceCategoryMinAggregateOutputType = {
     id: string | null;
     name: string | null;
+    prefix: string | null;
     createdAt: Date | null;
     updatedAt: Date | null;
 };
 export type ServiceCategoryMaxAggregateOutputType = {
     id: string | null;
     name: string | null;
+    prefix: string | null;
     createdAt: Date | null;
     updatedAt: Date | null;
 };
 export type ServiceCategoryCountAggregateOutputType = {
     id: number;
     name: number;
+    prefix: number;
     createdAt: number;
     updatedAt: number;
     _all: number;
@@ -28,18 +31,21 @@ export type ServiceCategoryCountAggregateOutputType = {
 export type ServiceCategoryMinAggregateInputType = {
     id?: true;
     name?: true;
+    prefix?: true;
     createdAt?: true;
     updatedAt?: true;
 };
 export type ServiceCategoryMaxAggregateInputType = {
     id?: true;
     name?: true;
+    prefix?: true;
     createdAt?: true;
     updatedAt?: true;
 };
 export type ServiceCategoryCountAggregateInputType = {
     id?: true;
     name?: true;
+    prefix?: true;
     createdAt?: true;
     updatedAt?: true;
     _all?: true;
@@ -71,6 +77,7 @@ export type ServiceCategoryGroupByArgs<ExtArgs extends runtime.Types.Extensions.
 export type ServiceCategoryGroupByOutputType = {
     id: string;
     name: string;
+    prefix: string;
     createdAt: Date;
     updatedAt: Date;
     _count: ServiceCategoryCountAggregateOutputType | null;
@@ -86,6 +93,7 @@ export type ServiceCategoryWhereInput = {
     NOT?: Prisma.ServiceCategoryWhereInput | Prisma.ServiceCategoryWhereInput[];
     id?: Prisma.StringFilter<"ServiceCategory"> | string;
     name?: Prisma.StringFilter<"ServiceCategory"> | string;
+    prefix?: Prisma.StringFilter<"ServiceCategory"> | string;
     createdAt?: Prisma.DateTimeFilter<"ServiceCategory"> | Date | string;
     updatedAt?: Prisma.DateTimeFilter<"ServiceCategory"> | Date | string;
     beneficiaries?: Prisma.BeneficiaryCategoryListRelationFilter;
@@ -93,6 +101,7 @@ export type ServiceCategoryWhereInput = {
 export type ServiceCategoryOrderByWithRelationInput = {
     id?: Prisma.SortOrder;
     name?: Prisma.SortOrder;
+    prefix?: Prisma.SortOrder;
     createdAt?: Prisma.SortOrder;
     updatedAt?: Prisma.SortOrder;
     beneficiaries?: Prisma.BeneficiaryCategoryOrderByRelationAggregateInput;
@@ -103,6 +112,7 @@ export type ServiceCategoryWhereUniqueInput = Prisma.AtLeast<{
     AND?: Prisma.ServiceCategoryWhereInput | Prisma.ServiceCategoryWhereInput[];
     OR?: Prisma.ServiceCategoryWhereInput[];
     NOT?: Prisma.ServiceCategoryWhereInput | Prisma.ServiceCategoryWhereInput[];
+    prefix?: Prisma.StringFilter<"ServiceCategory"> | string;
     createdAt?: Prisma.DateTimeFilter<"ServiceCategory"> | Date | string;
     updatedAt?: Prisma.DateTimeFilter<"ServiceCategory"> | Date | string;
     beneficiaries?: Prisma.BeneficiaryCategoryListRelationFilter;
@@ -110,6 +120,7 @@ export type ServiceCategoryWhereUniqueInput = Prisma.AtLeast<{
 export type ServiceCategoryOrderByWithAggregationInput = {
     id?: Prisma.SortOrder;
     name?: Prisma.SortOrder;
+    prefix?: Prisma.SortOrder;
     createdAt?: Prisma.SortOrder;
     updatedAt?: Prisma.SortOrder;
     _count?: Prisma.ServiceCategoryCountOrderByAggregateInput;
@@ -122,12 +133,14 @@ export type ServiceCategoryScalarWhereWithAggregatesInput = {
     NOT?: Prisma.ServiceCategoryScalarWhereWithAggregatesInput | Prisma.ServiceCategoryScalarWhereWithAggregatesInput[];
     id?: Prisma.StringWithAggregatesFilter<"ServiceCategory"> | string;
     name?: Prisma.StringWithAggregatesFilter<"ServiceCategory"> | string;
+    prefix?: Prisma.StringWithAggregatesFilter<"ServiceCategory"> | string;
     createdAt?: Prisma.DateTimeWithAggregatesFilter<"ServiceCategory"> | Date | string;
     updatedAt?: Prisma.DateTimeWithAggregatesFilter<"ServiceCategory"> | Date | string;
 };
 export type ServiceCategoryCreateInput = {
     id?: string;
     name: string;
+    prefix: string;
     createdAt?: Date | string;
     updatedAt?: Date | string;
     beneficiaries?: Prisma.BeneficiaryCategoryCreateNestedManyWithoutServiceCategoryInput;
@@ -135,6 +148,7 @@ export type ServiceCategoryCreateInput = {
 export type ServiceCategoryUncheckedCreateInput = {
     id?: string;
     name: string;
+    prefix: string;
     createdAt?: Date | string;
     updatedAt?: Date | string;
     beneficiaries?: Prisma.BeneficiaryCategoryUncheckedCreateNestedManyWithoutServiceCategoryInput;
@@ -142,6 +156,7 @@ export type ServiceCategoryUncheckedCreateInput = {
 export type ServiceCategoryUpdateInput = {
     id?: Prisma.StringFieldUpdateOperationsInput | string;
     name?: Prisma.StringFieldUpdateOperationsInput | string;
+    prefix?: Prisma.StringFieldUpdateOperationsInput | string;
     createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
     updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
     beneficiaries?: Prisma.BeneficiaryCategoryUpdateManyWithoutServiceCategoryNestedInput;
@@ -149,6 +164,7 @@ export type ServiceCategoryUpdateInput = {
 export type ServiceCategoryUncheckedUpdateInput = {
     id?: Prisma.StringFieldUpdateOperationsInput | string;
     name?: Prisma.StringFieldUpdateOperationsInput | string;
+    prefix?: Prisma.StringFieldUpdateOperationsInput | string;
     createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
     updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
     beneficiaries?: Prisma.BeneficiaryCategoryUncheckedUpdateManyWithoutServiceCategoryNestedInput;
@@ -156,36 +172,42 @@ export type ServiceCategoryUncheckedUpdateInput = {
 export type ServiceCategoryCreateManyInput = {
     id?: string;
     name: string;
+    prefix: string;
     createdAt?: Date | string;
     updatedAt?: Date | string;
 };
 export type ServiceCategoryUpdateManyMutationInput = {
     id?: Prisma.StringFieldUpdateOperationsInput | string;
     name?: Prisma.StringFieldUpdateOperationsInput | string;
+    prefix?: Prisma.StringFieldUpdateOperationsInput | string;
     createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
     updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
 };
 export type ServiceCategoryUncheckedUpdateManyInput = {
     id?: Prisma.StringFieldUpdateOperationsInput | string;
     name?: Prisma.StringFieldUpdateOperationsInput | string;
+    prefix?: Prisma.StringFieldUpdateOperationsInput | string;
     createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
     updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
 };
 export type ServiceCategoryCountOrderByAggregateInput = {
     id?: Prisma.SortOrder;
     name?: Prisma.SortOrder;
+    prefix?: Prisma.SortOrder;
     createdAt?: Prisma.SortOrder;
     updatedAt?: Prisma.SortOrder;
 };
 export type ServiceCategoryMaxOrderByAggregateInput = {
     id?: Prisma.SortOrder;
     name?: Prisma.SortOrder;
+    prefix?: Prisma.SortOrder;
     createdAt?: Prisma.SortOrder;
     updatedAt?: Prisma.SortOrder;
 };
 export type ServiceCategoryMinOrderByAggregateInput = {
     id?: Prisma.SortOrder;
     name?: Prisma.SortOrder;
+    prefix?: Prisma.SortOrder;
     createdAt?: Prisma.SortOrder;
     updatedAt?: Prisma.SortOrder;
 };
@@ -208,12 +230,14 @@ export type ServiceCategoryUpdateOneRequiredWithoutBeneficiariesNestedInput = {
 export type ServiceCategoryCreateWithoutBeneficiariesInput = {
     id?: string;
     name: string;
+    prefix: string;
     createdAt?: Date | string;
     updatedAt?: Date | string;
 };
 export type ServiceCategoryUncheckedCreateWithoutBeneficiariesInput = {
     id?: string;
     name: string;
+    prefix: string;
     createdAt?: Date | string;
     updatedAt?: Date | string;
 };
@@ -233,12 +257,14 @@ export type ServiceCategoryUpdateToOneWithWhereWithoutBeneficiariesInput = {
 export type ServiceCategoryUpdateWithoutBeneficiariesInput = {
     id?: Prisma.StringFieldUpdateOperationsInput | string;
     name?: Prisma.StringFieldUpdateOperationsInput | string;
+    prefix?: Prisma.StringFieldUpdateOperationsInput | string;
     createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
     updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
 };
 export type ServiceCategoryUncheckedUpdateWithoutBeneficiariesInput = {
     id?: Prisma.StringFieldUpdateOperationsInput | string;
     name?: Prisma.StringFieldUpdateOperationsInput | string;
+    prefix?: Prisma.StringFieldUpdateOperationsInput | string;
     createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
     updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
 };
@@ -257,6 +283,7 @@ export type ServiceCategoryCountOutputTypeCountBeneficiariesArgs<ExtArgs extends
 export type ServiceCategorySelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
     id?: boolean;
     name?: boolean;
+    prefix?: boolean;
     createdAt?: boolean;
     updatedAt?: boolean;
     beneficiaries?: boolean | Prisma.ServiceCategory$beneficiariesArgs<ExtArgs>;
@@ -265,22 +292,25 @@ export type ServiceCategorySelect<ExtArgs extends runtime.Types.Extensions.Inter
 export type ServiceCategorySelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
     id?: boolean;
     name?: boolean;
+    prefix?: boolean;
     createdAt?: boolean;
     updatedAt?: boolean;
 }, ExtArgs["result"]["serviceCategory"]>;
 export type ServiceCategorySelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
     id?: boolean;
     name?: boolean;
+    prefix?: boolean;
     createdAt?: boolean;
     updatedAt?: boolean;
 }, ExtArgs["result"]["serviceCategory"]>;
 export type ServiceCategorySelectScalar = {
     id?: boolean;
     name?: boolean;
+    prefix?: boolean;
     createdAt?: boolean;
     updatedAt?: boolean;
 };
-export type ServiceCategoryOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "name" | "createdAt" | "updatedAt", ExtArgs["result"]["serviceCategory"]>;
+export type ServiceCategoryOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "name" | "prefix" | "createdAt" | "updatedAt", ExtArgs["result"]["serviceCategory"]>;
 export type ServiceCategoryInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
     beneficiaries?: boolean | Prisma.ServiceCategory$beneficiariesArgs<ExtArgs>;
     _count?: boolean | Prisma.ServiceCategoryCountOutputTypeDefaultArgs<ExtArgs>;
@@ -295,6 +325,7 @@ export type $ServiceCategoryPayload<ExtArgs extends runtime.Types.Extensions.Int
     scalars: runtime.Types.Extensions.GetPayloadResult<{
         id: string;
         name: string;
+        prefix: string;
         createdAt: Date;
         updatedAt: Date;
     }, ExtArgs["result"]["serviceCategory"]>;
@@ -357,6 +388,7 @@ export interface Prisma__ServiceCategoryClient<T, Null = never, ExtArgs extends 
 export interface ServiceCategoryFieldRefs {
     readonly id: Prisma.FieldRef<"ServiceCategory", 'String'>;
     readonly name: Prisma.FieldRef<"ServiceCategory", 'String'>;
+    readonly prefix: Prisma.FieldRef<"ServiceCategory", 'String'>;
     readonly createdAt: Prisma.FieldRef<"ServiceCategory", 'DateTime'>;
     readonly updatedAt: Prisma.FieldRef<"ServiceCategory", 'DateTime'>;
 }

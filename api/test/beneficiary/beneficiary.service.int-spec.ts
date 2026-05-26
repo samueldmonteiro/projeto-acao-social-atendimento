@@ -431,22 +431,31 @@ describe('BeneficiaryService Integration', () => {
       await prisma.beneficiary.createMany({ data: items });
 
       const page1 = await service.findMany({ page: 1, perPage: 5 });
-      expect(page1).toHaveLength(5);
-      expect(page1[0].fullName).toBe('Beneficiário 01');
-      expect(page1[4].fullName).toBe('Beneficiário 05');
+      expect(page1.data).toHaveLength(5);
+      expect(page1.data[0].fullName).toBe('Beneficiário 01');
+      expect(page1.data[4].fullName).toBe('Beneficiário 05');
+      expect(page1.pagination.total).toBe(15);
+      expect(page1.pagination.page).toBe(1);
+      expect(page1.pagination.hasNextPage).toBe(true);
+      expect(page1.pagination.hasPrevPage).toBe(false);
 
       const page2 = await service.findMany({ page: 2, perPage: 5 });
-      expect(page2).toHaveLength(5);
-      expect(page2[0].fullName).toBe('Beneficiário 06');
-      expect(page2[4].fullName).toBe('Beneficiário 10');
+      expect(page2.data).toHaveLength(5);
+      expect(page2.data[0].fullName).toBe('Beneficiário 06');
+      expect(page2.data[4].fullName).toBe('Beneficiário 10');
+      expect(page2.pagination.page).toBe(2);
+      expect(page2.pagination.hasNextPage).toBe(true);
+      expect(page2.pagination.hasPrevPage).toBe(true);
 
       const page3 = await service.findMany({ page: 3, perPage: 5 });
-      expect(page3).toHaveLength(5);
-      expect(page3[0].fullName).toBe('Beneficiário 11');
-      expect(page3[4].fullName).toBe('Beneficiário 15');
+      expect(page3.data).toHaveLength(5);
+      expect(page3.data[0].fullName).toBe('Beneficiário 11');
+      expect(page3.data[4].fullName).toBe('Beneficiário 15');
 
       const page4 = await service.findMany({ page: 4, perPage: 5 });
-      expect(page4).toHaveLength(0);
+      expect(page4.data).toHaveLength(0);
+      expect(page4.pagination.hasNextPage).toBe(false);
+      expect(page4.pagination.hasPrevPage).toBe(true);
     });
 
     it('should default to page 1 with 10 per page', async () => {
@@ -460,8 +469,9 @@ describe('BeneficiaryService Integration', () => {
       await prisma.beneficiary.createMany({ data: items });
 
       const result = await service.findMany({});
-      expect(result).toHaveLength(10);
-      expect(result[0].fullName).toBe('B01');
+      expect(result.data).toHaveLength(10);
+      expect(result.data[0].fullName).toBe('B01');
+      expect(result.pagination.limit).toBe(10);
     });
 
     it('should list all beneficiaries ordered by name asc', async () => {
@@ -474,10 +484,10 @@ describe('BeneficiaryService Integration', () => {
       });
 
       const list = await service.findMany({});
-      expect(list).toHaveLength(3);
-      expect(list[0].fullName).toBe('Ana Silva');
-      expect(list[1].fullName).toBe('Bruna Silva');
-      expect(list[2].fullName).toBe('Carlos Silva');
+      expect(list.data).toHaveLength(3);
+      expect(list.data[0].fullName).toBe('Ana Silva');
+      expect(list.data[1].fullName).toBe('Bruna Silva');
+      expect(list.data[2].fullName).toBe('Carlos Silva');
     });
 
     it('should filter beneficiaries by search parameter', async () => {
@@ -489,12 +499,12 @@ describe('BeneficiaryService Integration', () => {
       });
 
       const searchByName = await service.findMany({ search: 'carlos' });
-      expect(searchByName).toHaveLength(1);
-      expect(searchByName[0].fullName).toBe('Carlos Alberto');
+      expect(searchByName.data).toHaveLength(1);
+      expect(searchByName.data[0].fullName).toBe('Carlos Alberto');
 
       const searchByCpf = await service.findMany({ search: '456' });
-      expect(searchByCpf).toHaveLength(1);
-      expect(searchByCpf[0].fullName).toBe('Ana Maria');
+      expect(searchByCpf.data).toHaveLength(1);
+      expect(searchByCpf.data[0].fullName).toBe('Ana Maria');
     });
 
     it('should filter beneficiaries by serviceCategoryId', async () => {
@@ -524,8 +534,8 @@ describe('BeneficiaryService Integration', () => {
       });
 
       const listFiltered = await service.findMany({ serviceCategoryId: cat.id });
-      expect(listFiltered).toHaveLength(1);
-      expect(listFiltered[0].fullName).toBe('Carlos Alberto');
+      expect(listFiltered.data).toHaveLength(1);
+      expect(listFiltered.data[0].fullName).toBe('Carlos Alberto');
     });
   });
 });

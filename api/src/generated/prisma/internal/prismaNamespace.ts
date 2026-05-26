@@ -773,6 +773,7 @@ export type BeneficiaryScalarFieldEnum = (typeof BeneficiaryScalarFieldEnum)[key
 export const ServiceCategoryScalarFieldEnum = {
   id: 'id',
   name: 'name',
+  prefix: 'prefix',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 } as const
@@ -783,6 +784,7 @@ export type ServiceCategoryScalarFieldEnum = (typeof ServiceCategoryScalarFieldE
 export const BeneficiaryCategoryScalarFieldEnum = {
   beneficiaryId: 'beneficiaryId',
   serviceCategoryId: 'serviceCategoryId',
+  callCode: 'callCode',
   createdAt: 'createdAt'
 } as const
 

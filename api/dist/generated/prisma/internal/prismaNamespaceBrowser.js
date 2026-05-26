@@ -79,12 +79,14 @@ exports.BeneficiaryScalarFieldEnum = {
 exports.ServiceCategoryScalarFieldEnum = {
     id: 'id',
     name: 'name',
+    prefix: 'prefix',
     createdAt: 'createdAt',
     updatedAt: 'updatedAt'
 };
 exports.BeneficiaryCategoryScalarFieldEnum = {
     beneficiaryId: 'beneficiaryId',
     serviceCategoryId: 'serviceCategoryId',
+    callCode: 'callCode',
     createdAt: 'createdAt'
 };
 exports.SortOrder = {

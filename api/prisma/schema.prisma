@@ -30,25 +30,24 @@ model User {
 }
 
 model Beneficiary {
-  id        String   @id @default(cuid())
-  fullName  String
-  cpf       String   @unique
-  email     String?  @unique
-  phone     String?
-  birthDate DateTime
-  gender    Gender
-
+  id         String                @id @default(uuid())
+  fullName   String
+  cpf        String                @unique
+  email      String?               @unique
+  phone      String?
+  birthDate  DateTime
+  gender     Gender
   categories BeneficiaryCategory[]
-
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  createdAt  DateTime              @default(now())
+  updatedAt  DateTime              @updatedAt
 
   @@map("beneficiaries")
 }
 
 model ServiceCategory {
-  id   String @id @default(cuid())
-  name String @unique
+  id     String @id @default(uuid())
+  name   String @unique
+  prefix String
 
   beneficiaries BeneficiaryCategory[]
 
@@ -61,6 +60,7 @@ model ServiceCategory {
 model BeneficiaryCategory {
   beneficiaryId     String
   serviceCategoryId String
+  callCode          String   @unique
 
   beneficiary     Beneficiary     @relation(fields: [beneficiaryId], references: [id], onDelete: Cascade)
   serviceCategory ServiceCategory @relation(fields: [serviceCategoryId], references: [id], onDelete: Cascade)

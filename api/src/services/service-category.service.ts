@@ -15,8 +15,18 @@ export class ServiceCategoryService {
       throw new ServiceCategoryAlreadyExistsError();
     }
 
+    const prefix = data.name
+      .split(' ')
+      .map(w => w[0])
+      .join('')
+      .toUpperCase()
+      .slice(0, 5);
+
     return await prisma.serviceCategory.create({
-      data,
+      data: {
+        name: data.name,
+        prefix,
+      },
     });
   }
 

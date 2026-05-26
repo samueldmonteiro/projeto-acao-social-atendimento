@@ -27,18 +27,21 @@ export type AggregateBeneficiaryCategory = {
 export type BeneficiaryCategoryMinAggregateOutputType = {
   beneficiaryId: string | null
   serviceCategoryId: string | null
+  callCode: string | null
   createdAt: Date | null
 }
 
 export type BeneficiaryCategoryMaxAggregateOutputType = {
   beneficiaryId: string | null
   serviceCategoryId: string | null
+  callCode: string | null
   createdAt: Date | null
 }
 
 export type BeneficiaryCategoryCountAggregateOutputType = {
   beneficiaryId: number
   serviceCategoryId: number
+  callCode: number
   createdAt: number
   _all: number
 }
@@ -47,18 +50,21 @@ export type BeneficiaryCategoryCountAggregateOutputType = {
 export type BeneficiaryCategoryMinAggregateInputType = {
   beneficiaryId?: true
   serviceCategoryId?: true
+  callCode?: true
   createdAt?: true
 }
 
 export type BeneficiaryCategoryMaxAggregateInputType = {
   beneficiaryId?: true
   serviceCategoryId?: true
+  callCode?: true
   createdAt?: true
 }
 
 export type BeneficiaryCategoryCountAggregateInputType = {
   beneficiaryId?: true
   serviceCategoryId?: true
+  callCode?: true
   createdAt?: true
   _all?: true
 }
@@ -138,6 +144,7 @@ export type BeneficiaryCategoryGroupByArgs<ExtArgs extends runtime.Types.Extensi
 export type BeneficiaryCategoryGroupByOutputType = {
   beneficiaryId: string
   serviceCategoryId: string
+  callCode: string
   createdAt: Date
   _count: BeneficiaryCategoryCountAggregateOutputType | null
   _min: BeneficiaryCategoryMinAggregateOutputType | null
@@ -165,6 +172,7 @@ export type BeneficiaryCategoryWhereInput = {
   NOT?: Prisma.BeneficiaryCategoryWhereInput | Prisma.BeneficiaryCategoryWhereInput[]
   beneficiaryId?: Prisma.StringFilter<"BeneficiaryCategory"> | string
   serviceCategoryId?: Prisma.StringFilter<"BeneficiaryCategory"> | string
+  callCode?: Prisma.StringFilter<"BeneficiaryCategory"> | string
   createdAt?: Prisma.DateTimeFilter<"BeneficiaryCategory"> | Date | string
   beneficiary?: Prisma.XOR<Prisma.BeneficiaryScalarRelationFilter, Prisma.BeneficiaryWhereInput>
   serviceCategory?: Prisma.XOR<Prisma.ServiceCategoryScalarRelationFilter, Prisma.ServiceCategoryWhereInput>
@@ -173,12 +181,14 @@ export type BeneficiaryCategoryWhereInput = {
 export type BeneficiaryCategoryOrderByWithRelationInput = {
   beneficiaryId?: Prisma.SortOrder
   serviceCategoryId?: Prisma.SortOrder
+  callCode?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   beneficiary?: Prisma.BeneficiaryOrderByWithRelationInput
   serviceCategory?: Prisma.ServiceCategoryOrderByWithRelationInput
 }
 
 export type BeneficiaryCategoryWhereUniqueInput = Prisma.AtLeast<{
+  callCode?: string
   beneficiaryId_serviceCategoryId?: Prisma.BeneficiaryCategoryBeneficiaryIdServiceCategoryIdCompoundUniqueInput
   AND?: Prisma.BeneficiaryCategoryWhereInput | Prisma.BeneficiaryCategoryWhereInput[]
   OR?: Prisma.BeneficiaryCategoryWhereInput[]
@@ -188,11 +198,12 @@ export type BeneficiaryCategoryWhereUniqueInput = Prisma.AtLeast<{
   createdAt?: Prisma.DateTimeFilter<"BeneficiaryCategory"> | Date | string
   beneficiary?: Prisma.XOR<Prisma.BeneficiaryScalarRelationFilter, Prisma.BeneficiaryWhereInput>
   serviceCategory?: Prisma.XOR<Prisma.ServiceCategoryScalarRelationFilter, Prisma.ServiceCategoryWhereInput>
-}, "beneficiaryId_serviceCategoryId">
+}, "beneficiaryId_serviceCategoryId" | "callCode">
 
 export type BeneficiaryCategoryOrderByWithAggregationInput = {
   beneficiaryId?: Prisma.SortOrder
   serviceCategoryId?: Prisma.SortOrder
+  callCode?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   _count?: Prisma.BeneficiaryCategoryCountOrderByAggregateInput
   _max?: Prisma.BeneficiaryCategoryMaxOrderByAggregateInput
@@ -205,10 +216,12 @@ export type BeneficiaryCategoryScalarWhereWithAggregatesInput = {
   NOT?: Prisma.BeneficiaryCategoryScalarWhereWithAggregatesInput | Prisma.BeneficiaryCategoryScalarWhereWithAggregatesInput[]
   beneficiaryId?: Prisma.StringWithAggregatesFilter<"BeneficiaryCategory"> | string
   serviceCategoryId?: Prisma.StringWithAggregatesFilter<"BeneficiaryCategory"> | string
+  callCode?: Prisma.StringWithAggregatesFilter<"BeneficiaryCategory"> | string
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"BeneficiaryCategory"> | Date | string
 }
 
 export type BeneficiaryCategoryCreateInput = {
+  callCode: string
   createdAt?: Date | string
   beneficiary: Prisma.BeneficiaryCreateNestedOneWithoutCategoriesInput
   serviceCategory: Prisma.ServiceCategoryCreateNestedOneWithoutBeneficiariesInput
@@ -217,10 +230,12 @@ export type BeneficiaryCategoryCreateInput = {
 export type BeneficiaryCategoryUncheckedCreateInput = {
   beneficiaryId: string
   serviceCategoryId: string
+  callCode: string
   createdAt?: Date | string
 }
 
 export type BeneficiaryCategoryUpdateInput = {
+  callCode?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   beneficiary?: Prisma.BeneficiaryUpdateOneRequiredWithoutCategoriesNestedInput
   serviceCategory?: Prisma.ServiceCategoryUpdateOneRequiredWithoutBeneficiariesNestedInput
@@ -229,22 +244,26 @@ export type BeneficiaryCategoryUpdateInput = {
 export type BeneficiaryCategoryUncheckedUpdateInput = {
   beneficiaryId?: Prisma.StringFieldUpdateOperationsInput | string
   serviceCategoryId?: Prisma.StringFieldUpdateOperationsInput | string
+  callCode?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
 export type BeneficiaryCategoryCreateManyInput = {
   beneficiaryId: string
   serviceCategoryId: string
+  callCode: string
   createdAt?: Date | string
 }
 
 export type BeneficiaryCategoryUpdateManyMutationInput = {
+  callCode?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
 export type BeneficiaryCategoryUncheckedUpdateManyInput = {
   beneficiaryId?: Prisma.StringFieldUpdateOperationsInput | string
   serviceCategoryId?: Prisma.StringFieldUpdateOperationsInput | string
+  callCode?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
@@ -266,18 +285,21 @@ export type BeneficiaryCategoryBeneficiaryIdServiceCategoryIdCompoundUniqueInput
 export type BeneficiaryCategoryCountOrderByAggregateInput = {
   beneficiaryId?: Prisma.SortOrder
   serviceCategoryId?: Prisma.SortOrder
+  callCode?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
 }
 
 export type BeneficiaryCategoryMaxOrderByAggregateInput = {
   beneficiaryId?: Prisma.SortOrder
   serviceCategoryId?: Prisma.SortOrder
+  callCode?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
 }
 
 export type BeneficiaryCategoryMinOrderByAggregateInput = {
   beneficiaryId?: Prisma.SortOrder
   serviceCategoryId?: Prisma.SortOrder
+  callCode?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
 }
 
@@ -366,12 +388,14 @@ export type BeneficiaryCategoryUncheckedUpdateManyWithoutServiceCategoryNestedIn
 }
 
 export type BeneficiaryCategoryCreateWithoutBeneficiaryInput = {
+  callCode: string
   createdAt?: Date | string
   serviceCategory: Prisma.ServiceCategoryCreateNestedOneWithoutBeneficiariesInput
 }
 
 export type BeneficiaryCategoryUncheckedCreateWithoutBeneficiaryInput = {
   serviceCategoryId: string
+  callCode: string
   createdAt?: Date | string
 }
 
@@ -407,16 +431,19 @@ export type BeneficiaryCategoryScalarWhereInput = {
   NOT?: Prisma.BeneficiaryCategoryScalarWhereInput | Prisma.BeneficiaryCategoryScalarWhereInput[]
   beneficiaryId?: Prisma.StringFilter<"BeneficiaryCategory"> | string
   serviceCategoryId?: Prisma.StringFilter<"BeneficiaryCategory"> | string
+  callCode?: Prisma.StringFilter<"BeneficiaryCategory"> | string
   createdAt?: Prisma.DateTimeFilter<"BeneficiaryCategory"> | Date | string
 }
 
 export type BeneficiaryCategoryCreateWithoutServiceCategoryInput = {
+  callCode: string
   createdAt?: Date | string
   beneficiary: Prisma.BeneficiaryCreateNestedOneWithoutCategoriesInput
 }
 
 export type BeneficiaryCategoryUncheckedCreateWithoutServiceCategoryInput = {
   beneficiaryId: string
+  callCode: string
   createdAt?: Date | string
 }
 
@@ -448,41 +475,49 @@ export type BeneficiaryCategoryUpdateManyWithWhereWithoutServiceCategoryInput = 
 
 export type BeneficiaryCategoryCreateManyBeneficiaryInput = {
   serviceCategoryId: string
+  callCode: string
   createdAt?: Date | string
 }
 
 export type BeneficiaryCategoryUpdateWithoutBeneficiaryInput = {
+  callCode?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   serviceCategory?: Prisma.ServiceCategoryUpdateOneRequiredWithoutBeneficiariesNestedInput
 }
 
 export type BeneficiaryCategoryUncheckedUpdateWithoutBeneficiaryInput = {
   serviceCategoryId?: Prisma.StringFieldUpdateOperationsInput | string
+  callCode?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
 export type BeneficiaryCategoryUncheckedUpdateManyWithoutBeneficiaryInput = {
   serviceCategoryId?: Prisma.StringFieldUpdateOperationsInput | string
+  callCode?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
 export type BeneficiaryCategoryCreateManyServiceCategoryInput = {
   beneficiaryId: string
+  callCode: string
   createdAt?: Date | string
 }
 
 export type BeneficiaryCategoryUpdateWithoutServiceCategoryInput = {
+  callCode?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   beneficiary?: Prisma.BeneficiaryUpdateOneRequiredWithoutCategoriesNestedInput
 }
 
 export type BeneficiaryCategoryUncheckedUpdateWithoutServiceCategoryInput = {
   beneficiaryId?: Prisma.StringFieldUpdateOperationsInput | string
+  callCode?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
 export type BeneficiaryCategoryUncheckedUpdateManyWithoutServiceCategoryInput = {
   beneficiaryId?: Prisma.StringFieldUpdateOperationsInput | string
+  callCode?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
@@ -491,6 +526,7 @@ export type BeneficiaryCategoryUncheckedUpdateManyWithoutServiceCategoryInput = 
 export type BeneficiaryCategorySelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   beneficiaryId?: boolean
   serviceCategoryId?: boolean
+  callCode?: boolean
   createdAt?: boolean
   beneficiary?: boolean | Prisma.BeneficiaryDefaultArgs<ExtArgs>
   serviceCategory?: boolean | Prisma.ServiceCategoryDefaultArgs<ExtArgs>
@@ -499,6 +535,7 @@ export type BeneficiaryCategorySelect<ExtArgs extends runtime.Types.Extensions.I
 export type BeneficiaryCategorySelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   beneficiaryId?: boolean
   serviceCategoryId?: boolean
+  callCode?: boolean
   createdAt?: boolean
   beneficiary?: boolean | Prisma.BeneficiaryDefaultArgs<ExtArgs>
   serviceCategory?: boolean | Prisma.ServiceCategoryDefaultArgs<ExtArgs>
@@ -507,6 +544,7 @@ export type BeneficiaryCategorySelectCreateManyAndReturn<ExtArgs extends runtime
 export type BeneficiaryCategorySelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   beneficiaryId?: boolean
   serviceCategoryId?: boolean
+  callCode?: boolean
   createdAt?: boolean
   beneficiary?: boolean | Prisma.BeneficiaryDefaultArgs<ExtArgs>
   serviceCategory?: boolean | Prisma.ServiceCategoryDefaultArgs<ExtArgs>
@@ -515,10 +553,11 @@ export type BeneficiaryCategorySelectUpdateManyAndReturn<ExtArgs extends runtime
 export type BeneficiaryCategorySelectScalar = {
   beneficiaryId?: boolean
   serviceCategoryId?: boolean
+  callCode?: boolean
   createdAt?: boolean
 }
 
-export type BeneficiaryCategoryOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"beneficiaryId" | "serviceCategoryId" | "createdAt", ExtArgs["result"]["beneficiaryCategory"]>
+export type BeneficiaryCategoryOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"beneficiaryId" | "serviceCategoryId" | "callCode" | "createdAt", ExtArgs["result"]["beneficiaryCategory"]>
 export type BeneficiaryCategoryInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   beneficiary?: boolean | Prisma.BeneficiaryDefaultArgs<ExtArgs>
   serviceCategory?: boolean | Prisma.ServiceCategoryDefaultArgs<ExtArgs>
@@ -541,6 +580,7 @@ export type $BeneficiaryCategoryPayload<ExtArgs extends runtime.Types.Extensions
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     beneficiaryId: string
     serviceCategoryId: string
+    callCode: string
     createdAt: Date
   }, ExtArgs["result"]["beneficiaryCategory"]>
   composites: {}
@@ -969,6 +1009,7 @@ export interface Prisma__BeneficiaryCategoryClient<T, Null = never, ExtArgs exte
 export interface BeneficiaryCategoryFieldRefs {
   readonly beneficiaryId: Prisma.FieldRef<"BeneficiaryCategory", 'String'>
   readonly serviceCategoryId: Prisma.FieldRef<"BeneficiaryCategory", 'String'>
+  readonly callCode: Prisma.FieldRef<"BeneficiaryCategory", 'String'>
   readonly createdAt: Prisma.FieldRef<"BeneficiaryCategory", 'DateTime'>
 }
     

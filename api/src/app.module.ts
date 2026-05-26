@@ -18,6 +18,8 @@ import { BeneficiaryService } from '@/services/beneficiary.service';
 import { ExportService } from '@/services/export.service';
 import { DashboardController } from '@/http/controllers/dashboard.controller';
 import { DashboardService } from '@/services/dashboard.service';
+import { BeneficiaryCategoryController } from '@/http/controllers/beneficiary-category.controller';
+import { BeneficiaryCategoryService } from '@/services/beneficiary-category.service';
 
 @Module({
   imports: [
@@ -40,6 +42,7 @@ import { DashboardService } from '@/services/dashboard.service';
     ServiceCategoryController,
     BeneficiaryController,
     DashboardController,
+    BeneficiaryCategoryController,
   ],
   providers: [
     AppService,
@@ -51,6 +54,7 @@ import { DashboardService } from '@/services/dashboard.service';
     AuthService,
     JwtGuard,
     JwtStrategy,
+    BeneficiaryCategoryService,
   ],
 })
 export class AppModule { }

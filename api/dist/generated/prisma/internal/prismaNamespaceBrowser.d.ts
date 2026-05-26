@@ -49,6 +49,7 @@ export type BeneficiaryScalarFieldEnum = (typeof BeneficiaryScalarFieldEnum)[key
 export declare const ServiceCategoryScalarFieldEnum: {
     readonly id: "id";
     readonly name: "name";
+    readonly prefix: "prefix";
     readonly createdAt: "createdAt";
     readonly updatedAt: "updatedAt";
 };
@@ -56,6 +57,7 @@ export type ServiceCategoryScalarFieldEnum = (typeof ServiceCategoryScalarFieldE
 export declare const BeneficiaryCategoryScalarFieldEnum: {
     readonly beneficiaryId: "beneficiaryId";
     readonly serviceCategoryId: "serviceCategoryId";
+    readonly callCode: "callCode";
     readonly createdAt: "createdAt";
 };
 export type BeneficiaryCategoryScalarFieldEnum = (typeof BeneficiaryCategoryScalarFieldEnum)[keyof typeof BeneficiaryCategoryScalarFieldEnum];
