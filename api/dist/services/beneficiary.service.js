@@ -11,8 +11,6 @@ const common_1 = require("@nestjs/common");
 const prisma_1 = require("../lib/prisma");
 const beneficiary_not_found_error_1 = require("../errors/beneficiary-not-found.error");
 const beneficiary_already_exists_error_1 = require("../errors/beneficiary-already-exists.error");
-const service_category_not_found_error_1 = require("../errors/service-category-not-found.error");
-const category_already_linked_error_1 = require("../errors/category-already-linked.error");
 let BeneficiaryService = class BeneficiaryService {
     async create(data) {
         return await prisma_1.prisma.$transaction(async (tx) => {
@@ -94,60 +92,6 @@ let BeneficiaryService = class BeneficiaryService {
                     },
                 },
             });
-        });
-    }
-    async addCategory(id, serviceCategoryId) {
-        return await prisma_1.prisma.$transaction(async (tx) => {
-            const beneficiary = await tx.beneficiary.findUnique({
-                where: { id },
-            });
-            if (!beneficiary) {
-                throw new beneficiary_not_found_error_1.BeneficiaryNotFoundError();
-            }
-            const category = await tx.serviceCategory.findUnique({
-                where: { id: serviceCategoryId },
-            });
-            if (!category) {
-                throw new service_category_not_found_error_1.ServiceCategoryNotFoundError();
-            }
-            const existing = await tx.appointment.findUnique({
-                where: {
-                    beneficiaryId_serviceCategoryId: {
-                        beneficiaryId: id,
-                        serviceCategoryId,
-                    },
-                },
-            });
-            if (existing) {
-                throw new category_already_linked_error_1.CategoryAlreadyLinkedError();
-            }
-        });
-    }
-    async removeCategory(id, serviceCategoryId) {
-        const beneficiary = await prisma_1.prisma.beneficiary.findUnique({
-            where: { id },
-        });
-        if (!beneficiary) {
-            throw new beneficiary_not_found_error_1.BeneficiaryNotFoundError();
-        }
-        const existing = await prisma_1.prisma.appointment.findUnique({
-            where: {
-                beneficiaryId_serviceCategoryId: {
-                    beneficiaryId: id,
-                    serviceCategoryId,
-                },
-            },
-        });
-        if (!existing) {
-            throw new service_category_not_found_error_1.ServiceCategoryNotFoundError('Vínculo entre beneficiário e categoria não encontrado');
-        }
-        await prisma_1.prisma.appointment.delete({
-            where: {
-                beneficiaryId_serviceCategoryId: {
-                    beneficiaryId: id,
-                    serviceCategoryId,
-                },
-            },
         });
     }
     async delete(id) {

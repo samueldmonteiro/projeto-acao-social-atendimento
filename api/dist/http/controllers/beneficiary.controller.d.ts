@@ -2,7 +2,7 @@ import type { Response } from 'express';
 import { BaseController, ApiResponse } from './base.controller';
 import { BeneficiaryService } from "../../services/beneficiary.service";
 import { ExportService } from "../../services/export.service";
-import { CreateBeneficiaryDto, UpdateBeneficiaryDto, AddBeneficiaryCategoryDto } from '../dtos/beneficiary.dto';
+import { CreateBeneficiaryDto, UpdateBeneficiaryDto } from '../dtos/beneficiary.dto';
 export declare class BeneficiaryController extends BaseController {
     private readonly beneficiaryService;
     private readonly exportService;
@@ -10,8 +10,6 @@ export declare class BeneficiaryController extends BaseController {
     export(res: Response): Promise<void>;
     create(body: CreateBeneficiaryDto): Promise<ApiResponse>;
     update(id: string, body: UpdateBeneficiaryDto): Promise<ApiResponse>;
-    addCategory(id: string, body: AddBeneficiaryCategoryDto): Promise<ApiResponse>;
-    removeCategory(id: string, categoryId: string): Promise<ApiResponse>;
     delete(id: string): Promise<ApiResponse>;
     findById(id: string): Promise<ApiResponse>;
     findMany(search?: string, serviceCategoryId?: string, page?: string, perPage?: string): Promise<ApiResponse>;

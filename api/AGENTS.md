@@ -2,13 +2,14 @@
 
 ## Visão Geral
 
-API REST para gerenciamento de beneficiários e categorias de atendimento de uma ação social da Faculdade Anhanguera. Desenvolvida com **NestJS 11**, **Prisma ORM 7**, **PostgreSQL 16** e **JWT**.
+API REST para gerenciamento de beneficiários, categorias de serviço e atendimentos de uma ação social da Faculdade Anhanguera. Desenvolvida com **NestJS 11**, **Prisma ORM 7**, **PostgreSQL 16** e **JWT**.
 
 ## Stack
 
 | Camada       | Tecnologia                              |
 | ------------ | --------------------------------------- |
 | Runtime      | Node.js 24                              |
+| Gerenciador de pacotes | NPM                           |
 | Framework    | NestJS 11 (Express 5)                   |
 | ORM          | Prisma 7 + adapter-pg                   |
 | Banco        | PostgreSQL 16                           |
@@ -30,20 +31,23 @@ api/
 │   ├── errors/              # DomainError classes
 │   ├── generated/prisma/    # Prisma Client (gerado)
 │   ├── http/
-│   │   ├── controllers/     # AppController, AuthController, BeneficiaryController, ServiceCategoryController, UserController
+│   │   ├── controllers/     # app, auth, appointment, base, beneficiary, dashboard, service-category, user
 │   │   ├── decorators/      # @GetUser()
-│   │   ├── dtos/            # DTOs com class-validator
+│   │   ├── dtos/            # appointment, auth, beneficiary, service-category
 │   │   └── filters/         # HttpExceptionFilter
 │   ├── lib/                 # Prisma client instance (singleton)
-│   ├── services/            # Business logic (AuthService, BeneficiaryService, ServiceCategoryService, UserService, ExportService)
+│   ├── services/            # appointment, auth, beneficiary, dashboard, export, service-category, user, app
 │   └── types/               # Tipos globais
 ├── test/                    # Testes (unit, int, e2e)
 │   ├── setup.ts             # Setup: schema PostgreSQL isolado por run
+│   ├── app/
 │   ├── auth/
 │   ├── beneficiary/
+│   ├── beneficiary-category/
+│   ├── dashboard/
+│   ├── export/
 │   ├── service-category/
-│   ├── user/
-│   └── export/
+│   └── user/
 ├── vitest.config.mts
 ├── eslint.config.mjs
 └── tsconfig.json
@@ -52,25 +56,32 @@ api/
 ## Principais Entidades
 
 - **User** — `id`, `name`, `email` (unique), `password` (argon2), `role` (ATTENDANT | ADMIN)
-- **Beneficiary** — `id`, `fullName`, `cpf` (unique), `email`, `phone`, `birthDate`, `gender` (MALE | FEMALE | OTHER)
-- **ServiceCategory** — `id`, `name` (unique)
-- **BeneficiaryCategory** — join table N:N entre beneficiary e service_category (cascade delete)
+- **Beneficiary** — `id`, `fullName`, `cpf` (unique), `email`, `phone`, `birthDate`, `gender` (MALE | FEMALE | OTHER), `address`
+- **ServiceCategory** — `id`, `name` (unique), `prefix`
+- **Appointment** — `beneficiaryId` + `serviceCategoryId` (composite PK), `callCode` (unique), `priority`, `canceled`, `startedAt`, `finishedAt`
 
 ## Comandos
 
+Os comandos abaixo devem ser executados **dentro do container** via `docker exec -it atendimento-api`:
+
 ```bash
-npm run start:dev      # Desenvolvimento com hot-reload
-npm run build          # Compilar para dist/
-npm run start:prod     # Rodar produção
-npm run lint           # ESLint (2 espaços, aspas simples, ponto-e-vírgula)
-npm run lint:fix       # Auto-fix
-npm run format         # Prettier
-npm run seed           # Popular usuários iniciais
-npm run test           # Vitest (unit + int + e2e)
-npm run test:cov       # Testes com cobertura
-npm run test:watch     # Testes em modo watch
-npm run prisma:studio  # Prisma Studio na porta 5555
+docker exec -it atendimento-api npm run start:dev      # Desenvolvimento com hot-reload
+docker exec -it atendimento-api npm run build          # Compilar para dist/
+docker exec -it atendimento-api npm run start:prod     # Rodar produção
+docker exec -it atendimento-api npm run lint           # ESLint (2 espaços, aspas simples, ponto-e-vírgula)
+docker exec -it atendimento-api npm run lint:fix       # Auto-fix
+docker exec -it atendimento-api npm run format         # Prettier
+docker exec -it atendimento-api npm run seed           # Popular usuários iniciais
+docker exec -it atendimento-api npm run test           # Vitest (unit + int + e2e)
+docker exec -it atendimento-api npm run test:cov       # Testes com cobertura
+docker exec -it atendimento-api npm run test:watch     # Testes em modo watch
+docker exec -it atendimento-api npm run prisma:studio  # Prisma Studio na porta 5555
+docker exec -it atendimento-api npx prisma migrate dev --name <nome>  # Criar migration
+docker exec -it atendimento-api npx prisma generate    # Regenerar Prisma Client
+docker exec -it atendimento-api npx prisma migrate deploy  # Deploy migrações em produção
 ```
+
+> Alternativamente, entre no container primeiro: `docker exec -it atendimento-api sh`, depois rode os comandos diretamente.
 
 ## Convenções de Código
 
@@ -87,31 +98,37 @@ npm run prisma:studio  # Prisma Studio na porta 5555
 - Prisma queries com logging em dev
 
 ## Padrão de Testes
-Ao rodar os testes, execute pelo container: docker exec -it atendimento-api (restante...)
+
 - **int**: `test/**/*.int-spec.ts` — com banco real (schema isolado)
 - **e2e**: `test/**/*.e2e-spec.ts` — requests HTTP reais com Supertest
 - Setup cria schema PostgreSQL único (`test_<uuid>`) e roda migrate, depois dropa no `afterAll`
 
 ## Endpoints da API
 
-| Método | Rota                                    | Descrição                  |
-| ------ | --------------------------------------- | -------------------------- |
-| GET    | `/`                                     | Health check               |
-| POST   | `/auth/signin`                          | Login (email+password)     |
-| GET    | `/users`                                | Listar usuários            |
-| GET    | `/beneficiaries`                        | Listar (search, page, perPage, serviceCategoryId) |
-| GET    | `/beneficiaries/:id`                    | Obter beneficiário         |
-| POST   | `/beneficiaries`                        | Criar beneficiário         |
-| PATCH  | `/beneficiaries/:id`                    | Atualizar beneficiário     |
-| DELETE | `/beneficiaries/:id`                    | Remover beneficiário       |
-| POST   | `/beneficiaries/:id/categories`         | Vincular categoria         |
-| DELETE | `/beneficiaries/:id/categories/:catId`  | Desvincular categoria      |
-| GET    | `/beneficiaries/export`                 | Exportar XLSX              |
-| GET    | `/categories`                           | Listar categorias          |
-| GET    | `/categories/:id`                       | Obter categoria            |
-| POST   | `/categories`                           | Criar categoria            |
-| PATCH  | `/categories/:id`                       | Atualizar categoria        |
-| DELETE | `/categories/:id`                       | Remover categoria          |
+| Método | Rota                                           | Descrição                    |
+| ------ | ---------------------------------------------- | ---------------------------- |
+| GET    | `/`                                            | Health check                 |
+| POST   | `/auth/signin`                                 | Login (email+password)       |
+| GET    | `/users`                                       | Listar usuários              |
+| GET    | `/beneficiaries`                               | Listar (search, page, perPage, serviceCategoryId) |
+| GET    | `/beneficiaries/:id`                           | Obter beneficiário           |
+| POST   | `/beneficiaries`                               | Criar beneficiário           |
+| PATCH  | `/beneficiaries/:id`                           | Atualizar beneficiário       |
+| DELETE | `/beneficiaries/:id`                           | Remover beneficiário         |
+| POST   | `/beneficiaries/:id/categories`                | Vincular categoria (cria appointment) |
+| DELETE | `/beneficiaries/:id/categories/:categoryId`    | Desvincular categoria        |
+| GET    | `/beneficiaries/export`                        | Exportar beneficiários XLSX  |
+| GET    | `/categories`                                  | Listar categorias            |
+| GET    | `/categories/:id`                              | Obter categoria              |
+| POST   | `/categories`                                  | Criar categoria              |
+| PATCH  | `/categories/:id`                              | Atualizar categoria          |
+| DELETE | `/categories/:id`                              | Remover categoria            |
+| GET    | `/appointments`                                | Listar (search, categoryId, page, perPage, priority, canceled, started, finished) |
+| POST   | `/appointments`                                | Criar atendimento            |
+| PATCH  | `/appointments/:beneficiaryId/:serviceCategoryId` | Atualizar atendimento    |
+| DELETE | `/appointments/:beneficiaryId/:serviceCategoryId` | Remover atendimento      |
+| GET    | `/appointments/export`                         | Exportar atendimentos XLSX   |
+| GET    | `/dashboard`                                   | Métricas do dashboard        |
 
 Todas as rotas (exceto `/` e `/auth/signin`) exigem header `Authorization: Bearer <token>`.
 

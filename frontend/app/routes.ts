@@ -6,9 +6,8 @@ export default [
 
   // Protected routes
   layout('components/layouts/protected-layout.tsx', [
-    layout('components/layouts/main-layout.tsx', [
-      index('pages/home.tsx'),
-      route('usuarios', 'pages/users/index.tsx'),
+    layout('components/layouts/dashboard-layout.tsx', [
+      index('pages/dashboard/index.tsx'),
     ]),
   ]),
 ] satisfies RouteConfig;

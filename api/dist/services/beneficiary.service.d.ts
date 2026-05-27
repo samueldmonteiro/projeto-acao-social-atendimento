@@ -4,16 +4,16 @@ export declare class BeneficiaryService {
     create(data: CreateBeneficiaryDto): Promise<{
         appointments: ({
             serviceCategory: {
-                id: string;
                 name: string;
+                id: string;
                 createdAt: Date;
                 updatedAt: Date;
                 prefix: string;
             };
         } & {
             createdAt: Date;
-            beneficiaryId: string;
             serviceCategoryId: string;
+            beneficiaryId: string;
             callCode: string;
             priority: boolean;
             canceled: boolean;
@@ -34,13 +34,13 @@ export declare class BeneficiaryService {
     }>;
     update(id: string, data: UpdateBeneficiaryDto): Promise<{
         appointments: {
-            serviceCategoryId: string;
-            callCode: string;
             serviceCategory: {
-                id: string;
                 name: string;
+                id: string;
                 prefix: string;
             };
+            serviceCategoryId: string;
+            callCode: string;
         }[];
     } & {
         id: string;
@@ -54,18 +54,16 @@ export declare class BeneficiaryService {
         gender: import("../generated/prisma/enums").Gender;
         address: string | null;
     }>;
-    addCategory(id: string, serviceCategoryId: string): Promise<void>;
-    removeCategory(id: string, serviceCategoryId: string): Promise<void>;
     delete(id: string): Promise<void>;
     findById(id: string): Promise<{
         appointments: {
-            serviceCategoryId: string;
-            callCode: string;
             serviceCategory: {
-                id: string;
                 name: string;
+                id: string;
                 prefix: string;
             };
+            serviceCategoryId: string;
+            callCode: string;
         }[];
     } & {
         id: string;
@@ -86,13 +84,13 @@ export declare class BeneficiaryService {
         perPage?: number;
     }): Promise<PaginationResponse<({
         appointments: {
-            serviceCategoryId: string;
-            callCode: string;
             serviceCategory: {
-                id: string;
                 name: string;
+                id: string;
                 prefix: string;
             };
+            serviceCategoryId: string;
+            callCode: string;
         }[];
     } & {
         id: string;

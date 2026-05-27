@@ -41,14 +41,6 @@ let BeneficiaryController = class BeneficiaryController extends base_controller_
         const data = await this.beneficiaryService.update(id, body);
         return this.success(data, 'Beneficiário atualizado com sucesso');
     }
-    async addCategory(id, body) {
-        const data = await this.beneficiaryService.addCategory(id, body.serviceCategoryId);
-        return this.created(data, 'Categoria vinculada ao beneficiário com sucesso');
-    }
-    async removeCategory(id, categoryId) {
-        await this.beneficiaryService.removeCategory(id, categoryId);
-        return this.success(null, 'Categoria desvinculada do beneficiário com sucesso');
-    }
     async delete(id) {
         await this.beneficiaryService.delete(id);
         return this.success(null, 'Beneficiário excluído com sucesso');
@@ -90,22 +82,6 @@ __decorate([
     __metadata("design:paramtypes", [String, beneficiary_dto_1.UpdateBeneficiaryDto]),
     __metadata("design:returntype", Promise)
 ], BeneficiaryController.prototype, "update", null);
-__decorate([
-    (0, common_1.Post)(':id/categories'),
-    __param(0, (0, common_1.Param)('id')),
-    __param(1, (0, common_1.Body)()),
-    __metadata("design:type", Function),
-    __metadata("design:paramtypes", [String, beneficiary_dto_1.AddBeneficiaryCategoryDto]),
-    __metadata("design:returntype", Promise)
-], BeneficiaryController.prototype, "addCategory", null);
-__decorate([
-    (0, common_1.Delete)(':id/categories/:categoryId'),
-    __param(0, (0, common_1.Param)('id')),
-    __param(1, (0, common_1.Param)('categoryId')),
-    __metadata("design:type", Function),
-    __metadata("design:paramtypes", [String, String]),
-    __metadata("design:returntype", Promise)
-], BeneficiaryController.prototype, "removeCategory", null);
 __decorate([
     (0, common_1.Delete)(':id'),
     __param(0, (0, common_1.Param)('id')),

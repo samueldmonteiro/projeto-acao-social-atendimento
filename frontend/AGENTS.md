@@ -141,27 +141,29 @@ export default function ExemploPage() {
 
 ### Service
 ```ts
-// services/foo.service.ts
+// services/beneficiary.service.ts
 import { http } from '@/lib/http';
-import type { ApiResponse } from '@/types/api.type';
-import type { Foo } from '@/types/foo.type';
+import type { ApiResponse, PaginationMeta } from '@/types/api.type';
+import type { Beneficiary, BeneficiaryWithAppointments, CreateBeneficiary, UpdateBeneficiary } from '@/types/beneficiary.type';
 
-export async function findFoos(): Promise<ApiResponse<Foo[]>> {
-  const { data } = await http.get('/foos');
-  return data;
-}
+export const BeneficiaryService = {
+  getAll: async (): Promise<ApiResponse<PaginationMeta<BeneficiaryWithAppointments[]>>> => {
+    const response = await http.get<ApiResponse<PaginationMeta<BeneficiaryWithAppointments[]>>>('/beneficiaries');
+    return response.data;
+  },
+
 ```
 
 ### Query hook
 ```ts
-// hooks/queries/useFoos.ts
+// hooks/queries/use-beneficiaries.ts
 import { useQuery } from '@tanstack/react-query';
-import { findFoos } from '@/services/foo.service';
+import { BeneficiaryService } from '@/services/beneficiary.service';
 
-export function useFoos() {
+export function useBeneficiaries() {
   return useQuery({
-    queryKey: ['foos', 'list'],
-    queryFn: findFoos,
+    queryKey: ['beneficiaries', 'list'],
+    queryFn: BeneficiaryService.getAll(),
     staleTime: 1000 * 60 * 5, // 5 min
     retry: 2,
   });

@@ -3,8 +3,6 @@ import { prisma } from '@/lib/prisma';
 import { CreateBeneficiaryDto, UpdateBeneficiaryDto } from '@/http/dtos/beneficiary.dto';
 import { BeneficiaryNotFoundError } from '@/errors/beneficiary-not-found.error';
 import { BeneficiaryAlreadyExistsError } from '@/errors/beneficiary-already-exists.error';
-import { ServiceCategoryNotFoundError } from '@/errors/service-category-not-found.error';
-import { CategoryAlreadyLinkedError } from '@/errors/category-already-linked.error';
 import { PaginationResponse } from '@/types/pagination.type';
 
 
@@ -111,71 +109,6 @@ export class BeneficiaryService {
           },
         },
       });
-    });
-  }
-
-  async addCategory(id: string, serviceCategoryId: string) {
-    return await prisma.$transaction(async (tx) => {
-      const beneficiary = await tx.beneficiary.findUnique({
-        where: { id },
-      });
-
-      if (!beneficiary) {
-        throw new BeneficiaryNotFoundError();
-      }
-
-      const category = await tx.serviceCategory.findUnique({
-        where: { id: serviceCategoryId },
-      });
-
-      if (!category) {
-        throw new ServiceCategoryNotFoundError();
-      }
-
-      const existing = await tx.appointment.findUnique({
-        where: {
-          beneficiaryId_serviceCategoryId: {
-            beneficiaryId: id,
-            serviceCategoryId,
-          },
-        },
-      });
-
-      if (existing) {
-        throw new CategoryAlreadyLinkedError();
-      }
-    });
-  }
-
-  async removeCategory(id: string, serviceCategoryId: string) {
-    const beneficiary = await prisma.beneficiary.findUnique({
-      where: { id },
-    });
-
-    if (!beneficiary) {
-      throw new BeneficiaryNotFoundError();
-    }
-
-    const existing = await prisma.appointment.findUnique({
-      where: {
-        beneficiaryId_serviceCategoryId: {
-          beneficiaryId: id,
-          serviceCategoryId,
-        },
-      },
-    });
-
-    if (!existing) {
-      throw new ServiceCategoryNotFoundError('Vínculo entre beneficiário e categoria não encontrado');
-    }
-
-    await prisma.appointment.delete({
-      where: {
-        beneficiaryId_serviceCategoryId: {
-          beneficiaryId: id,
-          serviceCategoryId,
-        },
-      },
     });
   }
 

@@ -1,8 +1,7 @@
 import { Outlet } from 'react-router';
-import { Navbar } from '@/components/navbar';
-import { Footer } from '@/components/footer';
 
-export default function MainLayout() {
+
+export default function DashboardLayout() {
   return (
     <div className="relative min-h-screen bg-[#0a0a0a] text-white selection:bg-indigo-500/30">
       {/* Background blobs for premium feel */}
@@ -10,7 +9,6 @@ export default function MainLayout() {
       <div className="fixed bottom-0 -right-4 w-96 h-96 bg-indigo-500/10 rounded-full blur-[128px] pointer-events-none" />
       
       <div className="relative flex flex-col min-h-screen">
-        <Navbar />
         
         <main className="grow">
           {/* We can wrap the Outlet with a container if we want a default max-width */}
@@ -19,7 +17,6 @@ export default function MainLayout() {
           </div>
         </main>
         
-        <Footer />
       </div>
     </div>
   );

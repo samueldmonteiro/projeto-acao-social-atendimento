@@ -3,7 +3,7 @@ import type { Response } from 'express';
 import { BaseController, ApiResponse } from './base.controller';
 import { BeneficiaryService } from '@/services/beneficiary.service';
 import { ExportService } from '@/services/export.service';
-import { CreateBeneficiaryDto, UpdateBeneficiaryDto, AddBeneficiaryCategoryDto } from '../dtos/beneficiary.dto';
+import { CreateBeneficiaryDto, UpdateBeneficiaryDto } from '../dtos/beneficiary.dto';
 import { JwtGuard } from '@/auth/jwt.guard';
 
 @UseGuards(JwtGuard)
@@ -40,24 +40,6 @@ export class BeneficiaryController extends BaseController {
   ): Promise<ApiResponse> {
     const data = await this.beneficiaryService.update(id, body);
     return this.success(data, 'Beneficiário atualizado com sucesso');
-  }
-
-  @Post(':id/categories')
-  async addCategory(
-    @Param('id') id: string,
-    @Body() body: AddBeneficiaryCategoryDto,
-  ): Promise<ApiResponse> {
-    const data = await this.beneficiaryService.addCategory(id, body.serviceCategoryId);
-    return this.created(data, 'Categoria vinculada ao beneficiário com sucesso');
-  }
-
-  @Delete(':id/categories/:categoryId')
-  async removeCategory(
-    @Param('id') id: string,
-    @Param('categoryId') categoryId: string,
-  ): Promise<ApiResponse> {
-    await this.beneficiaryService.removeCategory(id, categoryId);
-    return this.success(null, 'Categoria desvinculada do beneficiário com sucesso');
   }
 
   @Delete(':id')
