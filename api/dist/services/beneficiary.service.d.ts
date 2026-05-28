@@ -4,16 +4,16 @@ export declare class BeneficiaryService {
     create(data: CreateBeneficiaryDto): Promise<{
         appointments: ({
             serviceCategory: {
-                name: string;
                 id: string;
+                name: string;
                 createdAt: Date;
                 updatedAt: Date;
                 prefix: string;
             };
         } & {
             createdAt: Date;
-            serviceCategoryId: string;
             beneficiaryId: string;
+            serviceCategoryId: string;
             callCode: string;
             priority: boolean;
             canceled: boolean;
@@ -34,13 +34,13 @@ export declare class BeneficiaryService {
     }>;
     update(id: string, data: UpdateBeneficiaryDto): Promise<{
         appointments: {
-            serviceCategory: {
-                name: string;
-                id: string;
-                prefix: string;
-            };
             serviceCategoryId: string;
             callCode: string;
+            serviceCategory: {
+                id: string;
+                name: string;
+                prefix: string;
+            };
         }[];
     } & {
         id: string;
@@ -57,13 +57,13 @@ export declare class BeneficiaryService {
     delete(id: string): Promise<void>;
     findById(id: string): Promise<{
         appointments: {
-            serviceCategory: {
-                name: string;
-                id: string;
-                prefix: string;
-            };
             serviceCategoryId: string;
             callCode: string;
+            serviceCategory: {
+                id: string;
+                name: string;
+                prefix: string;
+            };
         }[];
     } & {
         id: string;
@@ -84,13 +84,13 @@ export declare class BeneficiaryService {
         perPage?: number;
     }): Promise<PaginationResponse<({
         appointments: {
-            serviceCategory: {
-                name: string;
-                id: string;
-                prefix: string;
-            };
             serviceCategoryId: string;
             callCode: string;
+            serviceCategory: {
+                id: string;
+                name: string;
+                prefix: string;
+            };
         }[];
     } & {
         id: string;

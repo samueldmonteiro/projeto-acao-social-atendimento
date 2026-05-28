@@ -11,8 +11,8 @@ export declare class AppointmentService {
         finished?: boolean;
     }): Promise<PaginationResponse<({
         serviceCategory: {
-            name: string;
             id: string;
+            name: string;
             createdAt: Date;
             updatedAt: Date;
             prefix: string;
@@ -26,13 +26,13 @@ export declare class AppointmentService {
             cpf: string;
             phone: string | null;
             birthDate: Date;
-            gender: import("@/generated/prisma/client").Gender;
+            gender: import("../generated/prisma/client").Gender;
             address: string | null;
         };
     } & {
         createdAt: Date;
-        serviceCategoryId: string;
         beneficiaryId: string;
+        serviceCategoryId: string;
         callCode: string;
         priority: boolean;
         canceled: boolean;
@@ -45,8 +45,8 @@ export declare class AppointmentService {
         priority?: boolean;
     }): Promise<{
         serviceCategory: {
-            name: string;
             id: string;
+            name: string;
             createdAt: Date;
             updatedAt: Date;
             prefix: string;
@@ -60,13 +60,13 @@ export declare class AppointmentService {
             cpf: string;
             phone: string | null;
             birthDate: Date;
-            gender: import("@/generated/prisma/client").Gender;
+            gender: import("../generated/prisma/client").Gender;
             address: string | null;
         };
     } & {
         createdAt: Date;
-        serviceCategoryId: string;
         beneficiaryId: string;
+        serviceCategoryId: string;
         callCode: string;
         priority: boolean;
         canceled: boolean;
@@ -83,8 +83,8 @@ export declare class AppointmentService {
         callCode?: string;
     }): Promise<{
         serviceCategory: {
-            name: string;
             id: string;
+            name: string;
             createdAt: Date;
             updatedAt: Date;
             prefix: string;
@@ -98,13 +98,13 @@ export declare class AppointmentService {
             cpf: string;
             phone: string | null;
             birthDate: Date;
-            gender: import("@/generated/prisma/client").Gender;
+            gender: import("../generated/prisma/client").Gender;
             address: string | null;
         };
     } & {
         createdAt: Date;
-        serviceCategoryId: string;
         beneficiaryId: string;
+        serviceCategoryId: string;
         callCode: string;
         priority: boolean;
         canceled: boolean;
