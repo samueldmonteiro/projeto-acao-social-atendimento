@@ -32,7 +32,7 @@ export type UpdateAppointment = {
   serviceCategoryId?: string;
   priority?: boolean;
   canceled?: boolean;
-  startedAt?: string;
-  finishedAt?: string;
+  startedAt?: string | null;
+  finishedAt?: string | null;
   callCode?: string;
 };

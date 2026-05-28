@@ -38,6 +38,10 @@ export type DashboardOverview = {
   totalAppointments: number;
   beneficiariesWithoutCategory: number;
   averageCategoriesPerBeneficiary: number;
+  totalAttended: number;
+  toBeAttended: number;
+  waiting: number;
+  canceled: number;
 };
 
 export type DashboardSummary = {

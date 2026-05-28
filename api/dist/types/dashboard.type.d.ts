@@ -31,6 +31,10 @@ export type DashboardOverview = {
     totalBeneficiaries: number;
     totalCategories: number;
     totalAppointments: number;
+    totalAttended: number;
+    toBeAttended: number;
+    waiting: number;
+    canceled: number;
     beneficiariesWithoutCategory: number;
     averageCategoriesPerBeneficiary: number;
 };

@@ -49,6 +49,17 @@ describe('ServiceCategoryService Integration', () => {
       expect(category.prefix).toBe('ASMOJ');
     });
 
+    it('should create a service category with custom prefix', async () => {
+      const category = await service.create({ name: 'Saúde Bucal', prefix: 'SB' });
+
+      expect(category.prefix).toBe('SB');
+
+      const dbCategory = await prisma.serviceCategory.findUnique({
+        where: { id: category.id },
+      });
+      expect(dbCategory?.prefix).toBe('SB');
+    });
+
     it('should throw ServiceCategoryAlreadyExistsError if a category with the same name exists', async () => {
       await prisma.serviceCategory.create({
         data: { name: 'Saúde', prefix: 'S' },
@@ -97,6 +108,21 @@ describe('ServiceCategoryService Integration', () => {
       await expect(
         service.update(cat2.id, { name: 'Educação' }),
       ).rejects.toThrow(ServiceCategoryAlreadyExistsError);
+    });
+
+    it('should update prefix successfully', async () => {
+      const created = await prisma.serviceCategory.create({
+        data: { name: 'Alimentação', prefix: 'A' },
+      });
+
+      const updated = await service.update(created.id, { prefix: 'ALI' });
+
+      expect(updated.prefix).toBe('ALI');
+
+      const dbCategory = await prisma.serviceCategory.findUnique({
+        where: { id: created.id },
+      });
+      expect(dbCategory?.prefix).toBe('ALI');
     });
 
     it('should throw ServiceCategoryNotFoundError if updating a non-existent category', async () => {

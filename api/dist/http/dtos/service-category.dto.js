@@ -13,6 +13,7 @@ exports.UpdateServiceCategoryDto = exports.CreateServiceCategoryDto = void 0;
 const class_validator_1 = require("class-validator");
 class CreateServiceCategoryDto {
     name;
+    prefix;
 }
 exports.CreateServiceCategoryDto = CreateServiceCategoryDto;
 __decorate([
@@ -21,8 +22,14 @@ __decorate([
     (0, class_validator_1.MinLength)(2, { message: 'O nome da categoria deve ter no mínimo 2 caracteres' }),
     __metadata("design:type", String)
 ], CreateServiceCategoryDto.prototype, "name", void 0);
+__decorate([
+    (0, class_validator_1.IsString)({ message: 'O prefixo deve ser uma string' }),
+    (0, class_validator_1.IsOptional)(),
+    __metadata("design:type", String)
+], CreateServiceCategoryDto.prototype, "prefix", void 0);
 class UpdateServiceCategoryDto {
     name;
+    prefix;
 }
 exports.UpdateServiceCategoryDto = UpdateServiceCategoryDto;
 __decorate([
@@ -32,4 +39,9 @@ __decorate([
     (0, class_validator_1.IsOptional)(),
     __metadata("design:type", String)
 ], UpdateServiceCategoryDto.prototype, "name", void 0);
+__decorate([
+    (0, class_validator_1.IsString)({ message: 'O prefixo deve ser uma string' }),
+    (0, class_validator_1.IsOptional)(),
+    __metadata("design:type", String)
+], UpdateServiceCategoryDto.prototype, "prefix", void 0);
 //# sourceMappingURL=service-category.dto.js.map

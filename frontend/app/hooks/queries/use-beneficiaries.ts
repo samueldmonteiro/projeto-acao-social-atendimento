@@ -1,13 +1,13 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { type AxiosError } from 'axios';
-import { BeneficiaryService } from '@/services/beneficiary.service';
+import { BeneficiaryService, type getAllBeneficiaryFilters } from '@/services/beneficiary.service';
 import type { ApiResponse, PaginationMeta } from '@/types/api.type';
 import type { Beneficiary, BeneficiaryWithAppointments, CreateBeneficiary, UpdateBeneficiary } from '@/types/beneficiary.type';
 
-export function useBeneficiaries() {
+export function useBeneficiaries(filters?: getAllBeneficiaryFilters) {
   return useQuery<ApiResponse<PaginationMeta<BeneficiaryWithAppointments[]>>, AxiosError<ApiResponse<unknown>>>({
-    queryKey: ['beneficiaries', 'list'],
-    queryFn: () => BeneficiaryService.getAll(),
+    queryKey: ['beneficiaries', 'list', filters],
+    queryFn: () => BeneficiaryService.getAll(filters),
     staleTime: 1000 * 60 * 5,
     retry: 2,
   });
@@ -30,6 +30,7 @@ export function useCreateBeneficiary() {
     mutationFn: (data) => BeneficiaryService.create(data),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['beneficiaries'] });
+      queryClient.invalidateQueries({ queryKey: ['dashboard'] });
     },
   });
 }
@@ -45,6 +46,7 @@ export function useUpdateBeneficiary() {
     mutationFn: ({ id, data }) => BeneficiaryService.update(id, data),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['beneficiaries'] });
+      queryClient.invalidateQueries({ queryKey: ['dashboard'] });
     },
   });
 }
@@ -56,6 +58,7 @@ export function useDeleteBeneficiary() {
     mutationFn: (id) => BeneficiaryService.delete(id),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['beneficiaries'] });
+      queryClient.invalidateQueries({ queryKey: ['dashboard'] });
     },
   });
 }

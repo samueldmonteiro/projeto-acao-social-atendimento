@@ -81,6 +81,21 @@ describe('ServiceCategoryController (e2e)', () => {
       expect(dbCategory?.prefix).toBe('E');
     });
 
+    it('should create a service category with custom prefix', async () => {
+      const response = await request(app.getHttpServer())
+        .post('/categories')
+        .set('Authorization', `Bearer ${accessToken}`)
+        .send({ name: 'Saúde Bucal', prefix: 'SB' })
+        .expect(201);
+
+      expect(response.body.data.prefix).toBe('SB');
+
+      const dbCategory = await prisma.serviceCategory.findUnique({
+        where: { name: 'Saúde Bucal' },
+      });
+      expect(dbCategory?.prefix).toBe('SB');
+    });
+
     it('should return 400 when validation fails (empty name)', async () => {
       const response = await request(app.getHttpServer())
         .post('/categories')
@@ -240,6 +255,25 @@ describe('ServiceCategoryController (e2e)', () => {
 
       expect(response.body.ok).toBe(false);
       expect(response.body.message).toBe('Categoria de serviço com este nome já existe');
+    });
+
+    it('should update prefix successfully', async () => {
+      const category = await prisma.serviceCategory.create({
+        data: { name: 'Educação', prefix: 'E' },
+      });
+
+      const response = await request(app.getHttpServer())
+        .patch(`/categories/${category.id}`)
+        .set('Authorization', `Bearer ${accessToken}`)
+        .send({ prefix: 'EDU' })
+        .expect(200);
+
+      expect(response.body.data.prefix).toBe('EDU');
+
+      const dbCategory = await prisma.serviceCategory.findUnique({
+        where: { id: category.id },
+      });
+      expect(dbCategory?.prefix).toBe('EDU');
     });
 
     it('should return 404 if the category to update is not found', async () => {

@@ -30,6 +30,7 @@ export function useCreateServiceCategory() {
     mutationFn: (data) => ServiceCategoryService.create(data),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['service-categories'] });
+      queryClient.invalidateQueries({ queryKey: ['dashboard'] });
     },
   });
 }
@@ -45,6 +46,7 @@ export function useUpdateServiceCategory() {
     mutationFn: ({ id, data }) => ServiceCategoryService.update(id, data),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['service-categories'] });
+      queryClient.invalidateQueries({ queryKey: ['dashboard'] });
     },
   });
 }
@@ -56,6 +58,7 @@ export function useDeleteServiceCategory() {
     mutationFn: (id) => ServiceCategoryService.delete(id),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['service-categories'] });
+      queryClient.invalidateQueries({ queryKey: ['dashboard'] });
     },
   });
 }

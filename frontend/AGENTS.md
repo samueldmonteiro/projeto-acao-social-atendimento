@@ -8,6 +8,7 @@
 | Build         | Vite 8                                                  |
 | Roteamento    | React Router v7 (SPA mode, SSR desligado)              |
 | Estilo        | Tailwind CSS v4 (`@import "tailwindcss"`, sem PostCSS) |
+| UI Library    | shadcn/ui (Radix primitives + `cn()` helper)            |
 | Server state  | TanStack React Query v5                                 |
 | HTTP          | Axios                                                   |
 | State global  | Zustand v5 + persist (localStorage)                     |
@@ -29,6 +30,7 @@ app/
 │   ├── layouts/
 │   │   ├── main-layout.tsx         # Navbar + Outlet + Footer
 │   │   └── protected-layout.tsx    # Guard de autenticação
+│   ├── ui/                         # shadcn/ui components
 │   ├── navbar/index.tsx
 │   └── footer/index.tsx
 ├── hooks/
@@ -108,6 +110,7 @@ export function Foo({ title, children }: FooProps) {
 - Props com interface no mesmo arquivo
 - Sem comments a menos que necessário
 - Apenas Tailwind, sem CSS modules ou styled-components
+- Componentes de UI devem vir de `@/components/ui/` (shadcn) ou ser compostos a partir deles
 
 ---
 
@@ -272,3 +275,4 @@ root.tsx (QueryClientProvider + Toaster)
 8. **Performance**: `staleTime` adequado nas queries
 9. **Import type**: `import type { Foo }` (verbatimModuleSyntax)
 10. **ESLint**: single quotes, semicolons, 2 spaces
+11. **shadcn/ui**: usar componentes de `@/components/ui/` sempre que possível; não criar componentes customizados quando o shadcn já prover equivalente

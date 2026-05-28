@@ -15,7 +15,7 @@ export class ServiceCategoryService {
       throw new ServiceCategoryAlreadyExistsError();
     }
 
-    const prefix = data.name
+    const prefix = data.prefix ?? data.name
       .split(' ')
       .map(w => w[0])
       .join('')
@@ -49,9 +49,13 @@ export class ServiceCategoryService {
       }
     }
 
+    const updateData: Record<string, string> = {};
+    if (data.name) updateData.name = data.name;
+    if (data.prefix) updateData.prefix = data.prefix;
+
     return await prisma.serviceCategory.update({
       where: { id },
-      data,
+      data: updateData,
     });
   }
 

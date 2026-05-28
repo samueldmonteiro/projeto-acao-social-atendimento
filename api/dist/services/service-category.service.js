@@ -19,7 +19,7 @@ let ServiceCategoryService = class ServiceCategoryService {
         if (exists) {
             throw new service_category_already_exists_error_1.ServiceCategoryAlreadyExistsError();
         }
-        const prefix = data.name
+        const prefix = data.prefix ?? data.name
             .split(' ')
             .map(w => w[0])
             .join('')
@@ -47,9 +47,14 @@ let ServiceCategoryService = class ServiceCategoryService {
                 throw new service_category_already_exists_error_1.ServiceCategoryAlreadyExistsError();
             }
         }
+        const updateData = {};
+        if (data.name)
+            updateData.name = data.name;
+        if (data.prefix)
+            updateData.prefix = data.prefix;
         return await prisma_1.prisma.serviceCategory.update({
             where: { id },
-            data,
+            data: updateData,
         });
     }
     async delete(id) {

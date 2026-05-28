@@ -20,6 +20,7 @@ export function useCreateAppointment() {
     mutationFn: (data) => AppointmentsService.create(data),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['appointments'] });
+      queryClient.invalidateQueries({ queryKey: ['dashboard'] });
     },
   });
 }
@@ -36,6 +37,7 @@ export function useUpdateAppointment() {
       AppointmentsService.update(beneficiaryId, serviceCategoryId, data),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['appointments'] });
+      queryClient.invalidateQueries({ queryKey: ['dashboard'] });
     },
   });
 }
@@ -52,6 +54,7 @@ export function useDeleteAppointment() {
       AppointmentsService.delete(beneficiaryId, serviceCategoryId),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['appointments'] });
+      queryClient.invalidateQueries({ queryKey: ['dashboard'] });
     },
   });
 }

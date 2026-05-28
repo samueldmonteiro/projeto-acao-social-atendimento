@@ -11,10 +11,14 @@ const common_1 = require("@nestjs/common");
 const prisma_1 = require("../lib/prisma");
 let DashboardService = class DashboardService {
     async getSummary() {
-        const [totalBeneficiaries, totalCategories, totalAppointments, categoriesRaw, genderDistribution, recentBeneficiaries,] = await Promise.all([
+        const [totalBeneficiaries, totalCategories, totalAppointments, totalAttended, toBeAttended, waiting, canceled, categoriesRaw, genderDistribution, recentBeneficiaries,] = await Promise.all([
             prisma_1.prisma.beneficiary.count(),
             prisma_1.prisma.serviceCategory.count(),
-            prisma_1.prisma.appointment.count({ where: { canceled: false } }),
+            prisma_1.prisma.appointment.count(),
+            prisma_1.prisma.appointment.count({ where: { finishedAt: { not: null } } }),
+            prisma_1.prisma.appointment.count({ where: { startedAt: { not: null }, finishedAt: null } }),
+            prisma_1.prisma.appointment.count({ where: { canceled: false, startedAt: null, finishedAt: null } }),
+            prisma_1.prisma.appointment.count({ where: { canceled: true } }),
             prisma_1.prisma.serviceCategory.findMany({
                 select: {
                     id: true,
@@ -87,6 +91,10 @@ let DashboardService = class DashboardService {
                 totalBeneficiaries,
                 totalCategories,
                 totalAppointments,
+                totalAttended,
+                toBeAttended,
+                waiting,
+                canceled,
                 beneficiariesWithoutCategory,
                 averageCategoriesPerBeneficiary: totalBeneficiaries > 0
                     ? Number((totalAppointments / totalBeneficiaries).toFixed(2))

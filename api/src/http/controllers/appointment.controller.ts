@@ -66,8 +66,8 @@ export class AppointmentController extends BaseController {
   ): Promise<ApiResponse> {
     const data = await this.appointmentService.update(beneficiaryId, serviceCategoryId, {
       ...body,
-      startedAt: body.startedAt ? new Date(body.startedAt) : undefined,
-      finishedAt: body.finishedAt ? new Date(body.finishedAt) : undefined,
+      startedAt: body.startedAt !== undefined ? (body.startedAt === null ? null : new Date(body.startedAt)) : undefined,
+      finishedAt: body.finishedAt !== undefined ? (body.finishedAt === null ? null : new Date(body.finishedAt)) : undefined,
     });
 
     return this.success(data, 'Atendimento atualizado com sucesso');

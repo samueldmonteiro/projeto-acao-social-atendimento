@@ -9,6 +9,10 @@ export class DashboardService {
       totalBeneficiaries,
       totalCategories,
       totalAppointments,
+      totalAttended,
+      toBeAttended,
+      waiting,
+      canceled,
       categoriesRaw,
       genderDistribution,
       recentBeneficiaries,
@@ -19,8 +23,20 @@ export class DashboardService {
       // Total de categorias de atendimento
       prisma.serviceCategory.count(),
 
-      // Total de atendimentos ativos (não cancelados)
-      prisma.appointment.count({ where: { canceled: false } }),
+      // Total de atendimentos
+      prisma.appointment.count(),
+
+      // Total de atendidos (com finishedAt preenchido)
+      prisma.appointment.count({ where: { finishedAt: { not: null } } }),
+
+      // A serem atendidos (com startedAt preenchido e finishedAt null)
+      prisma.appointment.count({ where: { startedAt: { not: null }, finishedAt: null } }),
+
+      // Em espera (não cancelados, sem startedAt e sem finishedAt)
+      prisma.appointment.count({ where: { canceled: false, startedAt: null, finishedAt: null } }),
+
+      // Cancelados
+      prisma.appointment.count({ where: { canceled: true } }),
 
       // Categorias com contagem de atendimentos ativos (ranking)
       prisma.serviceCategory.findMany({
@@ -113,6 +129,10 @@ export class DashboardService {
         totalBeneficiaries,
         totalCategories,
         totalAppointments,
+        totalAttended,
+        toBeAttended,
+        waiting,
+        canceled,
         beneficiariesWithoutCategory,
         averageCategoriesPerBeneficiary:
           totalBeneficiaries > 0

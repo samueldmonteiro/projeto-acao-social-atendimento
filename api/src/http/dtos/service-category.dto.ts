@@ -5,6 +5,10 @@ export class CreateServiceCategoryDto {
   @IsNotEmpty({ message: 'O nome é obrigatório' })
   @MinLength(2, { message: 'O nome da categoria deve ter no mínimo 2 caracteres' })
     name!: string;
+
+  @IsString({ message: 'O prefixo deve ser uma string' })
+  @IsOptional()
+    prefix?: string;
 }
 
 export class UpdateServiceCategoryDto {
@@ -13,4 +17,8 @@ export class UpdateServiceCategoryDto {
   @MinLength(2, { message: 'O nome da categoria deve ter no mínimo 2 caracteres' })
   @IsOptional()
     name?: string;
+
+  @IsString({ message: 'O prefixo deve ser uma string' })
+  @IsOptional()
+    prefix?: string;
 }

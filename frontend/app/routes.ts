@@ -7,7 +7,10 @@ export default [
   // Protected routes
   layout('components/layouts/protected-layout.tsx', [
     layout('components/layouts/dashboard-layout.tsx', [
-      index('pages/dashboard/index.tsx'),
+      index('pages/dashboard/appointments/index.tsx'),
+      route('beneficiarios', 'pages/dashboard/beneficiaries/index.tsx'),
+      route('categorias', 'pages/dashboard/service-categories/index.tsx'),
+      route('metricas', 'pages/dashboard/metrics/index.tsx'),
     ]),
   ]),
 ] satisfies RouteConfig;
