@@ -5,43 +5,62 @@ import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
 import { ValidationPipe } from '@nestjs/common';
 import { HttpExceptionFilter } from './http/filters/http-exception.filter';
 
-async function bootstrap() {
-  const app = await NestFactory.create(AppModule);
+let cachedApp: any;
 
-  app.useGlobalFilters(new HttpExceptionFilter());
+async function bootstrapApp() {
+  if (!cachedApp) {
+    const app = await NestFactory.create(AppModule);
 
-  app.useGlobalPipes(
-    new ValidationPipe({
-      whitelist: true,
-      transform: true,
-    }),
-  );
+    app.useGlobalFilters(new HttpExceptionFilter());
 
-  const allowedOrigins = [
-    'http://localhost:5173',
-    'https://atendimento-anhanguera.vercel.app',
-  ];
+    app.useGlobalPipes(
+      new ValidationPipe({
+        whitelist: true,
+        transform: true,
+      }),
+    );
 
-  if (process.env.FRONTEND_URL) {
-    allowedOrigins.push(process.env.FRONTEND_URL);
+    const allowedOrigins = [
+      'http://localhost:5173',
+      'https://atendimento-anhanguera.vercel.app',
+    ];
+
+    if (process.env.FRONTEND_URL) {
+      allowedOrigins.push(process.env.FRONTEND_URL);
+    }
+
+    app.enableCors({
+      origin: allowedOrigins,
+      methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
+      credentials: true,
+    });
+
+    const config = new DocumentBuilder()
+      .setTitle('Ação Social')
+      .setDescription('API de atendimento social')
+      .setVersion('1.0')
+      .addTag('Ação Social')
+      .build();
+
+    const documentFactory = () => SwaggerModule.createDocument(app, config);
+    SwaggerModule.setup('api', app, documentFactory);
+
+    await app.init();
+    cachedApp = app;
   }
-
-  app.enableCors({
-    origin: allowedOrigins,
-    methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
-    credentials: true,
-  });
-
-  const config = new DocumentBuilder()
-    .setTitle('Ação Social')
-    .setDescription('API de atendimento social')
-    .setVersion('1.0')
-    .addTag('Ação Social')
-    .build();
-
-  const documentFactory = () => SwaggerModule.createDocument(app, config);
-  SwaggerModule.setup('api', app, documentFactory);
-
-  await app.listen(process.env.PORT ?? 3000);
+  return cachedApp;
 }
-void bootstrap();
+
+// Serverless Handler para o Vercel
+export default async function handler(req: any, res: any) {
+  const app = await bootstrapApp();
+  const instance = app.getHttpAdapter().getInstance();
+  return instance(req, res);
+}
+
+// Inicia o servidor normalmente se não estiver no Vercel (ex: localhost)
+if (!process.env.VERCEL) {
+  bootstrapApp().then((app) => {
+    app.listen(process.env.PORT ?? 3000);
+  });
+}

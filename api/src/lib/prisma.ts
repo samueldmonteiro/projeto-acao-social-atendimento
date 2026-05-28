@@ -1,4 +1,5 @@
 import 'dotenv/config';
+import { Pool } from 'pg';
 import { PrismaPg } from '@prisma/adapter-pg';
 import { PrismaClient } from '@/generated/prisma/client';
 
@@ -15,10 +16,9 @@ const databaseURL = new URL(
 );
 const schema = databaseURL.searchParams.get('schema') ?? 'public';
 
-const adapter = new PrismaPg(
-  { connectionString: connectionString || '' },
-  { schema: schema },
-);
+const pool = new Pool({ connectionString: connectionString || '' });
+const adapter = new PrismaPg(pool, { schema });
+
 const prisma = new PrismaClient({
   adapter,
   log: process.env.NODE_ENV == 'development' ? ['query'] : undefined,
