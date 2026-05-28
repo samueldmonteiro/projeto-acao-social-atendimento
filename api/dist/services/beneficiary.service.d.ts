@@ -4,16 +4,16 @@ export declare class BeneficiaryService {
     create(data: CreateBeneficiaryDto): Promise<{
         appointments: ({
             serviceCategory: {
-                id: string;
                 name: string;
+                id: string;
                 createdAt: Date;
                 updatedAt: Date;
                 prefix: string;
             };
         } & {
             createdAt: Date;
-            beneficiaryId: string;
             serviceCategoryId: string;
+            beneficiaryId: string;
             callCode: string;
             priority: boolean;
             canceled: boolean;
@@ -26,21 +26,21 @@ export declare class BeneficiaryService {
         createdAt: Date;
         updatedAt: Date;
         fullName: string;
-        cpf: string;
+        cpf: string | null;
         phone: string | null;
-        birthDate: Date;
+        birthDate: Date | null;
         gender: import("../generated/prisma/enums").Gender;
         address: string | null;
     }>;
     update(id: string, data: UpdateBeneficiaryDto): Promise<{
         appointments: {
-            serviceCategoryId: string;
-            callCode: string;
             serviceCategory: {
-                id: string;
                 name: string;
+                id: string;
                 prefix: string;
             };
+            serviceCategoryId: string;
+            callCode: string;
         }[];
     } & {
         id: string;
@@ -48,22 +48,22 @@ export declare class BeneficiaryService {
         createdAt: Date;
         updatedAt: Date;
         fullName: string;
-        cpf: string;
+        cpf: string | null;
         phone: string | null;
-        birthDate: Date;
+        birthDate: Date | null;
         gender: import("../generated/prisma/enums").Gender;
         address: string | null;
     }>;
     delete(id: string): Promise<void>;
     findById(id: string): Promise<{
         appointments: {
-            serviceCategoryId: string;
-            callCode: string;
             serviceCategory: {
-                id: string;
                 name: string;
+                id: string;
                 prefix: string;
             };
+            serviceCategoryId: string;
+            callCode: string;
         }[];
     } & {
         id: string;
@@ -71,9 +71,9 @@ export declare class BeneficiaryService {
         createdAt: Date;
         updatedAt: Date;
         fullName: string;
-        cpf: string;
+        cpf: string | null;
         phone: string | null;
-        birthDate: Date;
+        birthDate: Date | null;
         gender: import("../generated/prisma/enums").Gender;
         address: string | null;
     }>;
@@ -84,13 +84,13 @@ export declare class BeneficiaryService {
         perPage?: number;
     }): Promise<PaginationResponse<({
         appointments: {
-            serviceCategoryId: string;
-            callCode: string;
             serviceCategory: {
-                id: string;
                 name: string;
+                id: string;
                 prefix: string;
             };
+            serviceCategoryId: string;
+            callCode: string;
         }[];
     } & {
         id: string;
@@ -98,9 +98,9 @@ export declare class BeneficiaryService {
         createdAt: Date;
         updatedAt: Date;
         fullName: string;
-        cpf: string;
+        cpf: string | null;
         phone: string | null;
-        birthDate: Date;
+        birthDate: Date | null;
         gender: import("../generated/prisma/enums").Gender;
         address: string | null;
     })[]>>;

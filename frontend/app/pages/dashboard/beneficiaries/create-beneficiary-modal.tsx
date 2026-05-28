@@ -46,15 +46,18 @@ export function CreateBeneficiaryModal({
   }
 
   function handleCreateBeneficiary() {
-    if (!formName.trim() || !formCpf.trim() || !formBirthDate) {
-      toast.error('Preencha os campos obrigatórios (Nome, CPF e Data de Nascimento)');
+    if (!formName.trim()) {
+      toast.error('Preencha os campos obrigatórios (Nome)');
       return;
     }
 
-    const cleanCpf = formCpf.replace(/\D/g, '');
-    if (cleanCpf.length !== 11) {
-      toast.error('CPF deve conter 11 dígitos');
-      return;
+    let cleanCpf: string | undefined = undefined;
+    if (formCpf.trim()) {
+      cleanCpf = formCpf.replace(/\D/g, '');
+      if (cleanCpf.length !== 11) {
+        toast.error('CPF deve conter 11 dígitos');
+        return;
+      }
     }
 
     createMutation.mutate(
@@ -63,7 +66,7 @@ export function CreateBeneficiaryModal({
         cpf: cleanCpf,
         email: formEmail || undefined,
         phone: formPhone || undefined,
-        birthDate: formBirthDate,
+        birthDate: formBirthDate || undefined,
         gender: formGender,
         address: formAddress || undefined,
       },
@@ -79,14 +82,14 @@ export function CreateBeneficiaryModal({
     );
   }
 
-  const isFormValid = !!formName.trim() && !!formCpf.trim() && !!formBirthDate;
+  const isFormValid = !!formName.trim();
 
   return (
     <CreateModal
       open={open}
       onOpenChange={handleClose}
       title="Cadastrar Novo Beneficiário"
-      description="Preencha os dados do beneficiário. Nome, CPF e Data de Nascimento são campos obrigatórios."
+      description="Preencha os dados do beneficiário. Apenas Nome e Gênero são campos obrigatórios."
       onSubmit={handleCreateBeneficiary}
       isSubmitting={createMutation.isPending}
       submitLabel="Cadastrar"
@@ -109,7 +112,7 @@ export function CreateBeneficiaryModal({
 
         <div className="flex flex-col gap-1.5">
           <Label htmlFor="create-cpf" className="text-xs text-muted-foreground font-medium">
-            CPF *
+            CPF
           </Label>
           <Input
             id="create-cpf"
@@ -123,7 +126,7 @@ export function CreateBeneficiaryModal({
 
         <div className="flex flex-col gap-1.5">
           <Label htmlFor="create-birth" className="text-xs text-muted-foreground font-medium">
-            Data de Nascimento *
+            Data de Nascimento
           </Label>
           <Input
             id="create-birth"

@@ -57,10 +57,12 @@ export class ExportService {
 
       worksheet.addRow({
         fullName: beneficiary.fullName,
-        cpf: beneficiary.cpf,
+        cpf: beneficiary.cpf || '',
         email: beneficiary.email || '',
         phone: beneficiary.phone || '',
-        birthDate: beneficiary.birthDate.toLocaleDateString('pt-BR'),
+        birthDate: beneficiary.birthDate
+          ? beneficiary.birthDate.toLocaleDateString('pt-BR')
+          : '',
         gender: genderMap[beneficiary.gender] || beneficiary.gender,
         categories: categoryNames,
       });
@@ -138,11 +140,12 @@ export class ExportService {
           : '',
         createdAt: appointment.createdAt.toLocaleDateString('pt-BR'),
         beneficiaryName: appointment.beneficiary.fullName,
-        beneficiaryCpf: appointment.beneficiary.cpf,
+        beneficiaryCpf: appointment.beneficiary.cpf || '',
         beneficiaryEmail: appointment.beneficiary.email || '',
         beneficiaryPhone: appointment.beneficiary.phone || '',
-        beneficiaryBirthDate:
-          appointment.beneficiary.birthDate.toLocaleDateString('pt-BR'),
+        beneficiaryBirthDate: appointment.beneficiary.birthDate
+          ? appointment.beneficiary.birthDate.toLocaleDateString('pt-BR')
+          : '',
         beneficiaryGender:
           genderMap[appointment.beneficiary.gender] ||
           appointment.beneficiary.gender,

@@ -90,10 +90,12 @@ let ExportService = class ExportService {
                 .join(', ');
             worksheet.addRow({
                 fullName: beneficiary.fullName,
-                cpf: beneficiary.cpf,
+                cpf: beneficiary.cpf || '',
                 email: beneficiary.email || '',
                 phone: beneficiary.phone || '',
-                birthDate: beneficiary.birthDate.toLocaleDateString('pt-BR'),
+                birthDate: beneficiary.birthDate
+                    ? beneficiary.birthDate.toLocaleDateString('pt-BR')
+                    : '',
                 gender: genderMap[beneficiary.gender] || beneficiary.gender,
                 categories: categoryNames,
             });
@@ -126,7 +128,11 @@ let ExportService = class ExportService {
             { header: 'Beneficiário', key: 'beneficiaryName', width: 35 },
             { header: 'CPF do Beneficiário', key: 'beneficiaryCpf', width: 18 },
             { header: 'E-mail do Beneficiário', key: 'beneficiaryEmail', width: 35 },
-            { header: 'Telefone do Beneficiário', key: 'beneficiaryPhone', width: 18 },
+            {
+                header: 'Telefone do Beneficiário',
+                key: 'beneficiaryPhone',
+                width: 18,
+            },
             { header: 'Data de Nascimento', key: 'beneficiaryBirthDate', width: 18 },
             { header: 'Gênero do Beneficiário', key: 'beneficiaryGender', width: 18 },
             { header: 'Categoria de Serviço', key: 'serviceCategory', width: 30 },
@@ -158,11 +164,14 @@ let ExportService = class ExportService {
                     : '',
                 createdAt: appointment.createdAt.toLocaleDateString('pt-BR'),
                 beneficiaryName: appointment.beneficiary.fullName,
-                beneficiaryCpf: appointment.beneficiary.cpf,
+                beneficiaryCpf: appointment.beneficiary.cpf || '',
                 beneficiaryEmail: appointment.beneficiary.email || '',
                 beneficiaryPhone: appointment.beneficiary.phone || '',
-                beneficiaryBirthDate: appointment.beneficiary.birthDate.toLocaleDateString('pt-BR'),
-                beneficiaryGender: genderMap[appointment.beneficiary.gender] || appointment.beneficiary.gender,
+                beneficiaryBirthDate: appointment.beneficiary.birthDate
+                    ? appointment.beneficiary.birthDate.toLocaleDateString('pt-BR')
+                    : '',
+                beneficiaryGender: genderMap[appointment.beneficiary.gender] ||
+                    appointment.beneficiary.gender,
                 serviceCategory: appointment.serviceCategory.name,
             });
         }

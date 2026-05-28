@@ -1,10 +1,10 @@
 import { Gender } from "../../generated/prisma/enums";
 export declare class CreateBeneficiaryDto {
     fullName: string;
-    cpf: string;
+    cpf?: string;
     email?: string;
     phone?: string;
-    birthDate: string;
+    birthDate?: string;
     gender: Gender;
     address?: string;
 }

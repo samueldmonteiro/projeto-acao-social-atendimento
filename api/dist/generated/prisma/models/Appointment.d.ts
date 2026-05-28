@@ -366,9 +366,6 @@ export type AppointmentUncheckedUpdateManyWithoutServiceCategoryNestedInput = {
 export type BoolFieldUpdateOperationsInput = {
     set?: boolean;
 };
-export type NullableDateTimeFieldUpdateOperationsInput = {
-    set?: Date | string | null;
-};
 export type AppointmentCreateWithoutBeneficiaryInput = {
     callCode: string;
     priority?: boolean;

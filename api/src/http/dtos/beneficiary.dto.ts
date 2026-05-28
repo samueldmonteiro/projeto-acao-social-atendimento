@@ -16,8 +16,8 @@ export class CreateBeneficiaryDto {
     fullName!: string;
 
   @IsString({ message: 'O CPF deve ser uma string' })
-  @IsNotEmpty({ message: 'O CPF é obrigatório' })
-    cpf!: string;
+  @IsOptional()
+    cpf?: string;
 
   @IsEmail({}, { message: 'O e-mail deve ser um endereço de e-mail válido' })
   @IsOptional()
@@ -34,8 +34,8 @@ export class CreateBeneficiaryDto {
         'A data de nascimento deve ser uma data válida no formato ISO 8601',
     },
   )
-  @IsNotEmpty({ message: 'A data de nascimento é obrigatória' })
-    birthDate!: string;
+  @IsOptional()
+    birthDate?: string;
 
   @IsEnum(Gender, { message: 'O gênero deve ser MALE, FEMALE ou OTHER' })
   @IsNotEmpty({ message: 'O gênero é obrigatório' })

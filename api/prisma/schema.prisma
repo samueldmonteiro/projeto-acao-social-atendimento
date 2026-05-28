@@ -33,10 +33,10 @@ model User {
 model Beneficiary {
   id           String        @id @default(uuid())
   fullName     String
-  cpf          String        @unique
+  cpf          String?       @unique
   email        String?       @unique
   phone        String?
-  birthDate    DateTime
+  birthDate    DateTime?
   gender       Gender
   address      String?
   appointments Appointment[]

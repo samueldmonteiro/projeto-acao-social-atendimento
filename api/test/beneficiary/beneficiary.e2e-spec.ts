@@ -94,6 +94,25 @@ describe('BeneficiaryController (e2e)', () => {
       expect(dbBeneficiary?.fullName).toBe('João da Silva');
     });
 
+    it('should create a beneficiary without CPF and birthDate', async () => {
+      const payload = {
+        fullName: 'Maria Souza',
+        email: 'maria@example.com',
+        gender: Gender.FEMALE,
+      };
+
+      const response = await request(app.getHttpServer())
+        .post('/beneficiaries')
+        .set('Authorization', `Bearer ${accessToken}`)
+        .send(payload)
+        .expect(201);
+
+      expect(response.body.data.fullName).toBe('Maria Souza');
+      expect(response.body.data.cpf).toBeNull();
+      expect(response.body.data.birthDate).toBeNull();
+      expect(response.body.data.email).toBe('maria@example.com');
+    });
+
     it('should return 400 when validation fails (empty payload)', async () => {
       const response = await request(app.getHttpServer())
         .post('/beneficiaries')
@@ -104,10 +123,6 @@ describe('BeneficiaryController (e2e)', () => {
       expect(response.body.ok).toBe(false);
       expect(response.body.message).toBe('Erro de validação');
       expect(response.body.errors).toContain('O nome é obrigatório');
-      expect(response.body.errors).toContain('O CPF é obrigatório');
-      expect(response.body.errors).toContain(
-        'A data de nascimento é obrigatória',
-      );
       expect(response.body.errors).toContain(
         'O gênero deve ser MALE, FEMALE ou OTHER',
       );

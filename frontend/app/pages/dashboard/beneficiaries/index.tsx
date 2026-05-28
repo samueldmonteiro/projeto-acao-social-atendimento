@@ -105,7 +105,7 @@ function formatDate(dateStr: string | null | undefined, includeTime = false): st
   }
 }
 
-function formatCpf(cpf: string): string {
+function formatCpf(cpf: string | null | undefined): string {
   if (!cpf) return '—';
   const clean = cpf.replace(/\D/g, '');
   if (clean.length !== 11) return cpf;

@@ -30,7 +30,7 @@ __decorate([
 ], CreateBeneficiaryDto.prototype, "fullName", void 0);
 __decorate([
     (0, class_validator_1.IsString)({ message: 'O CPF deve ser uma string' }),
-    (0, class_validator_1.IsNotEmpty)({ message: 'O CPF é obrigatório' }),
+    (0, class_validator_1.IsOptional)(),
     __metadata("design:type", String)
 ], CreateBeneficiaryDto.prototype, "cpf", void 0);
 __decorate([
@@ -44,8 +44,10 @@ __decorate([
     __metadata("design:type", String)
 ], CreateBeneficiaryDto.prototype, "phone", void 0);
 __decorate([
-    (0, class_validator_1.IsISO8601)({}, { message: 'A data de nascimento deve ser uma data válida no formato ISO 8601' }),
-    (0, class_validator_1.IsNotEmpty)({ message: 'A data de nascimento é obrigatória' }),
+    (0, class_validator_1.IsISO8601)({}, {
+        message: 'A data de nascimento deve ser uma data válida no formato ISO 8601',
+    }),
+    (0, class_validator_1.IsOptional)(),
     __metadata("design:type", String)
 ], CreateBeneficiaryDto.prototype, "birthDate", void 0);
 __decorate([
@@ -99,7 +101,9 @@ __decorate([
     __metadata("design:type", String)
 ], UpdateBeneficiaryDto.prototype, "phone", void 0);
 __decorate([
-    (0, class_validator_1.IsISO8601)({}, { message: 'A data de nascimento deve ser uma data válida no formato ISO 8601' }),
+    (0, class_validator_1.IsISO8601)({}, {
+        message: 'A data de nascimento deve ser uma data válida no formato ISO 8601',
+    }),
     (0, class_validator_1.IsOptional)(),
     __metadata("design:type", String)
 ], UpdateBeneficiaryDto.prototype, "birthDate", void 0);

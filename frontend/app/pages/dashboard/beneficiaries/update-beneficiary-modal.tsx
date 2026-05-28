@@ -43,15 +43,18 @@ export function UpdateBeneficiaryModal({
   function handleUpdateBeneficiary() {
     if (!beneficiary) return;
 
-    if (!formName.trim() || !formCpf.trim() || !formBirthDate) {
-      toast.error('Preencha os campos obrigatórios (Nome, CPF e Data de Nascimento)');
+    if (!formName.trim()) {
+      toast.error('Preencha os campos obrigatórios (Nome)');
       return;
     }
 
-    const cleanCpf = formCpf.replace(/\D/g, '');
-    if (cleanCpf.length !== 11) {
-      toast.error('CPF deve conter 11 dígitos');
-      return;
+    let cleanCpf: string | undefined = undefined;
+    if (formCpf.trim()) {
+      cleanCpf = formCpf.replace(/\D/g, '');
+      if (cleanCpf.length !== 11) {
+        toast.error('CPF deve conter 11 dígitos');
+        return;
+      }
     }
 
     updateMutation.mutate(
@@ -62,7 +65,7 @@ export function UpdateBeneficiaryModal({
           cpf: cleanCpf,
           email: formEmail || undefined,
           phone: formPhone || undefined,
-          birthDate: formBirthDate,
+          birthDate: formBirthDate || undefined,
           gender: formGender,
           address: formAddress || undefined,
         },
@@ -79,7 +82,7 @@ export function UpdateBeneficiaryModal({
     );
   }
 
-  const isFormValid = !!formName.trim() && !!formCpf.trim() && !!formBirthDate;
+  const isFormValid = !!formName.trim();
 
   return (
     <CreateModal
@@ -109,7 +112,7 @@ export function UpdateBeneficiaryModal({
 
         <div className="flex flex-col gap-1.5">
           <Label htmlFor="edit-cpf" className="text-xs text-muted-foreground font-medium">
-            CPF *
+            CPF
           </Label>
           <Input
             id="edit-cpf"
@@ -123,7 +126,7 @@ export function UpdateBeneficiaryModal({
 
         <div className="flex flex-col gap-1.5">
           <Label htmlFor="edit-birth" className="text-xs text-muted-foreground font-medium">
-            Data de Nascimento *
+            Data de Nascimento
           </Label>
           <Input
             id="edit-birth"

@@ -19,7 +19,9 @@ exports.CreateServiceCategoryDto = CreateServiceCategoryDto;
 __decorate([
     (0, class_validator_1.IsString)({ message: 'O nome deve ser uma string' }),
     (0, class_validator_1.IsNotEmpty)({ message: 'O nome é obrigatório' }),
-    (0, class_validator_1.MinLength)(2, { message: 'O nome da categoria deve ter no mínimo 2 caracteres' }),
+    (0, class_validator_1.MinLength)(2, {
+        message: 'O nome da categoria deve ter no mínimo 2 caracteres',
+    }),
     __metadata("design:type", String)
 ], CreateServiceCategoryDto.prototype, "name", void 0);
 __decorate([
@@ -35,7 +37,9 @@ exports.UpdateServiceCategoryDto = UpdateServiceCategoryDto;
 __decorate([
     (0, class_validator_1.IsString)({ message: 'O nome deve ser uma string' }),
     (0, class_validator_1.IsNotEmpty)({ message: 'O nome é obrigatório' }),
-    (0, class_validator_1.MinLength)(2, { message: 'O nome da categoria deve ter no mínimo 2 caracteres' }),
+    (0, class_validator_1.MinLength)(2, {
+        message: 'O nome da categoria deve ter no mínimo 2 caracteres',
+    }),
     (0, class_validator_1.IsOptional)(),
     __metadata("design:type", String)
 ], UpdateServiceCategoryDto.prototype, "name", void 0);

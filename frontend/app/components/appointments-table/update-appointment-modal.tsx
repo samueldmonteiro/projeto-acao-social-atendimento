@@ -20,6 +20,13 @@ interface UpdateAppointmentModalProps {
   appointment: AppointmentListWithRelations | null;
 }
 
+function formatCpf(cpf: string | null | undefined): string {
+  if (!cpf) return '—';
+  const clean = cpf.replace(/\D/g, '');
+  if (clean.length !== 11) return cpf;
+  return `${clean.slice(0, 3)}.${clean.slice(3, 6)}.${clean.slice(6, 9)}-${clean.slice(9)}`;
+}
+
 function formatToDatetimeLocal(dateStr?: string | null): string {
   if (!dateStr) return '';
   try {
@@ -107,7 +114,10 @@ export function UpdateAppointmentModal({
           <div className="grid grid-cols-1 gap-2 rounded-lg bg-white/5 border border-white/10 p-3 text-xs">
             <div>
               <span className="text-muted-foreground font-medium block">Beneficiário:</span>
-              <span className="text-foreground font-semibold">{appointment.beneficiary.fullName} ({appointment.beneficiary.cpf})</span>
+              <span className="text-foreground font-semibold">
+                {appointment.beneficiary.fullName}
+                {appointment.beneficiary.cpf ? ` (${formatCpf(appointment.beneficiary.cpf)})` : ''}
+              </span>
             </div>
             <div>
               <span className="text-muted-foreground font-medium block">Categoria de Serviço:</span>

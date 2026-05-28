@@ -14,11 +14,13 @@ const beneficiary_already_exists_error_1 = require("../errors/beneficiary-alread
 let BeneficiaryService = class BeneficiaryService {
     async create(data) {
         return await prisma_1.prisma.$transaction(async (tx) => {
-            const cpfExists = await tx.beneficiary.findUnique({
-                where: { cpf: data.cpf },
-            });
-            if (cpfExists) {
-                throw new beneficiary_already_exists_error_1.BeneficiaryAlreadyExistsError('Beneficiário com este CPF já cadastrado');
+            if (data.cpf) {
+                const cpfExists = await tx.beneficiary.findUnique({
+                    where: { cpf: data.cpf },
+                });
+                if (cpfExists) {
+                    throw new beneficiary_already_exists_error_1.BeneficiaryAlreadyExistsError('Beneficiário com este CPF já cadastrado');
+                }
             }
             if (data.email) {
                 const emailExists = await tx.beneficiary.findUnique({
@@ -34,7 +36,7 @@ let BeneficiaryService = class BeneficiaryService {
                     cpf: data.cpf,
                     email: data.email,
                     phone: data.phone,
-                    birthDate: new Date(data.birthDate),
+                    birthDate: data.birthDate ? new Date(data.birthDate) : undefined,
                     gender: data.gender,
                     address: data.address,
                 },

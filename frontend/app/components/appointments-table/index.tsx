@@ -117,6 +117,13 @@ function formatCallCode(callCode: string): string {
   return callCode ?? '—';
 }
 
+function formatCpf(cpf: string | null | undefined): string {
+  if (!cpf) return '—';
+  const clean = cpf.replace(/\D/g, '');
+  if (clean.length !== 11) return cpf;
+  return `${clean.slice(0, 3)}.${clean.slice(3, 6)}.${clean.slice(6, 9)}-${clean.slice(9)}`;
+}
+
 function formatDate(dateStr: string | null | undefined): string {
   if (!dateStr) return '—';
   return new Intl.DateTimeFormat('pt-BR', {
@@ -454,7 +461,7 @@ export function AppointmentsTable() {
                           {appointment.beneficiary.fullName}
                         </span>
                         <span className="text-xs text-muted-foreground">
-                          {appointment.beneficiary.cpf}
+                          {formatCpf(appointment.beneficiary.cpf)}
                         </span>
                       </div>
                     </TableCell>

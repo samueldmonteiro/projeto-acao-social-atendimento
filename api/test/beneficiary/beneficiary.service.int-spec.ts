@@ -49,6 +49,20 @@ describe('BeneficiaryService Integration', () => {
       expect(dbBeneficiary?.fullName).toBe('João Silva');
     });
 
+    it('should create a beneficiary without CPF and birthDate', async () => {
+      const beneficiary = await service.create({
+        fullName: 'Maria Souza',
+        email: 'maria@example.com',
+        gender: Gender.FEMALE,
+      });
+
+      expect(beneficiary).toHaveProperty('id');
+      expect(beneficiary.fullName).toBe('Maria Souza');
+      expect(beneficiary.cpf).toBeNull();
+      expect(beneficiary.birthDate).toBeNull();
+      expect(beneficiary.email).toBe('maria@example.com');
+    });
+
     it('should throw BeneficiaryAlreadyExistsError if a beneficiary with the same CPF exists', async () => {
       await prisma.beneficiary.create({
         data: {

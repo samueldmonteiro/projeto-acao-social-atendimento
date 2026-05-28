@@ -19,12 +19,13 @@ let ServiceCategoryService = class ServiceCategoryService {
         if (exists) {
             throw new service_category_already_exists_error_1.ServiceCategoryAlreadyExistsError();
         }
-        const prefix = data.prefix ?? data.name
-            .split(' ')
-            .map(w => w[0])
-            .join('')
-            .toUpperCase()
-            .slice(0, 5);
+        const prefix = data.prefix ??
+            data.name
+                .split(' ')
+                .map((w) => w[0])
+                .join('')
+                .toUpperCase()
+                .slice(0, 5);
         return await prisma_1.prisma.serviceCategory.create({
             data: {
                 name: data.name,

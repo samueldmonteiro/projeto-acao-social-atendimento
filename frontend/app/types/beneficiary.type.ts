@@ -5,12 +5,12 @@ export type Gender = 'MALE' | 'FEMALE';
 export type Beneficiary = {
   id: string;
   fullName: string;
-  cpf: string;
-  email: string;
-  phone: string;
-  birthDate: string;
+  cpf: string | null;
+  email: string | null;
+  phone: string | null;
+  birthDate: string | null;
   gender: Gender;
-  address: string;
+  address: string | null;
   createdAt: string;
   updatedAt: string;
 };
@@ -21,10 +21,10 @@ export type BeneficiaryWithAppointments = Beneficiary & {
 
 export type CreateBeneficiary = {
   fullName: string;
-  cpf: string;
+  cpf?: string;
   email?: string;
   phone?: string;
-  birthDate: string;
+  birthDate?: string;
   gender: Gender;
   address?: string;
 };

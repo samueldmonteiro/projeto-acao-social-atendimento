@@ -157,7 +157,8 @@ let AppointmentService = class AppointmentService {
             updateData.finishedAt = data.finishedAt;
         if (data.callCode !== undefined)
             updateData.callCode = data.callCode;
-        if (data.beneficiaryId !== undefined && data.beneficiaryId !== beneficiaryId) {
+        if (data.beneficiaryId !== undefined &&
+            data.beneficiaryId !== beneficiaryId) {
             const beneficiary = await prisma_1.prisma.beneficiary.findUnique({
                 where: { id: data.beneficiaryId },
             });
@@ -166,7 +167,8 @@ let AppointmentService = class AppointmentService {
             }
             updateData.beneficiary = { connect: { id: data.beneficiaryId } };
         }
-        if (data.serviceCategoryId !== undefined && data.serviceCategoryId !== serviceCategoryId) {
+        if (data.serviceCategoryId !== undefined &&
+            data.serviceCategoryId !== serviceCategoryId) {
             const category = await prisma_1.prisma.serviceCategory.findUnique({
                 where: { id: data.serviceCategoryId },
             });

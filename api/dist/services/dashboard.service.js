@@ -16,10 +16,15 @@ let DashboardService = class DashboardService {
             prisma_1.prisma.serviceCategory.count(),
             prisma_1.prisma.appointment.count(),
             prisma_1.prisma.appointment.count({ where: { finishedAt: { not: null } } }),
-            prisma_1.prisma.appointment.count({ where: { startedAt: { not: null }, finishedAt: null } }),
-            prisma_1.prisma.appointment.count({ where: { canceled: false, startedAt: null, finishedAt: null } }),
+            prisma_1.prisma.appointment.count({
+                where: { startedAt: { not: null }, finishedAt: null },
+            }),
+            prisma_1.prisma.appointment.count({
+                where: { canceled: false, startedAt: null, finishedAt: null },
+            }),
             prisma_1.prisma.appointment.count({ where: { canceled: true } }),
-            prisma_1.prisma.serviceCategory.findMany({
+            prisma_1.prisma.serviceCategory
+                .findMany({
                 select: {
                     id: true,
                     name: true,
@@ -29,7 +34,8 @@ let DashboardService = class DashboardService {
                         },
                     },
                 },
-            }).then((cats) => cats.sort((a, b) => b._count.appointments - a._count.appointments)),
+            })
+                .then((cats) => cats.sort((a, b) => b._count.appointments - a._count.appointments)),
             prisma_1.prisma.beneficiary.groupBy({
                 by: ['gender'],
                 _count: { id: true },

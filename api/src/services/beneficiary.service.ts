@@ -12,15 +12,17 @@ import { PaginationResponse } from '@/types/pagination.type';
 export class BeneficiaryService {
   async create(data: CreateBeneficiaryDto) {
     return await prisma.$transaction(async (tx) => {
-      // 2. Check if CPF is already in use
-      const cpfExists = await tx.beneficiary.findUnique({
-        where: { cpf: data.cpf },
-      });
+      // 2. Check if CPF is already in use (if provided)
+      if (data.cpf) {
+        const cpfExists = await tx.beneficiary.findUnique({
+          where: { cpf: data.cpf },
+        });
 
-      if (cpfExists) {
-        throw new BeneficiaryAlreadyExistsError(
-          'Beneficiário com este CPF já cadastrado',
-        );
+        if (cpfExists) {
+          throw new BeneficiaryAlreadyExistsError(
+            'Beneficiário com este CPF já cadastrado',
+          );
+        }
       }
 
       // 3. Check if Email is already in use (if provided)
@@ -36,14 +38,14 @@ export class BeneficiaryService {
         }
       }
 
-      // 5. Create beneficiary and link to service category with generated callCode
+      // 5. Create beneficiary
       return await tx.beneficiary.create({
         data: {
           fullName: data.fullName,
           cpf: data.cpf,
           email: data.email,
           phone: data.phone,
-          birthDate: new Date(data.birthDate),
+          birthDate: data.birthDate ? new Date(data.birthDate) : undefined,
           gender: data.gender,
           address: data.address,
         },
