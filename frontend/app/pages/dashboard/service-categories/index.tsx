@@ -1,7 +1,6 @@
 import { useState, useCallback, useRef } from 'react';
 import {
   SearchIcon,
-  Loader2Icon,
   AlertCircleIcon,
   InboxIcon,
   PlusIcon,
@@ -77,10 +76,10 @@ export default function ServiceCategoriesPage() {
 
   const categories = searchInput.trim()
     ? allCategories.filter(
-        (c) =>
-          c.name.toLowerCase().includes(searchInput.toLowerCase()) ||
+      (c) =>
+        c.name.toLowerCase().includes(searchInput.toLowerCase()) ||
           c.prefix.toLowerCase().includes(searchInput.toLowerCase())
-      )
+    )
     : allCategories;
 
   const handleSearchChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {

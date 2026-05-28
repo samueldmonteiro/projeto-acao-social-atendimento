@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { toast } from 'sonner';
 import { CreateModal } from '@/components/create-modal';
 import { Label } from '@/components/ui/label';
@@ -20,12 +20,15 @@ export function UpdateServiceCategoryModal({
   const [formName, setFormName] = useState('');
   const [formPrefix, setFormPrefix] = useState('');
 
-  useEffect(() => {
-    if (category) {
-      setFormName(category.name);
-      setFormPrefix(category.prefix);
-    }
-  }, [category, open]);
+  const [prevCategory, setPrevCategory] = useState<ServiceCategory | null>(null);
+  const [prevOpen, setPrevOpen] = useState(false);
+
+  if (category !== prevCategory || open !== prevOpen) {
+    setPrevCategory(category);
+    setPrevOpen(open);
+    setFormName(category ? category.name : '');
+    setFormPrefix(category ? category.prefix : '');
+  }
 
   const updateMutation = useUpdateServiceCategory();
 
