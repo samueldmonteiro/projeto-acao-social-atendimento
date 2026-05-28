@@ -424,7 +424,7 @@ export default function MetricsPage() {
                     {summary.recentBeneficiaries.map((b) => (
                       <tr key={b.id} className="text-foreground/90 dark:text-gray-300 hover:bg-muted/50 dark:hover:bg-white/5 transition-colors">
                         <td className="py-2.5 px-3 font-medium text-foreground dark:text-white">{b.fullName}</td>
-                        <td className="py-2.5 px-3 text-xs capitalize">{b.gender.toLowerCase()}</td>
+                        <td className="py-2.5 px-3 text-xs capitalize">{b.gender === 'MALE' ? 'Masculino' : 'Feminino'}</td>
                         <td className="py-2.5 px-3 text-xs text-muted-foreground dark:text-gray-400">
                           {new Date(b.createdAt).toLocaleDateString('pt-BR')}
                         </td>
