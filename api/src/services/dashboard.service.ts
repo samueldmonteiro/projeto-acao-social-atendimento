@@ -30,26 +30,34 @@ export class DashboardService {
       prisma.appointment.count({ where: { finishedAt: { not: null } } }),
 
       // A serem atendidos (com startedAt preenchido e finishedAt null)
-      prisma.appointment.count({ where: { startedAt: { not: null }, finishedAt: null } }),
+      prisma.appointment.count({
+        where: { startedAt: { not: null }, finishedAt: null },
+      }),
 
       // Em espera (não cancelados, sem startedAt e sem finishedAt)
-      prisma.appointment.count({ where: { canceled: false, startedAt: null, finishedAt: null } }),
+      prisma.appointment.count({
+        where: { canceled: false, startedAt: null, finishedAt: null },
+      }),
 
       // Cancelados
       prisma.appointment.count({ where: { canceled: true } }),
 
       // Categorias com contagem de atendimentos ativos (ranking)
-      prisma.serviceCategory.findMany({
-        select: {
-          id: true,
-          name: true,
-          _count: {
-            select: {
-              appointments: { where: { canceled: false } },
+      prisma.serviceCategory
+        .findMany({
+          select: {
+            id: true,
+            name: true,
+            _count: {
+              select: {
+                appointments: { where: { canceled: false } },
+              },
             },
           },
-        },
-      }).then((cats) => cats.sort((a, b) => b._count.appointments - a._count.appointments)),
+        })
+        .then((cats) =>
+          cats.sort((a, b) => b._count.appointments - a._count.appointments),
+        ),
 
       // Distribuição por gênero
       prisma.beneficiary.groupBy({
@@ -94,7 +102,9 @@ export class DashboardService {
       totalBeneficiaries: cat._count.appointments,
       percentage:
         totalBeneficiaries > 0
-          ? Number(((cat._count.appointments / totalBeneficiaries) * 100).toFixed(1))
+          ? Number(
+            ((cat._count.appointments / totalBeneficiaries) * 100).toFixed(1),
+          )
           : 0,
     }));
 

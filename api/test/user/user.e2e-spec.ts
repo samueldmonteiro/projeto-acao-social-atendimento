@@ -27,9 +27,7 @@ describe('UserController (e2e)', () => {
   });
 
   it('should return 401 when token is missing', async () => {
-    await request(app.getHttpServer())
-      .get('/users')
-      .expect(401);
+    await request(app.getHttpServer()).get('/users').expect(401);
   });
 
   it('GET /users - should return empty list when no users exist', async () => {
@@ -37,7 +35,10 @@ describe('UserController (e2e)', () => {
     const tempUser = await prisma.user.create({
       data: { email: 'temp@test.com', password: 'hash', name: 'Temp' },
     });
-    const token = jwtService.sign({ username: tempUser.email, sub: tempUser.id });
+    const token = jwtService.sign({
+      username: tempUser.email,
+      sub: tempUser.id,
+    });
 
     await prisma.user.deleteMany();
 

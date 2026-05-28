@@ -45,8 +45,11 @@ export class HttpExceptionFilter implements ExceptionFilter {
         message = exception.message;
       }
     } else if (exception instanceof Error) {
-      this.logger.error(`[Unhandled Error] ${exception.message}`, exception.stack);
-      
+      this.logger.error(
+        `[Unhandled Error] ${exception.message}`,
+        exception.stack,
+      );
+
       // If we are in development mode, we can expose the original error message
       if (process.env.NODE_ENV === 'development') {
         message = exception.message;

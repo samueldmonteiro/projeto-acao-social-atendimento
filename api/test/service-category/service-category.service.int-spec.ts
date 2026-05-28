@@ -44,13 +44,18 @@ describe('ServiceCategoryService Integration', () => {
     });
 
     it('should generate prefix uppercase and limited to 5 characters', async () => {
-      const category = await service.create({ name: 'Assistência Social Médica Odontológica Jurídica' });
+      const category = await service.create({
+        name: 'Assistência Social Médica Odontológica Jurídica',
+      });
 
       expect(category.prefix).toBe('ASMOJ');
     });
 
     it('should create a service category with custom prefix', async () => {
-      const category = await service.create({ name: 'Saúde Bucal', prefix: 'SB' });
+      const category = await service.create({
+        name: 'Saúde Bucal',
+        prefix: 'SB',
+      });
 
       expect(category.prefix).toBe('SB');
 
@@ -77,7 +82,9 @@ describe('ServiceCategoryService Integration', () => {
         data: { name: 'Alimentação', prefix: 'A' },
       });
 
-      const updated = await service.update(created.id, { name: 'Alimentação Saudável' });
+      const updated = await service.update(created.id, {
+        name: 'Alimentação Saudável',
+      });
 
       expect(updated.name).toBe('Alimentação Saudável');
 
@@ -103,7 +110,7 @@ describe('ServiceCategoryService Integration', () => {
       });
       const cat2 = await prisma.serviceCategory.create({
         data: { name: 'Saúde', prefix: 'S' },
-      }); 
+      });
 
       await expect(
         service.update(cat2.id, { name: 'Educação' }),

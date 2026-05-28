@@ -1,24 +1,26 @@
 import { Injectable } from '@nestjs/common';
 import { prisma } from '@/lib/prisma';
-import { CreateBeneficiaryDto, UpdateBeneficiaryDto } from '@/http/dtos/beneficiary.dto';
+import {
+  CreateBeneficiaryDto,
+  UpdateBeneficiaryDto,
+} from '@/http/dtos/beneficiary.dto';
 import { BeneficiaryNotFoundError } from '@/errors/beneficiary-not-found.error';
 import { BeneficiaryAlreadyExistsError } from '@/errors/beneficiary-already-exists.error';
 import { PaginationResponse } from '@/types/pagination.type';
 
-
 @Injectable()
 export class BeneficiaryService {
-
   async create(data: CreateBeneficiaryDto) {
     return await prisma.$transaction(async (tx) => {
-
       // 2. Check if CPF is already in use
       const cpfExists = await tx.beneficiary.findUnique({
         where: { cpf: data.cpf },
       });
 
       if (cpfExists) {
-        throw new BeneficiaryAlreadyExistsError('Beneficiário com este CPF já cadastrado');
+        throw new BeneficiaryAlreadyExistsError(
+          'Beneficiário com este CPF já cadastrado',
+        );
       }
 
       // 3. Check if Email is already in use (if provided)
@@ -28,7 +30,9 @@ export class BeneficiaryService {
         });
 
         if (emailExists) {
-          throw new BeneficiaryAlreadyExistsError('Beneficiário com este e-mail já cadastrado');
+          throw new BeneficiaryAlreadyExistsError(
+            'Beneficiário com este e-mail já cadastrado',
+          );
         }
       }
 
@@ -68,7 +72,9 @@ export class BeneficiaryService {
         });
 
         if (cpfExists) {
-          throw new BeneficiaryAlreadyExistsError('Beneficiário com este CPF já cadastrado');
+          throw new BeneficiaryAlreadyExistsError(
+            'Beneficiário com este CPF já cadastrado',
+          );
         }
       }
 
@@ -79,7 +85,9 @@ export class BeneficiaryService {
         });
 
         if (emailExists) {
-          throw new BeneficiaryAlreadyExistsError('Beneficiário com este e-mail já cadastrado');
+          throw new BeneficiaryAlreadyExistsError(
+            'Beneficiário com este e-mail já cadastrado',
+          );
         }
       }
 
@@ -149,12 +157,14 @@ export class BeneficiaryService {
     return beneficiary;
   }
 
-  async findMany(filters: {
-    search?: string;
-    serviceCategoryId?: string;
-    page?: number;
-    perPage?: number;
-  } = {}) {
+  async findMany(
+    filters: {
+      search?: string;
+      serviceCategoryId?: string;
+      page?: number;
+      perPage?: number;
+    } = {},
+  ) {
     const where: any = {};
 
     const page = filters.page || 1;

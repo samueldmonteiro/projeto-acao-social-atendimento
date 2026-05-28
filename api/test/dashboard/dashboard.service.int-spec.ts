@@ -36,8 +36,12 @@ describe('DashboardService Integration', () => {
   });
 
   it('should return correct overview numbers', async () => {
-    const cat1 = await prisma.serviceCategory.create({ data: { name: 'Saúde', prefix: 'S' } });
-    const cat2 = await prisma.serviceCategory.create({ data: { name: 'Educação', prefix: 'E' } });
+    const cat1 = await prisma.serviceCategory.create({
+      data: { name: 'Saúde', prefix: 'S' },
+    });
+    const cat2 = await prisma.serviceCategory.create({
+      data: { name: 'Educação', prefix: 'E' },
+    });
 
     await prisma.beneficiary.create({
       data: {
@@ -45,7 +49,9 @@ describe('DashboardService Integration', () => {
         cpf: '11111111111',
         birthDate: new Date('1990-01-01'),
         gender: Gender.MALE,
-        appointments: { create: { serviceCategoryId: cat1.id, callCode: 'TST-0001' } },
+        appointments: {
+          create: { serviceCategoryId: cat1.id, callCode: 'TST-0001' },
+        },
       },
     });
 
@@ -83,8 +89,12 @@ describe('DashboardService Integration', () => {
   });
 
   it('should return top category and ranking ordered by count desc', async () => {
-    const cat1 = await prisma.serviceCategory.create({ data: { name: 'Saúde', prefix: 'S' } });
-    const cat2 = await prisma.serviceCategory.create({ data: { name: 'Educação', prefix: 'E' } });
+    const cat1 = await prisma.serviceCategory.create({
+      data: { name: 'Saúde', prefix: 'S' },
+    });
+    const cat2 = await prisma.serviceCategory.create({
+      data: { name: 'Educação', prefix: 'E' },
+    });
 
     await prisma.beneficiary.create({
       data: {
@@ -92,7 +102,9 @@ describe('DashboardService Integration', () => {
         cpf: '1',
         birthDate: new Date(),
         gender: Gender.FEMALE,
-        appointments: { create: { serviceCategoryId: cat1.id, callCode: 'TST-0004' } },
+        appointments: {
+          create: { serviceCategoryId: cat1.id, callCode: 'TST-0004' },
+        },
       },
     });
 
@@ -102,7 +114,9 @@ describe('DashboardService Integration', () => {
         cpf: '2',
         birthDate: new Date(),
         gender: Gender.FEMALE,
-        appointments: { create: { serviceCategoryId: cat1.id, callCode: 'TST-0005' } },
+        appointments: {
+          create: { serviceCategoryId: cat1.id, callCode: 'TST-0005' },
+        },
       },
     });
 
@@ -112,7 +126,9 @@ describe('DashboardService Integration', () => {
         cpf: '3',
         birthDate: new Date(),
         gender: Gender.MALE,
-        appointments: { create: { serviceCategoryId: cat2.id, callCode: 'TST-0006' } },
+        appointments: {
+          create: { serviceCategoryId: cat2.id, callCode: 'TST-0006' },
+        },
       },
     });
 
@@ -134,11 +150,36 @@ describe('DashboardService Integration', () => {
   it('should return gender distribution', async () => {
     await prisma.beneficiary.createMany({
       data: [
-        { fullName: 'Ana', cpf: '1', birthDate: new Date(), gender: Gender.FEMALE },
-        { fullName: 'Bia', cpf: '2', birthDate: new Date(), gender: Gender.FEMALE },
-        { fullName: 'Carlos', cpf: '3', birthDate: new Date(), gender: Gender.MALE },
-        { fullName: 'Davi', cpf: '4', birthDate: new Date(), gender: Gender.MALE },
-        { fullName: 'Eva', cpf: '5', birthDate: new Date(), gender: Gender.OTHER },
+        {
+          fullName: 'Ana',
+          cpf: '1',
+          birthDate: new Date(),
+          gender: Gender.FEMALE,
+        },
+        {
+          fullName: 'Bia',
+          cpf: '2',
+          birthDate: new Date(),
+          gender: Gender.FEMALE,
+        },
+        {
+          fullName: 'Carlos',
+          cpf: '3',
+          birthDate: new Date(),
+          gender: Gender.MALE,
+        },
+        {
+          fullName: 'Davi',
+          cpf: '4',
+          birthDate: new Date(),
+          gender: Gender.MALE,
+        },
+        {
+          fullName: 'Eva',
+          cpf: '5',
+          birthDate: new Date(),
+          gender: Gender.OTHER,
+        },
       ],
     });
 
@@ -146,9 +187,15 @@ describe('DashboardService Integration', () => {
 
     expect(result.genderDistribution).toHaveLength(3);
 
-    const female = result.genderDistribution.find((g) => g.gender === Gender.FEMALE);
-    const male = result.genderDistribution.find((g) => g.gender === Gender.MALE);
-    const other = result.genderDistribution.find((g) => g.gender === Gender.OTHER);
+    const female = result.genderDistribution.find(
+      (g) => g.gender === Gender.FEMALE,
+    );
+    const male = result.genderDistribution.find(
+      (g) => g.gender === Gender.MALE,
+    );
+    const other = result.genderDistribution.find(
+      (g) => g.gender === Gender.OTHER,
+    );
 
     expect(female).toBeDefined();
     expect(female!.count).toBe(2);
@@ -188,7 +235,9 @@ describe('DashboardService Integration', () => {
   });
 
   it('should include categories in recent beneficiaries', async () => {
-    const cat = await prisma.serviceCategory.create({ data: { name: 'Saúde', prefix: 'S' } });
+    const cat = await prisma.serviceCategory.create({
+      data: { name: 'Saúde', prefix: 'S' },
+    });
 
     await prisma.beneficiary.create({
       data: {
@@ -196,7 +245,9 @@ describe('DashboardService Integration', () => {
         cpf: '12345678901',
         birthDate: new Date(),
         gender: Gender.MALE,
-        appointments: { create: { serviceCategoryId: cat.id, callCode: 'TST-0007' } },
+        appointments: {
+          create: { serviceCategoryId: cat.id, callCode: 'TST-0007' },
+        },
       },
     });
 

@@ -15,7 +15,7 @@ export interface SigninRequest {
 }
 @Injectable()
 export class AuthService {
-  constructor(private readonly jwtService: JwtService) { }
+  constructor(private readonly jwtService: JwtService) {}
 
   async signin(signin: SigninRequest): Promise<SignInResponse> {
     const user = await prisma.user.findFirst({

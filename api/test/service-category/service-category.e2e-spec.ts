@@ -49,9 +49,7 @@ describe('ServiceCategoryController (e2e)', () => {
 
   describe('Unauthorized access', () => {
     it('should return 401 when token is missing', async () => {
-      await request(app.getHttpServer())
-        .get('/categories')
-        .expect(401);
+      await request(app.getHttpServer()).get('/categories').expect(401);
     });
   });
 
@@ -117,7 +115,9 @@ describe('ServiceCategoryController (e2e)', () => {
 
       expect(response.body.ok).toBe(false);
       expect(response.body.message).toBe('Erro de validação');
-      expect(response.body.errors).toContain('O nome da categoria deve ter no mínimo 2 caracteres');
+      expect(response.body.errors).toContain(
+        'O nome da categoria deve ter no mínimo 2 caracteres',
+      );
     });
 
     it('should return 409 when the category name already exists', async () => {
@@ -144,7 +144,11 @@ describe('ServiceCategoryController (e2e)', () => {
   describe('GET /categories', () => {
     it('should retrieve all service categories ordered alphabetically by name', async () => {
       await prisma.serviceCategory.createMany({
-        data: [{ name: 'Lazer', prefix: 'L' }, { name: 'Alimentação', prefix: 'A' }, { name: 'Saúde', prefix: 'S' }],
+        data: [
+          { name: 'Lazer', prefix: 'L' },
+          { name: 'Alimentação', prefix: 'A' },
+          { name: 'Saúde', prefix: 'S' },
+        ],
       });
 
       const response = await request(app.getHttpServer())
@@ -161,7 +165,11 @@ describe('ServiceCategoryController (e2e)', () => {
 
     it('should return filtered categories when a search query is passed', async () => {
       await prisma.serviceCategory.createMany({
-        data: [{ name: 'Cultura e Lazer', prefix: 'CL' }, { name: 'Saúde Alimentar', prefix: 'SA' }, { name: 'Saúde', prefix: 'S' }],
+        data: [
+          { name: 'Cultura e Lazer', prefix: 'CL' },
+          { name: 'Saúde Alimentar', prefix: 'SA' },
+          { name: 'Saúde', prefix: 'S' },
+        ],
       });
 
       const response = await request(app.getHttpServer())
@@ -254,7 +262,9 @@ describe('ServiceCategoryController (e2e)', () => {
         .expect(409);
 
       expect(response.body.ok).toBe(false);
-      expect(response.body.message).toBe('Categoria de serviço com este nome já existe');
+      expect(response.body.message).toBe(
+        'Categoria de serviço com este nome já existe',
+      );
     });
 
     it('should update prefix successfully', async () => {

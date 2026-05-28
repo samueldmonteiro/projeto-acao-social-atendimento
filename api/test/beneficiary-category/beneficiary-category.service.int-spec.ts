@@ -152,7 +152,9 @@ describe('AppointmentService Integration', () => {
       // Search by email
       const searchByEmail = await service.findMany({ search: 'carlos@' });
       expect(searchByEmail.items).toHaveLength(1);
-      expect(searchByEmail.items[0].beneficiary.fullName).toBe('Carlos Alberto');
+      expect(searchByEmail.items[0].beneficiary.fullName).toBe(
+        'Carlos Alberto',
+      );
     });
 
     it('should support pagination with page and perPage parameters', async () => {
@@ -178,13 +180,25 @@ describe('AppointmentService Integration', () => {
       });
 
       await prisma.appointment.create({
-        data: { beneficiaryId: beneficiary.id, serviceCategoryId: category.id, callCode: 'NUT-0001' },
+        data: {
+          beneficiaryId: beneficiary.id,
+          serviceCategoryId: category.id,
+          callCode: 'NUT-0001',
+        },
       });
       await prisma.appointment.create({
-        data: { beneficiaryId: beneficiary.id, serviceCategoryId: cat2.id, callCode: 'NU2-0001' },
+        data: {
+          beneficiaryId: beneficiary.id,
+          serviceCategoryId: cat2.id,
+          callCode: 'NU2-0001',
+        },
       });
       await prisma.appointment.create({
-        data: { beneficiaryId: beneficiary.id, serviceCategoryId: cat3.id, callCode: 'NU3-0001' },
+        data: {
+          beneficiaryId: beneficiary.id,
+          serviceCategoryId: cat3.id,
+          callCode: 'NU3-0001',
+        },
       });
 
       const page1 = await service.findMany({ page: 1, perPage: 2 });

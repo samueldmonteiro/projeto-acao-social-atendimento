@@ -99,7 +99,11 @@ export class ExportService {
       { header: 'Beneficiário', key: 'beneficiaryName', width: 35 },
       { header: 'CPF do Beneficiário', key: 'beneficiaryCpf', width: 18 },
       { header: 'E-mail do Beneficiário', key: 'beneficiaryEmail', width: 35 },
-      { header: 'Telefone do Beneficiário', key: 'beneficiaryPhone', width: 18 },
+      {
+        header: 'Telefone do Beneficiário',
+        key: 'beneficiaryPhone',
+        width: 18,
+      },
       { header: 'Data de Nascimento', key: 'beneficiaryBirthDate', width: 18 },
       { header: 'Gênero do Beneficiário', key: 'beneficiaryGender', width: 18 },
       { header: 'Categoria de Serviço', key: 'serviceCategory', width: 30 },
@@ -137,8 +141,11 @@ export class ExportService {
         beneficiaryCpf: appointment.beneficiary.cpf,
         beneficiaryEmail: appointment.beneficiary.email || '',
         beneficiaryPhone: appointment.beneficiary.phone || '',
-        beneficiaryBirthDate: appointment.beneficiary.birthDate.toLocaleDateString('pt-BR'),
-        beneficiaryGender: genderMap[appointment.beneficiary.gender] || appointment.beneficiary.gender,
+        beneficiaryBirthDate:
+          appointment.beneficiary.birthDate.toLocaleDateString('pt-BR'),
+        beneficiaryGender:
+          genderMap[appointment.beneficiary.gender] ||
+          appointment.beneficiary.gender,
         serviceCategory: appointment.serviceCategory.name,
       });
     }

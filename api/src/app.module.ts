@@ -57,5 +57,4 @@ import { AppointmentService } from '@/services/appointment.service';
     AppointmentService,
   ],
 })
-export class AppModule { }
-
+export class AppModule {}

@@ -51,9 +51,7 @@ describe('AppointmentController (e2e)', () => {
 
   describe('Unauthorized access', () => {
     it('should return 401 when token is missing', async () => {
-      await request(app.getHttpServer())
-        .get('/appointments')
-        .expect(401);
+      await request(app.getHttpServer()).get('/appointments').expect(401);
     });
   });
 
@@ -160,7 +158,9 @@ describe('AppointmentController (e2e)', () => {
         .expect(200);
 
       expect(response.body.data.items).toHaveLength(1);
-      expect(response.body.data.items[0].beneficiary.fullName).toBe('Ciclano de Tal');
+      expect(response.body.data.items[0].beneficiary.fullName).toBe(
+        'Ciclano de Tal',
+      );
     });
   });
 });

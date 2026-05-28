@@ -251,9 +251,24 @@ describe('BeneficiaryService Integration', () => {
     it('should list all beneficiaries ordered by name asc', async () => {
       await prisma.beneficiary.createMany({
         data: [
-          { fullName: 'Carlos Silva', cpf: '1', birthDate: new Date(), gender: Gender.MALE },
-          { fullName: 'Ana Silva', cpf: '2', birthDate: new Date(), gender: Gender.FEMALE },
-          { fullName: 'Bruna Silva', cpf: '3', birthDate: new Date(), gender: Gender.FEMALE },
+          {
+            fullName: 'Carlos Silva',
+            cpf: '1',
+            birthDate: new Date(),
+            gender: Gender.MALE,
+          },
+          {
+            fullName: 'Ana Silva',
+            cpf: '2',
+            birthDate: new Date(),
+            gender: Gender.FEMALE,
+          },
+          {
+            fullName: 'Bruna Silva',
+            cpf: '3',
+            birthDate: new Date(),
+            gender: Gender.FEMALE,
+          },
         ],
       });
 
@@ -267,8 +282,20 @@ describe('BeneficiaryService Integration', () => {
     it('should filter beneficiaries by search parameter', async () => {
       await prisma.beneficiary.createMany({
         data: [
-          { fullName: 'Carlos Alberto', cpf: '123', email: 'carlos@example.com', birthDate: new Date(), gender: Gender.MALE },
-          { fullName: 'Ana Maria', cpf: '456', email: 'ana@example.com', birthDate: new Date(), gender: Gender.FEMALE },
+          {
+            fullName: 'Carlos Alberto',
+            cpf: '123',
+            email: 'carlos@example.com',
+            birthDate: new Date(),
+            gender: Gender.MALE,
+          },
+          {
+            fullName: 'Ana Maria',
+            cpf: '456',
+            email: 'ana@example.com',
+            birthDate: new Date(),
+            gender: Gender.FEMALE,
+          },
         ],
       });
 
@@ -307,7 +334,9 @@ describe('BeneficiaryService Integration', () => {
         },
       });
 
-      const listFiltered = await service.findMany({ serviceCategoryId: cat.id });
+      const listFiltered = await service.findMany({
+        serviceCategoryId: cat.id,
+      });
       expect(listFiltered.items).toHaveLength(1);
       expect(listFiltered.items[0].fullName).toBe('Carlos Alberto');
     });

@@ -99,6 +99,8 @@ describe('AuthController (e2e)', () => {
       .expect(400);
 
     expect(response.body.ok).toBe(false);
-    expect(response.body.errors).toContain('A senha deve ter no mínimo 6 caracteres');
+    expect(response.body.errors).toContain(
+      'A senha deve ter no mínimo 6 caracteres',
+    );
   });
 });

@@ -51,9 +51,7 @@ describe('BeneficiaryController (e2e)', () => {
 
   describe('Unauthorized access', () => {
     it('should return 401 when token is missing', async () => {
-      await request(app.getHttpServer())
-        .get('/beneficiaries')
-        .expect(401);
+      await request(app.getHttpServer()).get('/beneficiaries').expect(401);
     });
   });
 
@@ -107,8 +105,12 @@ describe('BeneficiaryController (e2e)', () => {
       expect(response.body.message).toBe('Erro de validação');
       expect(response.body.errors).toContain('O nome é obrigatório');
       expect(response.body.errors).toContain('O CPF é obrigatório');
-      expect(response.body.errors).toContain('A data de nascimento é obrigatória');
-      expect(response.body.errors).toContain('O gênero deve ser MALE, FEMALE ou OTHER');
+      expect(response.body.errors).toContain(
+        'A data de nascimento é obrigatória',
+      );
+      expect(response.body.errors).toContain(
+        'O gênero deve ser MALE, FEMALE ou OTHER',
+      );
     });
 
     it('should return 400 when name is too short', async () => {
@@ -125,7 +127,9 @@ describe('BeneficiaryController (e2e)', () => {
 
       expect(response.body.ok).toBe(false);
       expect(response.body.message).toBe('Erro de validação');
-      expect(response.body.errors).toContain('O nome deve ter no mínimo 2 caracteres');
+      expect(response.body.errors).toContain(
+        'O nome deve ter no mínimo 2 caracteres',
+      );
     });
 
     it('should return 400 when email format is invalid', async () => {
@@ -142,7 +146,9 @@ describe('BeneficiaryController (e2e)', () => {
         .expect(400);
 
       expect(response.body.ok).toBe(false);
-      expect(response.body.errors).toContain('O e-mail deve ser um endereço de e-mail válido');
+      expect(response.body.errors).toContain(
+        'O e-mail deve ser um endereço de e-mail válido',
+      );
     });
 
     it('should return 400 when gender is invalid', async () => {
@@ -158,7 +164,9 @@ describe('BeneficiaryController (e2e)', () => {
         .expect(400);
 
       expect(response.body.ok).toBe(false);
-      expect(response.body.errors).toContain('O gênero deve ser MALE, FEMALE ou OTHER');
+      expect(response.body.errors).toContain(
+        'O gênero deve ser MALE, FEMALE ou OTHER',
+      );
     });
 
     it('should return 409 when the beneficiary CPF already exists', async () => {
@@ -275,9 +283,24 @@ describe('BeneficiaryController (e2e)', () => {
     it('should retrieve all beneficiaries ordered alphabetically by name', async () => {
       await prisma.beneficiary.createMany({
         data: [
-          { fullName: 'Carlos Silva', cpf: '1', birthDate: new Date(), gender: Gender.MALE },
-          { fullName: 'Ana Silva', cpf: '2', birthDate: new Date(), gender: Gender.FEMALE },
-          { fullName: 'Bruna Silva', cpf: '3', birthDate: new Date(), gender: Gender.FEMALE },
+          {
+            fullName: 'Carlos Silva',
+            cpf: '1',
+            birthDate: new Date(),
+            gender: Gender.MALE,
+          },
+          {
+            fullName: 'Ana Silva',
+            cpf: '2',
+            birthDate: new Date(),
+            gender: Gender.FEMALE,
+          },
+          {
+            fullName: 'Bruna Silva',
+            cpf: '3',
+            birthDate: new Date(),
+            gender: Gender.FEMALE,
+          },
         ],
       });
 
@@ -297,8 +320,20 @@ describe('BeneficiaryController (e2e)', () => {
     it('should filter beneficiaries when a search query is passed', async () => {
       await prisma.beneficiary.createMany({
         data: [
-          { fullName: 'Carlos Alberto', cpf: '12345', email: 'carlos@example.com', birthDate: new Date(), gender: Gender.MALE },
-          { fullName: 'Ana Maria', cpf: '67890', email: 'ana@example.com', birthDate: new Date(), gender: Gender.FEMALE },
+          {
+            fullName: 'Carlos Alberto',
+            cpf: '12345',
+            email: 'carlos@example.com',
+            birthDate: new Date(),
+            gender: Gender.MALE,
+          },
+          {
+            fullName: 'Ana Maria',
+            cpf: '67890',
+            email: 'ana@example.com',
+            birthDate: new Date(),
+            gender: Gender.FEMALE,
+          },
         ],
       });
 
@@ -463,7 +498,9 @@ describe('BeneficiaryController (e2e)', () => {
         .expect(400);
 
       expect(response.body.ok).toBe(false);
-      expect(response.body.errors).toContain('O e-mail deve ser um endereço de e-mail válido');
+      expect(response.body.errors).toContain(
+        'O e-mail deve ser um endereço de e-mail válido',
+      );
     });
 
     it('should return 404 if the beneficiary to update is not found', async () => {
@@ -503,7 +540,9 @@ describe('BeneficiaryController (e2e)', () => {
         .expect(409);
 
       expect(response.body.ok).toBe(false);
-      expect(response.body.message).toBe('Beneficiário com este CPF já cadastrado');
+      expect(response.body.message).toBe(
+        'Beneficiário com este CPF já cadastrado',
+      );
     });
 
     it('should return 409 if updated Email is already taken by another beneficiary', async () => {
@@ -534,10 +573,11 @@ describe('BeneficiaryController (e2e)', () => {
         .expect(409);
 
       expect(response.body.ok).toBe(false);
-      expect(response.body.message).toBe('Beneficiário com este e-mail já cadastrado');
+      expect(response.body.message).toBe(
+        'Beneficiário com este e-mail já cadastrado',
+      );
     });
   });
-
 
   describe('DELETE /beneficiaries/:id', () => {
     it('should delete a beneficiary successfully', async () => {

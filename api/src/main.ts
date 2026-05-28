@@ -2,12 +2,13 @@ import 'dotenv/config';
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
-import { ValidationPipe } from '@nestjs/common';
+import { ValidationPipe, INestApplication } from '@nestjs/common';
 import { HttpExceptionFilter } from './http/filters/http-exception.filter';
+import { Request, Response } from 'express';
 
-let cachedApp: any;
+let cachedApp: INestApplication;
 
-async function bootstrapApp() {
+async function bootstrapApp(): Promise<INestApplication> {
   if (!cachedApp) {
     const app = await NestFactory.create(AppModule);
 
@@ -52,15 +53,17 @@ async function bootstrapApp() {
 }
 
 // Serverless Handler para o Vercel
-export default async function handler(req: any, res: any) {
+export default async function handler(req: Request, res: Response) {
   const app = await bootstrapApp();
+   
   const instance = app.getHttpAdapter().getInstance();
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-return, @typescript-eslint/no-unsafe-call
   return instance(req, res);
 }
 
 // Inicia o servidor normalmente se não estiver no Vercel (ex: localhost)
 if (!process.env.VERCEL) {
-  bootstrapApp().then((app) => {
-    app.listen(process.env.PORT ?? 3000);
+  void bootstrapApp().then((app) => {
+    void app.listen(process.env.PORT ?? 3000);
   });
 }

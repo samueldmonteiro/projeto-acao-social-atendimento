@@ -1,7 +1,20 @@
-import { Body, Controller, Delete, Get, Param, Patch, Post, Query, UseGuards } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Param,
+  Patch,
+  Post,
+  Query,
+  UseGuards,
+} from '@nestjs/common';
 import { BaseController, ApiResponse } from './base.controller';
 import { ServiceCategoryService } from '@/services/service-category.service';
-import { CreateServiceCategoryDto, UpdateServiceCategoryDto } from '../dtos/service-category.dto';
+import {
+  CreateServiceCategoryDto,
+  UpdateServiceCategoryDto,
+} from '../dtos/service-category.dto';
 import { JwtGuard } from '@/auth/jwt.guard';
 
 @UseGuards(JwtGuard)
@@ -12,9 +25,7 @@ export class ServiceCategoryController extends BaseController {
   }
 
   @Post()
-  async create(
-    @Body() body: CreateServiceCategoryDto,
-  ): Promise<ApiResponse> {
+  async create(@Body() body: CreateServiceCategoryDto): Promise<ApiResponse> {
     const data = await this.serviceCategoryService.create(body);
     return this.created(data, 'Categoria de serviço criada com sucesso');
   }
@@ -29,25 +40,19 @@ export class ServiceCategoryController extends BaseController {
   }
 
   @Delete(':id')
-  async delete(
-    @Param('id') id: string,
-  ): Promise<ApiResponse> {
+  async delete(@Param('id') id: string): Promise<ApiResponse> {
     await this.serviceCategoryService.delete(id);
     return this.success(null, 'Categoria de serviço excluída com sucesso');
   }
 
   @Get(':id')
-  async findById(
-    @Param('id') id: string,
-  ): Promise<ApiResponse> {
+  async findById(@Param('id') id: string): Promise<ApiResponse> {
     const data = await this.serviceCategoryService.findById(id);
     return this.success(data, 'Categoria de serviço encontrada com sucesso');
   }
 
   @Get()
-  async findMany(
-    @Query('search') search?: string,
-  ): Promise<ApiResponse> {
+  async findMany(@Query('search') search?: string): Promise<ApiResponse> {
     const data = await this.serviceCategoryService.findMany(search);
     return this.success(data, 'Categorias de serviço listadas com sucesso');
   }

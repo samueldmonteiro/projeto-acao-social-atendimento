@@ -9,19 +9,20 @@ import { AppointmentAlreadyExistsError } from '@/errors/appointment-already-exis
 
 type PrismaTransactionClient = Prisma.TransactionClient;
 
-
 @Injectable()
 export class AppointmentService {
-  async findMany(filters: {
-    search?: string;
-    categoryId?: string;
-    page?: number;
-    perPage?: number;
-    priority?: boolean;
-    canceled?: boolean;
-    started?: boolean;
-    finished?: boolean;
-  } = {}) {
+  async findMany(
+    filters: {
+      search?: string;
+      categoryId?: string;
+      page?: number;
+      perPage?: number;
+      priority?: boolean;
+      canceled?: boolean;
+      started?: boolean;
+      finished?: boolean;
+    } = {},
+  ) {
     const where: Prisma.AppointmentWhereInput = {};
 
     const page = filters.page || 1;
@@ -196,7 +197,10 @@ export class AppointmentService {
     if (data.finishedAt !== undefined) updateData.finishedAt = data.finishedAt;
     if (data.callCode !== undefined) updateData.callCode = data.callCode;
 
-    if (data.beneficiaryId !== undefined && data.beneficiaryId !== beneficiaryId) {
+    if (
+      data.beneficiaryId !== undefined &&
+      data.beneficiaryId !== beneficiaryId
+    ) {
       const beneficiary = await prisma.beneficiary.findUnique({
         where: { id: data.beneficiaryId },
       });
@@ -206,7 +210,10 @@ export class AppointmentService {
       updateData.beneficiary = { connect: { id: data.beneficiaryId } };
     }
 
-    if (data.serviceCategoryId !== undefined && data.serviceCategoryId !== serviceCategoryId) {
+    if (
+      data.serviceCategoryId !== undefined &&
+      data.serviceCategoryId !== serviceCategoryId
+    ) {
       const category = await prisma.serviceCategory.findUnique({
         where: { id: data.serviceCategoryId },
       });
@@ -289,4 +296,4 @@ export class AppointmentService {
     const paddedNumber = String(nextNumber).padStart(4, '0');
     return `${category.prefix}-${paddedNumber}`;
   }
-} 
+}

@@ -10,9 +10,7 @@ export class AuthController extends BaseController {
   }
 
   @Post('/signin')
-  async signin(
-    @Body() signin: UserLoginDto,
-  ) {
+  async signin(@Body() signin: UserLoginDto) {
     const data = await this.auth.signin(signin);
     return this.success(data);
   }

@@ -42,9 +42,7 @@ describe('ExportController (e2e)', () => {
   });
 
   it('should return 401 when token is missing', async () => {
-    await request(app.getHttpServer())
-      .get('/beneficiaries/export')
-      .expect(401);
+    await request(app.getHttpServer()).get('/beneficiaries/export').expect(401);
   });
 
   it('should export an Excel file with beneficiaries', async () => {
@@ -78,6 +76,8 @@ describe('ExportController (e2e)', () => {
       'attachment; filename="beneficiarios.xlsx"',
     );
     expect(response.body).toBeTruthy();
-    expect(Buffer.isBuffer(response.body) || typeof response.body === 'object').toBe(true);
+    expect(
+      Buffer.isBuffer(response.body) || typeof response.body === 'object',
+    ).toBe(true);
   });
 });

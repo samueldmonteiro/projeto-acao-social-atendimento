@@ -6,5 +6,5 @@ export type PaginationResponse<T> = {
     perPage: number;
     hasNextPage: boolean;
     hasPrevPage: boolean;
-  }
-}
+  };
+};

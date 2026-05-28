@@ -95,8 +95,12 @@ describe('ExportService Integration', () => {
   });
 
   it('should list multiple categories separated by comma', async () => {
-    const cat1 = await prisma.serviceCategory.create({ data: { name: 'Saúde', prefix: 'S' } });
-    const cat2 = await prisma.serviceCategory.create({ data: { name: 'Educação', prefix: 'E' } });
+    const cat1 = await prisma.serviceCategory.create({
+      data: { name: 'Saúde', prefix: 'S' },
+    });
+    const cat2 = await prisma.serviceCategory.create({
+      data: { name: 'Educação', prefix: 'E' },
+    });
 
     await prisma.beneficiary.create({
       data: {

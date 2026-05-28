@@ -1,10 +1,24 @@
-import { Body, Controller, Delete, Get, Param, Patch, Post, Query, Res, UseGuards } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Param,
+  Patch,
+  Post,
+  Query,
+  Res,
+  UseGuards,
+} from '@nestjs/common';
 import type { Response } from 'express';
 import { BaseController, ApiResponse } from './base.controller';
 import { AppointmentService } from '@/services/appointment.service';
 import { ExportService } from '@/services/export.service';
 import { JwtGuard } from '@/auth/jwt.guard';
-import { CreateAppointmentDto, UpdateAppointmentDto } from '../dtos/appointment.dto';
+import {
+  CreateAppointmentDto,
+  UpdateAppointmentDto,
+} from '../dtos/appointment.dto';
 
 @UseGuards(JwtGuard)
 @Controller('appointments')
@@ -20,8 +34,14 @@ export class AppointmentController extends BaseController {
   async export(@Res() res: Response): Promise<void> {
     const buffer = await this.exportService.generateAppointmentsExcel();
 
-    res.setHeader('Content-Type', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
-    res.setHeader('Content-Disposition', 'attachment; filename="atendimentos.xlsx"');
+    res.setHeader(
+      'Content-Type',
+      'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+    );
+    res.setHeader(
+      'Content-Disposition',
+      'attachment; filename="atendimentos.xlsx"',
+    );
     res.send(buffer);
   }
 
@@ -51,9 +71,7 @@ export class AppointmentController extends BaseController {
   }
 
   @Post()
-  async create(
-    @Body() body: CreateAppointmentDto,
-  ): Promise<ApiResponse> {
+  async create(@Body() body: CreateAppointmentDto): Promise<ApiResponse> {
     const data = await this.appointmentService.create(body);
     return this.created(data, 'Atendimento criado com sucesso');
   }
@@ -64,11 +82,25 @@ export class AppointmentController extends BaseController {
     @Param('serviceCategoryId') serviceCategoryId: string,
     @Body() body: UpdateAppointmentDto,
   ): Promise<ApiResponse> {
-    const data = await this.appointmentService.update(beneficiaryId, serviceCategoryId, {
-      ...body,
-      startedAt: body.startedAt !== undefined ? (body.startedAt === null ? null : new Date(body.startedAt)) : undefined,
-      finishedAt: body.finishedAt !== undefined ? (body.finishedAt === null ? null : new Date(body.finishedAt)) : undefined,
-    });
+    const data = await this.appointmentService.update(
+      beneficiaryId,
+      serviceCategoryId,
+      {
+        ...body,
+        startedAt:
+          body.startedAt !== undefined
+            ? body.startedAt === null
+              ? null
+              : new Date(body.startedAt)
+            : undefined,
+        finishedAt:
+          body.finishedAt !== undefined
+            ? body.finishedAt === null
+              ? null
+              : new Date(body.finishedAt)
+            : undefined,
+      },
+    );
 
     return this.success(data, 'Atendimento atualizado com sucesso');
   }

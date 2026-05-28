@@ -1,4 +1,12 @@
-import { IsEmail, IsEnum, IsISO8601, IsNotEmpty, IsOptional, IsString, MinLength } from 'class-validator';
+import {
+  IsEmail,
+  IsEnum,
+  IsISO8601,
+  IsNotEmpty,
+  IsOptional,
+  IsString,
+  MinLength,
+} from 'class-validator';
 import { Gender } from '@/generated/prisma/enums';
 
 export class CreateBeneficiaryDto {
@@ -19,7 +27,13 @@ export class CreateBeneficiaryDto {
   @IsOptional()
     phone?: string;
 
-  @IsISO8601({}, { message: 'A data de nascimento deve ser uma data válida no formato ISO 8601' })
+  @IsISO8601(
+    {},
+    {
+      message:
+        'A data de nascimento deve ser uma data válida no formato ISO 8601',
+    },
+  )
   @IsNotEmpty({ message: 'A data de nascimento é obrigatória' })
     birthDate!: string;
 
@@ -56,7 +70,13 @@ export class UpdateBeneficiaryDto {
   @IsOptional()
     phone?: string;
 
-  @IsISO8601({}, { message: 'A data de nascimento deve ser uma data válida no formato ISO 8601' })
+  @IsISO8601(
+    {},
+    {
+      message:
+        'A data de nascimento deve ser uma data válida no formato ISO 8601',
+    },
+  )
   @IsOptional()
     birthDate?: string;
 
