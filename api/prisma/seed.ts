@@ -57,11 +57,11 @@ async function main() {
     console.log(`- Upserted service type: ${serviceType.name}`);
   }**/
 
-  const userPassword = await argon2.hash('12345678');
+  const userPassword = await argon2.hash('Pass11@458038');
   const users = [
     {
       name: 'Admin',
-      email: 'admin@example.com',
+      email: 'atendimento@anhanguera.com',
       password: userPassword,
       role: 'ADMIN' as Role,
     },

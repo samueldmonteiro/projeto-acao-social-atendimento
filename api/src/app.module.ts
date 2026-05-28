@@ -31,7 +31,7 @@ import { AppointmentService } from '@/services/appointment.service';
       inject: [ConfigService],
       useFactory: () => ({
         secret: process.env.JWT_TOKEN,
-        signOptions: { expiresIn: '30min' },
+        signOptions: { expiresIn: '1h' },
       }),
     }),
   ],
