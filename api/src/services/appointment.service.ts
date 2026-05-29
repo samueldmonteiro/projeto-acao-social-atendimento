@@ -189,6 +189,33 @@ export class AppointmentService {
       throw new AppointmentNotFoundError();
     }
 
+    const targetBeneficiaryId =
+      data.beneficiaryId !== undefined ? data.beneficiaryId : beneficiaryId;
+    const targetServiceCategoryId =
+      data.serviceCategoryId !== undefined
+        ? data.serviceCategoryId
+        : serviceCategoryId;
+
+    if (
+      targetBeneficiaryId !== beneficiaryId ||
+      targetServiceCategoryId !== serviceCategoryId
+    ) {
+      const existingAppointment = await prisma.appointment.findUnique({
+        where: {
+          beneficiaryId_serviceCategoryId: {
+            beneficiaryId: targetBeneficiaryId,
+            serviceCategoryId: targetServiceCategoryId,
+          },
+        },
+      });
+
+      if (existingAppointment) {
+        throw new AppointmentAlreadyExistsError(
+          'Já existe um atendimento registrado para este beneficiário nesta categoria de serviço.',
+        );
+      }
+    }
+
     const updateData: Prisma.AppointmentUpdateInput = {};
 
     if (data.priority !== undefined) updateData.priority = data.priority;

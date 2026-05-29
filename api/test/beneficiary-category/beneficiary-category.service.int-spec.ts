@@ -208,4 +208,47 @@ describe('AppointmentService Integration', () => {
       expect(page2.items).toHaveLength(1);
     });
   });
+
+  describe('update', () => {
+    it('should throw an error if updating beneficiaryId and/or serviceCategoryId to an already existing appointment', async () => {
+      const category1 = await prisma.serviceCategory.create({
+        data: { name: 'Odontologia', prefix: 'ODO' },
+      });
+
+      const category2 = await prisma.serviceCategory.create({
+        data: { name: 'Psicologia', prefix: 'PSI' },
+      });
+
+      const beneficiary = await prisma.beneficiary.create({
+        data: {
+          fullName: 'João Souza',
+          cpf: '22233344455',
+          birthDate: new Date('1985-05-10'),
+          gender: Gender.MALE,
+        },
+      });
+
+      await prisma.appointment.create({
+        data: {
+          beneficiaryId: beneficiary.id,
+          serviceCategoryId: category1.id,
+          callCode: 'ODO-0001',
+        },
+      });
+
+      await prisma.appointment.create({
+        data: {
+          beneficiaryId: beneficiary.id,
+          serviceCategoryId: category2.id,
+          callCode: 'PSI-0001',
+        },
+      });
+
+      await expect(
+        service.update(beneficiary.id, category1.id, {
+          serviceCategoryId: category2.id,
+        }),
+      ).rejects.toThrow('Já existe um atendimento registrado para este beneficiário nesta categoria de serviço.');
+    });
+  });
 });
