@@ -12,6 +12,8 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import { useUpdateAppointment } from '@/hooks/queries/use-appointments';
+import { useBeneficiaries } from '@/hooks/queries/use-beneficiaries';
+import { useServiceCategories } from '@/hooks/queries/use-service-categories';
 import type { AppointmentListWithRelations } from '@/types/appointments.type';
 
 interface UpdateAppointmentModalProps {
@@ -20,12 +22,6 @@ interface UpdateAppointmentModalProps {
   appointment: AppointmentListWithRelations | null;
 }
 
-function formatCpf(cpf: string | null | undefined): string {
-  if (!cpf) return '—';
-  const clean = cpf.replace(/\D/g, '');
-  if (clean.length !== 11) return cpf;
-  return `${clean.slice(0, 3)}.${clean.slice(3, 6)}.${clean.slice(6, 9)}-${clean.slice(9)}`;
-}
 
 function formatToDatetimeLocal(dateStr?: string | null): string {
   if (!dateStr) return '';
@@ -48,11 +44,19 @@ export function UpdateAppointmentModal({
   onOpenChange,
   appointment,
 }: UpdateAppointmentModalProps) {
+  const [formBeneficiaryId, setFormBeneficiaryId] = useState(appointment?.beneficiaryId ?? '');
+  const [formServiceCategoryId, setFormServiceCategoryId] = useState(appointment?.serviceCategoryId ?? '');
   const [formPriority, setFormPriority] = useState(appointment?.priority ?? false);
   const [formCanceled, setFormCanceled] = useState(appointment?.canceled ?? false);
   const [formCallCode, setFormCallCode] = useState(appointment?.callCode ?? '');
   const [formStartedAt, setFormStartedAt] = useState(formatToDatetimeLocal(appointment?.startedAt));
   const [formFinishedAt, setFormFinishedAt] = useState(formatToDatetimeLocal(appointment?.finishedAt));
+
+  const { data: beneficiariesData, isLoading: loadingBeneficiaries } = useBeneficiaries();
+  const { data: categoriesData, isLoading: loadingCategories } = useServiceCategories();
+
+  const beneficiaries = beneficiariesData?.data?.items ?? [];
+  const categories = categoriesData?.data ?? [];
 
   const updateMutation = useUpdateAppointment();
 
@@ -68,6 +72,16 @@ export function UpdateAppointmentModal({
       return;
     }
 
+    if (!formBeneficiaryId) {
+      toast.error('O beneficiário é obrigatório.');
+      return;
+    }
+
+    if (!formServiceCategoryId) {
+      toast.error('A categoria de serviço é obrigatória.');
+      return;
+    }
+
     const startedAtIso = formStartedAt ? new Date(formStartedAt).toISOString() : null;
     const finishedAtIso = formFinishedAt ? new Date(formFinishedAt).toISOString() : null;
 
@@ -76,6 +90,8 @@ export function UpdateAppointmentModal({
         beneficiaryId: appointment.beneficiaryId,
         serviceCategoryId: appointment.serviceCategoryId,
         data: {
+          beneficiaryId: formBeneficiaryId,
+          serviceCategoryId: formServiceCategoryId,
           priority: formPriority,
           canceled: formCanceled,
           callCode: formCallCode,
@@ -95,7 +111,7 @@ export function UpdateAppointmentModal({
     );
   }
 
-  const isFormValid = !!formCallCode.trim();
+  const isFormValid = !!formCallCode.trim() && !!formBeneficiaryId && !!formServiceCategoryId;
 
   return (
     <CreateModal
@@ -110,22 +126,84 @@ export function UpdateAppointmentModal({
     >
       {appointment && (
         <div className="flex flex-col gap-4">
-          {/* Informações não editáveis (Chaves) */}
-          <div className="grid grid-cols-1 gap-2 rounded-lg bg-white/5 border border-white/10 p-3 text-xs">
-            <div>
-              <span className="text-muted-foreground font-medium block">Beneficiário:</span>
-              <span className="text-foreground font-semibold">
-                {appointment.beneficiary.fullName}
-                {appointment.beneficiary.cpf ? ` (${formatCpf(appointment.beneficiary.cpf)})` : ''}
-              </span>
-            </div>
-            <div>
-              <span className="text-muted-foreground font-medium block">Categoria de Serviço:</span>
-              <span className="text-foreground font-semibold">{appointment.serviceCategory.prefix} — {appointment.serviceCategory.name}</span>
-            </div>
-          </div>
-
           <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+            {/* Beneficiário */}
+            <div className="flex flex-col gap-1.5 sm:col-span-2">
+              <Label
+                htmlFor="edit-appointment-beneficiary"
+                className="text-xs text-muted-foreground font-medium"
+              >
+                Beneficiário *
+              </Label>
+              <Select
+                value={formBeneficiaryId}
+                onValueChange={(v) => setFormBeneficiaryId(v ?? '')}
+                disabled={loadingBeneficiaries || updateMutation.isPending}
+              >
+                <SelectTrigger
+                  id="edit-appointment-beneficiary"
+                  className="h-9 bg-background border-input text-foreground text-sm data-placeholder:text-muted-foreground"
+                >
+                  <SelectValue placeholder={loadingBeneficiaries ? 'Carregando...' : 'Selecionar'}>
+                    {formBeneficiaryId
+                      ? beneficiaries.find((b) => b.id === formBeneficiaryId)?.fullName
+                      : null}
+                  </SelectValue>
+                </SelectTrigger>
+                <SelectContent className="min-w-[320px] bg-card border border-border">
+                  {beneficiaries.map((b) => (
+                    <SelectItem key={b.id} value={b.id}>
+                      <span className="font-medium">{b.fullName}</span>
+                    </SelectItem>
+                  ))}
+                  {!loadingBeneficiaries && beneficiaries.length === 0 && (
+                    <div className="px-3 py-2 text-sm text-muted-foreground">
+                      Nenhum beneficiário encontrado.
+                    </div>
+                  )}
+                </SelectContent>
+              </Select>
+            </div>
+
+            {/* Categoria de Serviço */}
+            <div className="flex flex-col gap-1.5 sm:col-span-2">
+              <Label
+                htmlFor="edit-appointment-category"
+                className="text-xs text-muted-foreground font-medium"
+              >
+                Categoria de Serviço *
+              </Label>
+              <Select
+                value={formServiceCategoryId}
+                onValueChange={(v) => setFormServiceCategoryId(v ?? '')}
+                disabled={loadingCategories || updateMutation.isPending}
+              >
+                <SelectTrigger
+                  id="edit-appointment-category"
+                  className="h-9 bg-background border-input text-foreground text-sm data-placeholder:text-muted-foreground"
+                >
+                  <SelectValue placeholder={loadingCategories ? 'Carregando...' : 'Selecionar'}>
+                    {formServiceCategoryId
+                      ? categories.find((cat) => cat.id === formServiceCategoryId)?.name
+                      : null}
+                  </SelectValue>
+                </SelectTrigger>
+                <SelectContent className="min-w-[240px] bg-card border border-border">
+                  {categories.map((cat) => (
+                    <SelectItem key={cat.id} value={cat.id}>
+                      <span className="font-mono text-xs text-brand-orange-400 mr-2">{cat.prefix}</span>
+                      {cat.name}
+                    </SelectItem>
+                  ))}
+                  {!loadingCategories && categories.length === 0 && (
+                    <div className="px-3 py-2 text-sm text-muted-foreground">
+                      Nenhuma categoria encontrada.
+                    </div>
+                  )}
+                </SelectContent>
+              </Select>
+            </div>
+
             {/* Código de Chamada */}
             <div className="flex flex-col gap-1.5 sm:col-span-2">
               <Label htmlFor="edit-call-code" className="text-xs text-muted-foreground font-medium">
