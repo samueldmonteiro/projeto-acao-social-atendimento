@@ -89,7 +89,7 @@ export class AppointmentService {
           serviceCategory: true,
         },
         orderBy: {
-          createdAt: 'desc',
+          createdAt: 'asc',
         },
         skip: (page - 1) * perPage,
         take: perPage,

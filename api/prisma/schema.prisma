@@ -4,7 +4,6 @@ generator client {
   moduleFormat = "cjs"
 }
 
-
 datasource db {
   provider = "postgresql"
 }
@@ -62,13 +61,13 @@ model ServiceCategory {
 model Appointment {
   beneficiaryId     String
   serviceCategoryId String
-  callCode          String @unique
-  priority          Boolean @default(false)
-  beneficiary     Beneficiary     @relation(fields: [beneficiaryId], references: [id], onDelete: Cascade)
-  serviceCategory ServiceCategory @relation(fields: [serviceCategoryId], references: [id], onDelete: Cascade)
-  canceled          Boolean @default(false)
-  startedAt  DateTime?
-  finishedAt DateTime?
+  callCode          String          @unique
+  priority          Boolean         @default(false)
+  beneficiary       Beneficiary     @relation(fields: [beneficiaryId], references: [id], onDelete: Cascade)
+  serviceCategory   ServiceCategory @relation(fields: [serviceCategoryId], references: [id], onDelete: Cascade)
+  canceled          Boolean         @default(false)
+  startedAt         DateTime?
+  finishedAt        DateTime?
 
   createdAt DateTime @default(now())
 
