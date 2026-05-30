@@ -43,7 +43,7 @@ exports.AppModule = AppModule = __decorate([
                 inject: [config_1.ConfigService],
                 useFactory: () => ({
                     secret: process.env.JWT_TOKEN,
-                    signOptions: { expiresIn: '1h' },
+                    signOptions: { expiresIn: '12h' },
                 }),
             }),
         ],

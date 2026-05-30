@@ -11,7 +11,7 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
 } from '@/components/ui/sidebar';
-import { LayoutDashboardIcon, FolderIcon, UsersIcon, BarChart3Icon } from 'lucide-react';
+import { LayoutDashboardIcon, FolderIcon, UsersIcon, BarChart3Icon, MonitorPlayIcon } from 'lucide-react';
 import type { UserSafe } from '@/types/user.type';
 import logo from '@/assets/logo-simple.png';
 
@@ -46,6 +46,14 @@ const data = {
       url: '/metricas',
       icon: (
         <BarChart3Icon
+        />
+      ),
+    },
+    {
+      title: 'Painel',
+      url: '/painel',
+      icon: (
+        <MonitorPlayIcon
         />
       ),
     },

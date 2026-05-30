@@ -12,5 +12,6 @@ export default [
       route('categorias', 'pages/dashboard/service-categories/index.tsx'),
       route('metricas', 'pages/dashboard/metrics/index.tsx'),
     ]),
+    route('painel', 'pages/dashboard/panel/index.tsx'),
   ]),
 ] satisfies RouteConfig;

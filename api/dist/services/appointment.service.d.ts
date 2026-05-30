@@ -10,68 +10,68 @@ export declare class AppointmentService {
         started?: boolean;
         finished?: boolean;
     }): Promise<PaginationResponse<({
-        beneficiary: {
-            createdAt: Date;
+        serviceCategory: {
+            name: string;
             id: string;
+            createdAt: Date;
+            updatedAt: Date;
+            prefix: string;
+        };
+        beneficiary: {
+            id: string;
+            email: string | null;
+            createdAt: Date;
+            updatedAt: Date;
             fullName: string;
             cpf: string | null;
-            email: string | null;
             phone: string | null;
             birthDate: Date | null;
             gender: import("@/generated/prisma/client").Gender;
             address: string | null;
-            updatedAt: Date;
-        };
-        serviceCategory: {
-            createdAt: Date;
-            name: string;
-            id: string;
-            updatedAt: Date;
-            prefix: string;
         };
     } & {
-        beneficiaryId: string;
+        createdAt: Date;
         serviceCategoryId: string;
+        beneficiaryId: string;
         callCode: string;
         priority: boolean;
         canceled: boolean;
         startedAt: Date | null;
         finishedAt: Date | null;
-        createdAt: Date;
     })[]>>;
     create(data: {
         beneficiaryId: string;
         serviceCategoryId: string;
         priority?: boolean;
     }): Promise<{
-        beneficiary: {
-            createdAt: Date;
+        serviceCategory: {
+            name: string;
             id: string;
+            createdAt: Date;
+            updatedAt: Date;
+            prefix: string;
+        };
+        beneficiary: {
+            id: string;
+            email: string | null;
+            createdAt: Date;
+            updatedAt: Date;
             fullName: string;
             cpf: string | null;
-            email: string | null;
             phone: string | null;
             birthDate: Date | null;
             gender: import("@/generated/prisma/client").Gender;
             address: string | null;
-            updatedAt: Date;
-        };
-        serviceCategory: {
-            createdAt: Date;
-            name: string;
-            id: string;
-            updatedAt: Date;
-            prefix: string;
         };
     } & {
-        beneficiaryId: string;
+        createdAt: Date;
         serviceCategoryId: string;
+        beneficiaryId: string;
         callCode: string;
         priority: boolean;
         canceled: boolean;
         startedAt: Date | null;
         finishedAt: Date | null;
-        createdAt: Date;
     }>;
     update(beneficiaryId: string, serviceCategoryId: string, data: {
         beneficiaryId?: string;
@@ -82,34 +82,34 @@ export declare class AppointmentService {
         finishedAt?: Date | null;
         callCode?: string;
     }): Promise<{
-        beneficiary: {
-            createdAt: Date;
+        serviceCategory: {
+            name: string;
             id: string;
+            createdAt: Date;
+            updatedAt: Date;
+            prefix: string;
+        };
+        beneficiary: {
+            id: string;
+            email: string | null;
+            createdAt: Date;
+            updatedAt: Date;
             fullName: string;
             cpf: string | null;
-            email: string | null;
             phone: string | null;
             birthDate: Date | null;
             gender: import("@/generated/prisma/client").Gender;
             address: string | null;
-            updatedAt: Date;
-        };
-        serviceCategory: {
-            createdAt: Date;
-            name: string;
-            id: string;
-            updatedAt: Date;
-            prefix: string;
         };
     } & {
-        beneficiaryId: string;
+        createdAt: Date;
         serviceCategoryId: string;
+        beneficiaryId: string;
         callCode: string;
         priority: boolean;
         canceled: boolean;
         startedAt: Date | null;
         finishedAt: Date | null;
-        createdAt: Date;
     }>;
     delete(beneficiaryId: string, serviceCategoryId: string): Promise<void>;
     private generateCallCode;
