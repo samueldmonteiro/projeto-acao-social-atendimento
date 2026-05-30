@@ -38,7 +38,9 @@ export function CreateAppointmentModal({
   const [isCreateBeneficiaryOpen, setIsCreateBeneficiaryOpen] = useState(false);
   const [isCreateServiceCategoryOpen, setIsCreateServiceCategoryOpen] = useState(false);
 
-  const { data: beneficiariesData, isLoading: loadingBeneficiaries } = useBeneficiaries();
+  const { data: beneficiariesData, isLoading: loadingBeneficiaries } = useBeneficiaries({
+    perPage:400
+  });
   const { data: categoriesData, isLoading: loadingCategories } = useServiceCategories();
   const createMutation = useCreateAppointment();
 
