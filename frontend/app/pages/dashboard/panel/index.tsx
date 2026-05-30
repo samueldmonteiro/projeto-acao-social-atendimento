@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useQueryClient } from '@tanstack/react-query';
 import { useAppointments } from '@/hooks/queries/use-appointments';
+import logo from '@/assets/logo-simple.png';
 
 export default function PanelPage() {
   const queryClient = useQueryClient();
@@ -100,15 +101,8 @@ export default function PanelPage() {
       >
         {/* Brand */}
         <div className="flex items-center gap-3">
-          <div
-            className="w-9 h-9 sm:w-10 sm:h-10 rounded-xl flex items-center justify-center font-black text-base sm:text-lg text-black shrink-0"
-            style={{
-              background: 'linear-gradient(135deg, #fb923c, #ea580c)',
-              boxShadow: '0 0 20px rgba(249,115,22,0.45)',
-            }}
-          >
-            A
-          </div>
+
+          <img src={logo} alt="Logo" className=" object-contain w-9 h-9" />
           <div>
             <div className="font-bold text-base sm:text-lg leading-tight text-white">
               Ação Social — Anhanguera
