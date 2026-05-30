@@ -21,7 +21,8 @@ import {
   PieChart,
   Pie,
   Cell,
-  CartesianGrid
+  CartesianGrid,
+  LabelList
 } from 'recharts';
 
 export function meta() {
@@ -228,134 +229,176 @@ export default function MetricsPage() {
         </Card>
       </div>
 
-      {/* Main Charts Row */}
-      <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
-        {/* Service Categories Ranking */}
-        <Card className="bg-card dark:bg-white/5 backdrop-blur-sm border border-border dark:border-white/10">
-          <CardHeader>
-            <CardTitle className="text-lg font-semibold text-foreground dark:text-white flex items-center gap-2">
-              <ActivityIcon className="size-5 text-brand-orange-400" />
-              Ranking de Categorias de Serviço
-            </CardTitle>
-            <CardDescription>
-              Demanda por tipo de atendimento e assistência
-            </CardDescription>
-          </CardHeader>
-          <CardContent className="h-[340px]">
-            {rankingChartData.length > 0 ? (
-              <ResponsiveContainer width="100%" height="100%">
-                <BarChart
-                  data={rankingChartData}
-                  layout="vertical"
-                  margin={{ top: 5, right: 30, left: 20, bottom: 5 }}
+      {/* Service Categories Ranking — full width */}
+      <Card className="bg-card dark:bg-white/5 backdrop-blur-sm border border-border dark:border-white/10">
+        <CardHeader>
+          <CardTitle className="text-lg font-semibold text-foreground dark:text-white flex items-center gap-2">
+            <ActivityIcon className="size-5 text-brand-orange-400" />
+            Ranking de Categorias de Serviço
+          </CardTitle>
+          <CardDescription>
+            Demanda por tipo de atendimento e assistência — beneficiários por categoria
+          </CardDescription>
+        </CardHeader>
+        <CardContent>
+          {rankingChartData.length > 0 ? (
+            <ResponsiveContainer
+              width="100%"
+              height={Math.max(320, rankingChartData.length * 52)}
+            >
+              <BarChart
+                data={rankingChartData}
+                layout="vertical"
+                margin={{ top: 4, right: 80, left: 8, bottom: 4 }}
+                barCategoryGap="28%"
+              >
+                <defs>
+                  <linearGradient id="barGradient0" x1="0" y1="0" x2="1" y2="0">
+                    <stop offset="0%" stopColor="#ea580c" />
+                    <stop offset="100%" stopColor="#fb923c" />
+                  </linearGradient>
+                  <linearGradient id="barGradient1" x1="0" y1="0" x2="1" y2="0">
+                    <stop offset="0%" stopColor="#f97316" />
+                    <stop offset="100%" stopColor="#fdba74" />
+                  </linearGradient>
+                </defs>
+                <CartesianGrid
+                  strokeDasharray="3 3"
+                  stroke="var(--border)"
+                  opacity={0.35}
+                  horizontal={false}
+                  vertical={true}
+                />
+                <XAxis
+                  type="number"
+                  stroke="var(--muted-foreground)"
+                  fontSize={11}
+                  tickLine={false}
+                  axisLine={false}
+                  tick={{ fill: 'var(--muted-foreground)' }}
+                />
+                <YAxis
+                  dataKey="name"
+                  type="category"
+                  stroke="var(--muted-foreground)"
+                  fontSize={12}
+                  tickLine={false}
+                  axisLine={false}
+                  width={160}
+                  tick={{ fill: 'var(--foreground)', fontWeight: 500 }}
+                />
+                <RechartsTooltip
+                  cursor={{ fill: 'var(--muted)', opacity: 0.12 }}
+                  contentStyle={{
+                    backgroundColor: 'var(--popover)',
+                    border: '1px solid var(--border)',
+                    borderRadius: 'var(--radius-md)',
+                    color: 'var(--popover-foreground)',
+                    fontSize: 13,
+                  }}
+                  formatter={(value: number, _name: string, props) => [
+                    `${value} beneficiários (${props.payload.porcentagem}%)`,
+                    'Total',
+                  ]}
+                  labelStyle={{ fontWeight: 600 }}
+                />
+                <Bar
+                  dataKey="beneficiarios"
+                  name="Beneficiários"
+                  radius={[0, 6, 6, 0]}
+                  maxBarSize={32}
                 >
-                  <CartesianGrid strokeDasharray="3 3" stroke="var(--border)" opacity={0.4} horizontal={true} vertical={false} />
-                  <XAxis type="number" stroke="var(--muted-foreground)" fontSize={12} tickLine={false} axisLine={false} />
-                  <YAxis
-                    dataKey="name"
-                    type="category"
-                    stroke="var(--muted-foreground)"
-                    fontSize={12}
-                    tickLine={false}
-                    axisLine={false}
-                    width={100}
-                  />
-                  <RechartsTooltip
-                    cursor={{ fill: 'var(--muted)', opacity: 0.15 }}
-                    contentStyle={{
-                      backgroundColor: 'var(--popover)',
-                      border: '1px solid var(--border)',
-                      borderRadius: 'var(--radius-md)',
-                      color: 'var(--popover-foreground)',
+                  {rankingChartData.map((_, index) => (
+                    <Cell
+                      key={`cell-${index}`}
+                      fill={`url(#barGradient${index === 0 ? '0' : '1'})`}
+                    />
+                  ))}
+                  <LabelList
+                    dataKey="beneficiarios"
+                    position="right"
+                    style={{ fill: 'var(--muted-foreground)', fontSize: 12, fontWeight: 600 }}
+                    formatter={(value: number) => {
+                      const item = rankingChartData.find(d => d.beneficiarios === value);
+                      return item ? `${value} (${item.porcentagem}%)` : `${value}`;
                     }}
                   />
-                  <Bar
-                    dataKey="beneficiarios"
-                    fill="#f97316"
-                    radius={[0, 4, 4, 0]}
-                    name="Beneficiários"
-                    barSize={18}
-                  >
-                    {rankingChartData.map((_, index) => (
-                      <Cell key={`cell-${index}`} fill={index === 0 ? '#ea580c' : '#f97316'} />
-                    ))}
-                  </Bar>
-                </BarChart>
-              </ResponsiveContainer>
-            ) : (
-              <div className="flex items-center justify-center h-full text-muted-foreground">
-                Nenhum dado disponível
-              </div>
-            )}
-          </CardContent>
-        </Card>
+                </Bar>
+              </BarChart>
+            </ResponsiveContainer>
+          ) : (
+            <div className="flex items-center justify-center h-48 text-muted-foreground">
+              Nenhum dado disponível
+            </div>
+          )}
+        </CardContent>
+      </Card>
 
-        {/* Gender Distribution */}
-        <Card className="bg-card dark:bg-white/5 backdrop-blur-sm border border-border dark:border-white/10">
-          <CardHeader>
-            <CardTitle className="text-lg font-semibold text-foreground dark:text-white flex items-center gap-2">
-              <PieChartIcon className="size-5 text-brand-orange-400" />
-              Distribuição de Gênero
-            </CardTitle>
-            <CardDescription>
-              Perfil demográfico do público atendido
-            </CardDescription>
-          </CardHeader>
-          <CardContent className="h-[340px] flex flex-col sm:flex-row items-center justify-center gap-6">
-            {genderChartData.length > 0 ? (
-              <>
-                <div className="w-full sm:w-1/2 h-[220px]">
-                  <ResponsiveContainer width="100%" height="100%">
-                    <PieChart>
-                      <Pie
-                        data={genderChartData}
-                        cx="50%"
-                        cy="50%"
-                        innerRadius={60}
-                        outerRadius={85}
-                        paddingAngle={5}
-                        dataKey="value"
-                      >
-                        {genderChartData.map((entry, index) => (
-                          <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
-                        ))}
-                      </Pie>
-                      <RechartsTooltip
-                        contentStyle={{
-                          backgroundColor: 'var(--popover)',
-                          border: '1px solid var(--border)',
-                          borderRadius: 'var(--radius-md)',
-                          color: 'var(--popover-foreground)',
-                        }}
-                      />
-                    </PieChart>
-                  </ResponsiveContainer>
-                </div>
-                <div className="flex flex-col gap-3 w-full sm:w-1/2">
-                  {genderChartData.map((item, index) => (
-                    <div key={item.name} className="flex items-center justify-between">
-                      <div className="flex items-center gap-2">
-                        <div
-                          className="size-3 rounded-full shrink-0"
-                          style={{ backgroundColor: COLORS[index % COLORS.length] }}
-                        />
-                        <span className="text-sm font-medium text-foreground/80 dark:text-gray-300">{item.name}</span>
-                      </div>
-                      <div className="text-sm font-mono text-muted-foreground dark:text-gray-400">
-                        {item.value} <span className="text-xs text-muted-foreground/60 dark:text-gray-500">({item.percentage}%)</span>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </>
-            ) : (
-              <div className="flex items-center justify-center h-full text-muted-foreground">
-                Nenhum dado disponível
+      {/* Gender Distribution — full width below ranking */}
+      <Card className="bg-card dark:bg-white/5 backdrop-blur-sm border border-border dark:border-white/10">
+        <CardHeader>
+          <CardTitle className="text-lg font-semibold text-foreground dark:text-white flex items-center gap-2">
+            <PieChartIcon className="size-5 text-brand-orange-400" />
+            Distribuição de Gênero
+          </CardTitle>
+          <CardDescription>
+            Perfil demográfico do público atendido
+          </CardDescription>
+        </CardHeader>
+        <CardContent className="h-[340px] flex flex-col sm:flex-row items-center justify-center gap-6">
+          {genderChartData.length > 0 ? (
+            <>
+              <div className="w-full sm:w-1/2 h-[220px]">
+                <ResponsiveContainer width="100%" height="100%">
+                  <PieChart>
+                    <Pie
+                      data={genderChartData}
+                      cx="50%"
+                      cy="50%"
+                      innerRadius={60}
+                      outerRadius={85}
+                      paddingAngle={5}
+                      dataKey="value"
+                    >
+                      {genderChartData.map((entry, index) => (
+                        <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+                      ))}
+                    </Pie>
+                    <RechartsTooltip
+                      contentStyle={{
+                        backgroundColor: 'var(--popover)',
+                        border: '1px solid var(--border)',
+                        borderRadius: 'var(--radius-md)',
+                        color: 'var(--popover-foreground)',
+                      }}
+                    />
+                  </PieChart>
+                </ResponsiveContainer>
               </div>
-            )}
-          </CardContent>
-        </Card>
-      </div>
+              <div className="flex flex-col gap-3 w-full sm:w-1/2">
+                {genderChartData.map((item, index) => (
+                  <div key={item.name} className="flex items-center justify-between">
+                    <div className="flex items-center gap-2">
+                      <div
+                        className="size-3 rounded-full shrink-0"
+                        style={{ backgroundColor: COLORS[index % COLORS.length] }}
+                      />
+                      <span className="text-sm font-medium text-foreground/80 dark:text-gray-300">{item.name}</span>
+                    </div>
+                    <div className="text-sm font-mono text-muted-foreground dark:text-gray-400">
+                      {item.value} <span className="text-xs text-muted-foreground/60 dark:text-gray-500">({item.percentage}%)</span>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </>
+          ) : (
+            <div className="flex items-center justify-center h-full text-muted-foreground">
+              Nenhum dado disponível
+            </div>
+          )}
+        </CardContent>
+      </Card>
 
       {/* Additional Management View Row */}
       <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
