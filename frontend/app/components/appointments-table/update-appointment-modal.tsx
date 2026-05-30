@@ -52,7 +52,9 @@ export function UpdateAppointmentModal({
   const [formStartedAt, setFormStartedAt] = useState(formatToDatetimeLocal(appointment?.startedAt));
   const [formFinishedAt, setFormFinishedAt] = useState(formatToDatetimeLocal(appointment?.finishedAt));
 
-  const { data: beneficiariesData, isLoading: loadingBeneficiaries } = useBeneficiaries();
+  const { data: beneficiariesData, isLoading: loadingBeneficiaries } = useBeneficiaries({
+    perPage: 400
+  });
   const { data: categoriesData, isLoading: loadingCategories } = useServiceCategories();
 
   const beneficiaries = beneficiariesData?.data?.items ?? [];
